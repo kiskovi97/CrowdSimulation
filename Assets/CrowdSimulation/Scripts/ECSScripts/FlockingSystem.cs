@@ -6,12 +6,15 @@ using Unity.Mathematics;
 using ReadOnlyAttribute = System.ComponentModel.ReadOnlyAttribute;
 using Unity.Burst;
 using UnityEngine;
+using System;
 
 [AlwaysSynchronizeSystem]
 public class FlockingSystem : JobComponentSystem
 {
     public static readonly float threshold = 1f;
     public static readonly float3 center = new float3(4, 0, 4);
+
+    public static readonly float max = 50f;
 
     [BurstCompile]
     private struct FlockingQuadrantJob : IJobForEach<Rotation, Translation, People>
@@ -26,34 +29,32 @@ public class FlockingSystem : JobComponentSystem
         {
             float3 avoidanceForce = new float3();
             float3 convinientForce = new float3();
-            
-            int key = QuadrantSystem.GetPositionHashMapKey(transform.Value);
-            if (targetMap.TryGetFirstValue(key, out QudrantData data, out NativeMultiHashMapIterator<int> iterator))
+            float3 centerForce = transform.Value;
+            float crowdNumber = 1f;
+
+            ForeachAround(new QudrantData()
             {
-                do
-                {
-                    var force = transform.Value - data.position;
-                    var length = math.length(force);
-                    if (length < threshold && length > 0)
-                    {
-                        if (people.debug)
-                        {
-                           // DebugProxy.DrawLine(transform.Value, data.position, Color.red);
-                        }
-
-                        var multiplyer = (threshold - length) / threshold;
-                        avoidanceForce += math.normalize(force) * multiplyer;
-
-                        convinientForce += data.people.direction;
-                    }
-
-                } while (targetMap.TryGetNextValue(out data, ref iterator));
-            }
+                position = transform.Value,
+                people = people,
+            }, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
 
             var direction = people.direction;
 
-            direction += avoidanceForce * 0.2f;// * deltaTime;
-            direction += people.desire * 0.1f;// * deltaTime;
+            direction += avoidanceForce * 20f * deltaTime;// * deltaTime;
+
+            if (people.desire.w == 0)
+            {
+                direction += people.desire.xyz * deltaTime * 2f;// * deltaTime;
+            } else
+            {
+                var desire = (people.desire.xyz - transform.Value);
+                if (math.length(desire) > 1f)
+                {
+                    desire = math.normalize(desire);
+                }
+                direction += desire * deltaTime * 2f;// * deltaTime;
+            }
+
             //direction += convinientForce * deltaTime;
 
             if (math.length(direction) > people.maxSpeed)
@@ -66,11 +67,70 @@ public class FlockingSystem : JobComponentSystem
 
             people.direction = direction;
 
-            rotation.Value = quaternion.LookRotation(direction, new float3(0, 1, 0));
+            if (math.length(direction) > 0.5f)
+            {
+                rotation.Value = quaternion.LookRotation(direction, new float3(0, 1, 0));
+            }
+
 
             Step(ref transform, direction);
 
             EdgeReaction(ref transform);
+        }
+
+        private void ForeachAround(QudrantData me, ref float crowdNumber,
+            ref float3 centerForce, ref float3 avoidanceForce, ref float3 convinientForce)
+        {
+            var position = me.position;
+            var key = QuadrantSystem.GetPositionHashMapKey(position);
+            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 0));
+            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 0));
+            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, 1));
+            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, -1));
+            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+        }
+
+
+        private void Foreach(int key, QudrantData me, ref float crowdNumber, 
+            ref float3 centerForce, ref float3 avoidanceForce, ref float3 convinientForce)
+        {
+            if (targetMap.TryGetFirstValue(key, out QudrantData data, out NativeMultiHashMapIterator<int> iterator))
+            {
+                do
+                {
+                    var force = me.position - data.position;
+                    var length = math.length(force);
+                    if (length < threshold * 3)
+                        if (data.people.crowdId == me.people.crowdId)
+                        {
+                            crowdNumber++;
+                            centerForce += data.position;
+                        }
+
+                    var thresholdMultiplyer = data.people.crowdId == me.people.crowdId ? 1f : 2f;
+                    if (length < threshold * thresholdMultiplyer && length > 0)
+                    {
+                        
+                        var distanceNormalized = (threshold * thresholdMultiplyer - length) / (threshold);
+
+                        var frontMultiplyer = (math.dot(math.normalize(-force), math.normalize(me.people.direction)) + 1f) * 0.5f;
+
+                        var forceMultiplyer = math.length(data.people.direction) + 0.7f;
+
+                        var multiplyer = distanceNormalized * frontMultiplyer * forceMultiplyer;
+
+                        var multiplyerSin = math.sin(multiplyer * math.PI / 2f);
+
+                        avoidanceForce += math.normalize(force) * multiplyerSin;
+
+                        convinientForce += data.people.direction;
+                    }
+                } while (targetMap.TryGetNextValue(out data, ref iterator));
+            }
         }
 
         private void Step(ref Translation transform, float3 direction)
@@ -80,21 +140,21 @@ public class FlockingSystem : JobComponentSystem
 
         private void EdgeReaction(ref Translation transform)
         {
-            if (transform.Value.x < -10f)
+            if (transform.Value.x < -max)
             {
-                transform.Value.x += 20f;
+                transform.Value.x += 2 * max;
             }
-            if (transform.Value.x > 10f)
+            if (transform.Value.x > max)
             {
-                transform.Value.x -= 20f;
+                transform.Value.x -= 2 * max;
             }
-            if (transform.Value.z < -10f)
+            if (transform.Value.z < -max)
             {
-                transform.Value.z += 20f;
+                transform.Value.z += 2 * max;
             }
-            if (transform.Value.z > 10f)
+            if (transform.Value.z > max)
             {
-                transform.Value.z -= 20f;
+                transform.Value.z -= 2 * max;
             }
         }
     }
