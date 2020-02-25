@@ -5,16 +5,12 @@ using Unity.Collections;
 using Unity.Mathematics;
 using ReadOnlyAttribute = System.ComponentModel.ReadOnlyAttribute;
 using Unity.Burst;
-using UnityEngine;
-using System;
 
 [AlwaysSynchronizeSystem]
 public class FlockingSystem : JobComponentSystem
 {
     public static readonly float threshold = 1f;
     public static readonly float3 center = new float3(4, 0, 4);
-
-    public static readonly float max = 50f;
 
     [BurstCompile]
     private struct FlockingQuadrantJob : IJobForEach<Rotation, Translation, People>
@@ -29,14 +25,8 @@ public class FlockingSystem : JobComponentSystem
         {
             float3 avoidanceForce = new float3();
             float3 convinientForce = new float3();
-            float3 centerForce = transform.Value;
-            float crowdNumber = 1f;
 
-            ForeachAround(new QudrantData()
-            {
-                position = transform.Value,
-                people = people,
-            }, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            ForeachAround(new QudrantData() { position = transform.Value, people = people, }, ref avoidanceForce, ref convinientForce);
 
             var direction = people.direction;
 
@@ -55,8 +45,6 @@ public class FlockingSystem : JobComponentSystem
                 direction += desire * deltaTime * 2f;// * deltaTime;
             }
 
-            //direction += convinientForce * deltaTime;
-
             if (math.length(direction) > people.maxSpeed)
             {
                 direction = math.normalize(direction) * people.maxSpeed;
@@ -69,34 +57,31 @@ public class FlockingSystem : JobComponentSystem
 
             if (math.length(direction) > 0.5f)
             {
-                rotation.Value = quaternion.LookRotation(direction, new float3(0, 1, 0));
+                rotation.Value = quaternion.LookRotationSafe(direction, new float3(0, 1, 0));
             }
-
 
             Step(ref transform, direction);
 
             EdgeReaction(ref transform);
         }
 
-        private void ForeachAround(QudrantData me, ref float crowdNumber,
-            ref float3 centerForce, ref float3 avoidanceForce, ref float3 convinientForce)
+        private void ForeachAround(QudrantData me, ref float3 avoidanceForce, ref float3 convinientForce)
         {
             var position = me.position;
             var key = QuadrantSystem.GetPositionHashMapKey(position);
-            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            Foreach(key, me, ref avoidanceForce, ref convinientForce);
             key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 0));
-            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            Foreach(key, me, ref avoidanceForce, ref convinientForce);
             key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 0));
-            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            Foreach(key, me, ref avoidanceForce, ref convinientForce);
             key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, 1));
-            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            Foreach(key, me, ref avoidanceForce, ref convinientForce);
             key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, -1));
-            Foreach(key, me, ref crowdNumber, ref centerForce, ref avoidanceForce, ref convinientForce);
+            Foreach(key, me, ref avoidanceForce, ref convinientForce);
         }
 
 
-        private void Foreach(int key, QudrantData me, ref float crowdNumber, 
-            ref float3 centerForce, ref float3 avoidanceForce, ref float3 convinientForce)
+        private void Foreach(int key, QudrantData me, ref float3 avoidanceForce, ref float3 convinientForce)
         {
             if (targetMap.TryGetFirstValue(key, out QudrantData data, out NativeMultiHashMapIterator<int> iterator))
             {
@@ -104,17 +89,9 @@ public class FlockingSystem : JobComponentSystem
                 {
                     var force = me.position - data.position;
                     var length = math.length(force);
-                    if (length < threshold * 3)
-                        if (data.people.crowdId == me.people.crowdId)
-                        {
-                            crowdNumber++;
-                            centerForce += data.position;
-                        }
-
-                    var thresholdMultiplyer = data.people.crowdId == me.people.crowdId ? 1f : 2f;
+                    var thresholdMultiplyer = data.people.crowdId == me.people.crowdId ? 1f : 1.6f;
                     if (length < threshold * thresholdMultiplyer && length > 0)
                     {
-                        
                         var distanceNormalized = (threshold * thresholdMultiplyer - length) / (threshold);
 
                         var frontMultiplyer = (math.dot(math.normalize(-force), math.normalize(me.people.direction)) + 1f) * 0.5f;
@@ -140,21 +117,21 @@ public class FlockingSystem : JobComponentSystem
 
         private void EdgeReaction(ref Translation transform)
         {
-            if (transform.Value.x < -max)
+            if (transform.Value.x < -Map.max)
             {
-                transform.Value.x += 2 * max;
+                transform.Value.x += 2 * Map.max;
             }
-            if (transform.Value.x > max)
+            if (transform.Value.x > Map.max)
             {
-                transform.Value.x -= 2 * max;
+                transform.Value.x -= 2 * Map.max;
             }
-            if (transform.Value.z < -max)
+            if (transform.Value.z < -Map.max)
             {
-                transform.Value.z += 2 * max;
+                transform.Value.z += 2 * Map.max;
             }
-            if (transform.Value.z > max)
+            if (transform.Value.z > Map.max)
             {
-                transform.Value.z -= 2 * max;
+                transform.Value.z -= 2 * Map.max;
             }
         }
     }

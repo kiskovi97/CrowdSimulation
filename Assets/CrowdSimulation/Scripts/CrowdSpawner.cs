@@ -25,14 +25,11 @@ public class CrowdSpawner : MonoBehaviour
                 var obj = Instantiate(entityObject, transform);
                 obj.transform.localPosition = position;
                 var people = obj.GetComponent<PeopleAuth>();
-                people.crowdId = Id;
+                if (people != null)
+                {
+                    people.crowdId = Id;
+                }
             }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
