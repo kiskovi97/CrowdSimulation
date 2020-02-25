@@ -10,6 +10,16 @@ public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
 
     public void Execute(ref Rotation rotation, ref Translation transform, ref Walker walker)
     {
+        var speed = math.length(walker.direction);
+        if (speed > 0.1f)
+        {
+            rotation.Value = quaternion.LookRotationSafe(walker.direction, new float3(0, 1, 0));
+        }
+        if (speed > walker.maxSpeed)
+        {
+            walker.direction = math.normalize(walker.direction) * walker.maxSpeed;
+        }
+
         Step(ref transform, walker.direction);
 
         EdgeReaction(ref transform);
@@ -18,6 +28,7 @@ public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
 
     private void Step(ref Translation transform, float3 direction)
     {
+        
         transform.Value += direction * deltaTime;
     }
 

@@ -8,6 +8,6 @@ public struct PathFindingJob : IJobForEach<DecidedForce, CollisionParameters, Wa
     public void Execute(ref DecidedForce decidedForce, ref CollisionParameters collisionParameters, ref Walker walker, 
         ref Translation translation, ref PathForce pathForce)
     {
-        
+        pathForce.force = decidedForce.force;
     }
 }

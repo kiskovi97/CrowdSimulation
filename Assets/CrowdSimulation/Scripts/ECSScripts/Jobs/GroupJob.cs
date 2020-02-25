@@ -5,7 +5,13 @@ using Unity.Burst;
 [BurstCompile]
 public struct GroupGoalJob : IJobForEach<Translation, GroupCondition, DesireForce>
 {
-    public void Execute(ref Translation c0, ref GroupCondition c1, ref DesireForce c2)
+    public void Execute(ref Translation translation, ref GroupCondition groupCondition, ref DesireForce desire)
     {
+        var force = (groupCondition.goalPoint - translation.Value);
+        if (math.length(force) > 1f)
+        {
+            force = math.normalize(force);
+        }
+        desire.force = force;
     }
 }
