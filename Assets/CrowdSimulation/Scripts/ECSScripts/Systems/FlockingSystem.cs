@@ -19,14 +19,14 @@ public class FlockingSystem : JobComponentSystem
 
         [NativeDisableParallelForRestriction]
         [ReadOnly(true)]
-        public NativeMultiHashMap<int, QudrantData> targetMap;
+        public NativeMultiHashMap<int, FlockingQudrantData> targetMap;
 
         public void Execute(ref Rotation rotation, ref Translation transform, ref People people)
         {
             float3 avoidanceForce = new float3();
             float3 convinientForce = new float3();
 
-            ForeachAround(new QudrantData() { position = transform.Value, people = people, }, ref avoidanceForce, ref convinientForce);
+            ForeachAround(new FlockingQudrantData() { position = transform.Value, people = people, }, ref avoidanceForce, ref convinientForce);
 
             var direction = people.direction;
 
@@ -65,25 +65,24 @@ public class FlockingSystem : JobComponentSystem
             EdgeReaction(ref transform);
         }
 
-        private void ForeachAround(QudrantData me, ref float3 avoidanceForce, ref float3 convinientForce)
+        private void ForeachAround(FlockingQudrantData me, ref float3 avoidanceForce, ref float3 convinientForce)
         {
             var position = me.position;
-            var key = QuadrantSystem.GetPositionHashMapKey(position);
+            var key = FlockingQuadrantSystem.GetPositionHashMapKey(position);
             Foreach(key, me, ref avoidanceForce, ref convinientForce);
-            key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 0));
+            key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 0));
             Foreach(key, me, ref avoidanceForce, ref convinientForce);
-            key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 0));
+            key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 0));
             Foreach(key, me, ref avoidanceForce, ref convinientForce);
-            key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, 1));
+            key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, 1));
             Foreach(key, me, ref avoidanceForce, ref convinientForce);
-            key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, -1));
+            key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, -1));
             Foreach(key, me, ref avoidanceForce, ref convinientForce);
         }
 
-
-        private void Foreach(int key, QudrantData me, ref float3 avoidanceForce, ref float3 convinientForce)
+        private void Foreach(int key, FlockingQudrantData me, ref float3 avoidanceForce, ref float3 convinientForce)
         {
-            if (targetMap.TryGetFirstValue(key, out QudrantData data, out NativeMultiHashMapIterator<int> iterator))
+            if (targetMap.TryGetFirstValue(key, out FlockingQudrantData data, out NativeMultiHashMapIterator<int> iterator))
             {
                 do
                 {
@@ -143,7 +142,7 @@ public class FlockingSystem : JobComponentSystem
 
         var job = new FlockingQuadrantJob()
         {
-            targetMap = QuadrantSystem.quadrantHashMap,
+            targetMap = FlockingQuadrantSystem.quadrantHashMap,
             deltaTime = deltaTime,
         };
 

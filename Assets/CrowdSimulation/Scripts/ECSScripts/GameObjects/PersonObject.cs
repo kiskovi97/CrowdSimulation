@@ -26,7 +26,7 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
         });
         dstManager.AddComponentData(entity, new GroupCondition
         {
-            goalPoint = new float3(0, 0, 1)
+            goalPoint = new float3(-1, 0, 0)
         });
         dstManager.AddComponentData(entity, new CollisionParameters
         {

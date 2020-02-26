@@ -4,16 +4,15 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-public struct QudrantData
+public struct QuadrantData
 {
-    public People people;
+    public float3 direction;
     public float3 position;
-    public quaternion rotation;
 }
 
 public class QuadrantSystem : ComponentSystem
 {
-    public static NativeMultiHashMap<int, QudrantData> quadrantHashMap;
+    public static NativeMultiHashMap<int, QuadrantData> quadrantHashMap;
     private static readonly int quadrandCellSize = 10;
     private static readonly int quadrandMultiplyer = 100000;
 
@@ -29,22 +28,14 @@ public class QuadrantSystem : ComponentSystem
         return GetPositionHashMapKey(position + distance * quadrandCellSize);
     }
 
-    private static int GetEntityCountInHashMap(NativeMultiHashMap<int, QudrantData> map, int key)
+    private static int GetEntityCountInHashMap(NativeMultiHashMap<int, QuadrantData> map, int key)
     {
-        int count = 0;
-        if (map.TryGetFirstValue(key, out QudrantData entity, out NativeMultiHashMapIterator<int> iterator))
-        {
-            do
-            {
-                count++;
-            } while (map.TryGetNextValue(out entity, ref iterator));
-        }
-        return count;
+        return map.CountValuesForKey(key);
     }
 
     protected override void OnCreate()
     {
-        quadrantHashMap = new NativeMultiHashMap<int, QudrantData>(0, Allocator.Persistent);
+        quadrantHashMap = new NativeMultiHashMap<int, QuadrantData>(0, Allocator.Persistent);
         base.OnCreate();
     }
 
@@ -55,26 +46,24 @@ public class QuadrantSystem : ComponentSystem
     }
 
     [BurstCompile]
-    private struct SetQuadrantDataHashMapJob : IJobForEachWithEntity<Translation, Rotation, People>
+    private struct SetQuadrantDataHashMapJob : IJobForEachWithEntity<Translation, Walker>
     {
-        public NativeMultiHashMap<int, QudrantData>.ParallelWriter quadrantHashMap;
+        public NativeMultiHashMap<int, QuadrantData>.ParallelWriter quadrantHashMap;
 
-
-        public void Execute(Entity entity, int index, ref Translation translation, ref Rotation rotation, ref People people)
+        public void Execute(Entity entity, int index, ref Translation translation, ref Walker walker)
         {
             int key = GetPositionHashMapKey(translation.Value);
-            quadrantHashMap.Add(key, new QudrantData()
+            quadrantHashMap.Add(key, new QuadrantData()
             {
-                people = people,
                 position = translation.Value,
-                rotation = rotation.Value,
+                direction = walker.direction,
             });
         }
     }
 
     protected override void OnUpdate()
     {
-        EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Rotation), typeof(People));
+        EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Walker));
         quadrantHashMap.Clear();
         if (entityQuery.CalculateEntityCount() > quadrantHashMap.Capacity)
         {

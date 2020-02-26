@@ -15,7 +15,10 @@ public class CrowdSystem : JobComponentSystem
         var decisionJob = new DecisionJob();
         var decisionHandle = decisionJob.Schedule(this, groupHandle);
 
-        var pathFindingJob = new PathFindingJob();
+        var pathFindingJob = new PathFindingJob()
+        {
+            targetMap = QuadrantSystem.quadrantHashMap
+        };
         var pathHandle = pathFindingJob.Schedule(this, decisionHandle);
 
         var forceJob = new ForceJob()

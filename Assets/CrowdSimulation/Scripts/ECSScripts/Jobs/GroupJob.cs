@@ -12,6 +12,6 @@ public struct GroupGoalJob : IJobForEach<Translation, GroupCondition, DesireForc
         {
             force = math.normalize(force);
         }
-        desire.force = force;
+        desire.force = groupCondition.goalPoint;
     }
 }
