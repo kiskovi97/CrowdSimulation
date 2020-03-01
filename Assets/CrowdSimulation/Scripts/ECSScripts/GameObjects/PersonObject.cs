@@ -11,6 +11,12 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
     public float3 direction = Vector3.left;
     public float3 desire = Vector3.left;
 
+    CrowdSpawner parent;
+    public void ConnectParent(CrowdSpawner parent)
+    {
+        this.parent = parent;
+    }
+
     private GroupCondition condition = new GroupCondition
     {
         goalPoint = new float3(-1, 0, 0)
@@ -69,5 +75,7 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
         {
             force = float3.zero
         });
+
+        parent.AddEntity(entity);
     }
 }

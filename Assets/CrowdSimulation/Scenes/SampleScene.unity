@@ -155,7 +155,7 @@ MonoBehaviour:
   goalPoint:
     x: 0
     y: 0
-    z: 10
+    z: 14
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
@@ -435,7 +435,7 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: bf4459ca70511b045b40782f619c78e4,
     type: 3}
   goalPoint:
-    x: 10
+    x: 14
     y: 0
     z: 0
   goalRadius: 5
@@ -573,7 +573,7 @@ MonoBehaviour:
   goalPoint:
     x: 0
     y: 0
-    z: -10
+    z: -14
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
@@ -624,7 +624,7 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: e862c90a28677e140872ffc31855588b,
     type: 3}
   goalPoint:
-    x: -10
+    x: -14
     y: 0
     z: 0
   goalRadius: 4
