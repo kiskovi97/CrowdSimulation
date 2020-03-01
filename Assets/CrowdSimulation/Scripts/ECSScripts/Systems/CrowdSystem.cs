@@ -15,24 +15,17 @@ public class CrowdSystem : JobComponentSystem
         var decisionJob = new DecisionJob();
         var decisionHandle = decisionJob.Schedule(this, groupHandle);
 
-        var pathFindingJob = new PathFindingJob()
-        {
-            targetMap = QuadrantSystem.quadrantHashMap
-        };
+        var pathFindingJob = new PathFindingJob() { targetMap = QuadrantSystem.quadrantHashMap };
         var pathHandle = pathFindingJob.Schedule(this, decisionHandle);
 
-        var forceJob = new ForceJob()
-        {
-            deltaTime = deltaTime,
-        };
-        var forceHandle = forceJob.Schedule(this, pathHandle);
+        var collisionForce = new CollisionJob() { targetMap = QuadrantSystem.quadrantHashMap };
+        var collisionHandle = collisionForce.Schedule(this, pathHandle);
 
-        var walker = new WalkerJob()
-        {
-            deltaTime = deltaTime,
-        };
+        var forceJob = new ForceJob() { deltaTime = deltaTime };
+        var forceHandle = forceJob.Schedule(this, collisionHandle);
+
+        var walker = new WalkerJob() { deltaTime = deltaTime };
         var walkerHandle = walker.Schedule(this, forceHandle);
-
 
         return walkerHandle;
     }

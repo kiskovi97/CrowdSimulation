@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -1980776331931212350}
   - component: {fileID: 2002152154697913497}
   m_Layer: 0
-  m_Name: People_Desire
+  m_Name: People_Desire 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6694870a78bfb944697ecf3ad4f743a9, type: 2}
+  - {fileID: 2100000, guid: 6fd4be57fd9f663478c63f324043ecf5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -93,13 +93,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38c070b67c83c044f8df7a8424076608, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  broId: 0
   maxSpeed: 1.5
   innerRadius: 0.5
   outerRadius: 2
   direction:
     x: -1
     y: 0
-    z: 0
+    z: 0.2
   desire:
     x: 1
     y: 0

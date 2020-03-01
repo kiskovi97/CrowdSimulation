@@ -4,11 +4,22 @@ using UnityEngine;
 
 public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
 {
+    public int broId;
     public float maxSpeed = 2f;
     public float innerRadius = 1f;
     public float outerRadius = 2f;
     public float3 direction = Vector3.left;
     public float3 desire = Vector3.left;
+
+    private GroupCondition condition = new GroupCondition
+    {
+        goalPoint = new float3(-1, 0, 0)
+    };
+
+    public void ChangeGroup(GroupCondition condition)
+    {
+        this.condition = condition;
+    }
 
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
@@ -24,10 +35,7 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
         {
             hierarchieNumber = 0
         });
-        dstManager.AddComponentData(entity, new GroupCondition
-        {
-            goalPoint = new float3(-1, 0, 0)
-        });
+        dstManager.AddComponentData(entity, condition);
         dstManager.AddComponentData(entity, new CollisionParameters
         {
             innerRadius = innerRadius,
@@ -37,6 +45,7 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
         {
             direction = direction,
             maxSpeed = maxSpeed,
+            broId = broId,
         });
 
         // Forces

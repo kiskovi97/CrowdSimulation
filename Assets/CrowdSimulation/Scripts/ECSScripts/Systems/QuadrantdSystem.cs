@@ -8,6 +8,7 @@ public struct QuadrantData
 {
     public float3 direction;
     public float3 position;
+    public int broId;
 }
 
 public class QuadrantSystem : ComponentSystem
@@ -57,6 +58,7 @@ public class QuadrantSystem : ComponentSystem
             {
                 position = translation.Value,
                 direction = walker.direction,
+                broId = walker.broId,
             });
         }
     }

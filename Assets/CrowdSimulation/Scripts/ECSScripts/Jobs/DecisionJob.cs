@@ -8,6 +8,6 @@ public struct DecisionJob : IJobForEach<GroupForce, DesireForce, DecidedForce>
 {
     public void Execute(ref GroupForce groupForce, ref DesireForce desireForce, ref DecidedForce decidedForce)
     {
-        decidedForce.force = groupForce.force + desireForce.force;
+        decidedForce.force = groupForce.force + desireForce.force * 20f;
     }
 }

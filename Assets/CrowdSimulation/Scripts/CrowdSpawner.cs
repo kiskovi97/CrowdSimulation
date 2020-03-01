@@ -1,10 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class CrowdSpawner : MonoBehaviour
 {
     public GameObject entityObject;
+
+    public float3 goalPoint;
 
     public static int Id = 0;
 
@@ -16,6 +19,7 @@ public class CrowdSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        var cond = new GroupCondition() { goalPoint = goalPoint };
         Id++;
         for (int i = 0; i<sizeX; i++)
         {
@@ -28,6 +32,12 @@ public class CrowdSpawner : MonoBehaviour
                 if (people != null)
                 {
                     people.crowdId = Id;
+                }
+                var person = obj.GetComponent<PersonObject>();
+                if (person != null)
+                {
+                    person.ChangeGroup(cond);
+                    person.broId = Id;
                 }
             }
         }
