@@ -16,33 +16,35 @@ public struct PathFindingJob : IJobForEach<DecidedForce, CollisionParameters, Wa
     {
         var avoidanceForce = float3.zero;
         var convinientForce = float3.zero;
+        var bros = 0;
         ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId }, 
-            ref avoidanceForce, ref convinientForce, collisionParameters.outerRadius);
+            ref avoidanceForce, ref convinientForce, ref bros, collisionParameters.outerRadius);
 
         pathForce.force = decidedForce.force + avoidanceForce;
-        if (math.length(convinientForce) > 0.1f)
+
+        if (bros > 0)
         {
-            pathForce.force += math.normalize(convinientForce) * 0.5f;
+            pathForce.force += convinientForce *= 1 / bros;
         }
     }
 
-    private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, ref float3 convinientForce, float radius)
+    private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, ref float3 convinientForce, ref int bros,float radius)
     {
         var position = me.position;
         var key = FlockingQuadrantSystem.GetPositionHashMapKey(position);
-        Foreach(key, me, ref avoidanceForce, ref convinientForce, radius);
+        Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
         key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 0));
-        Foreach(key, me, ref avoidanceForce, ref convinientForce, radius);
+        Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
         key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 0));
-        Foreach(key, me, ref avoidanceForce, ref convinientForce, radius);
+        Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
         key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, 1));
-        Foreach(key, me, ref avoidanceForce, ref convinientForce, radius);
+        Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
         key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, -1));
-        Foreach(key, me, ref avoidanceForce, ref convinientForce, radius);
+        Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
     }
 
 
-    private void Foreach(int key, QuadrantData me, ref float3 avoidanceForce, ref float3 convinientForce, float radius)
+    private void Foreach(int key, QuadrantData me, ref float3 avoidanceForce, ref float3 convinientForce, ref int bros, float radius)
     {
         if (targetMap.TryGetFirstValue(key, out QuadrantData other, out NativeMultiHashMapIterator<int> iterator))
         {
@@ -50,6 +52,7 @@ public struct PathFindingJob : IJobForEach<DecidedForce, CollisionParameters, Wa
             {
                 if (me.broId == other.broId) {
                     convinientForce += other.direction;
+                    bros++;
                     continue;
                 }
 

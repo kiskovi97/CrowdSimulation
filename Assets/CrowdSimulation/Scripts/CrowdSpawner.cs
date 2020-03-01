@@ -8,6 +8,7 @@ public class CrowdSpawner : MonoBehaviour
     public GameObject entityObject;
 
     public float3 goalPoint;
+    public float goalRadius;
 
     public static int Id = 0;
 
@@ -19,7 +20,7 @@ public class CrowdSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var cond = new GroupCondition() { goalPoint = goalPoint };
+        var cond = new GroupCondition() { goalPoint = goalPoint, goalRadius = goalRadius };
         Id++;
         for (int i = 0; i<sizeX; i++)
         {

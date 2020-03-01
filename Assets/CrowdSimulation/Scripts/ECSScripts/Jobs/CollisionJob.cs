@@ -62,12 +62,13 @@ public struct CollisionJob : IJobForEach<Translation, Walker, CollisionParameter
                     var frontMultiplyer = (math.dot(math.normalize(-direction), math.normalize(me.direction)) + 1f) * 0.5f;
 
                     var forceMultiplyer = math.length(other.direction) + 0.7f;
+                    var myForceMultiplyer = math.length(me.direction) + 0.1f;
 
-                    var multiplyer = distanceNormalized * frontMultiplyer * forceMultiplyer;
+                    var multiplyer = myForceMultiplyer* distanceNormalized * frontMultiplyer * forceMultiplyer;
 
-                    var multiplyerSin = math.sin(multiplyer * math.PI / 2f);
+                    //var multiplyerSin = math.sin(multiplyer * math.PI / 2f);
 
-                    avoidanceForce += math.normalize(direction) * multiplyerSin;
+                    avoidanceForce += math.normalize(direction) * multiplyer;
 
                     avoidanceForce += direction / radius;
                 }
