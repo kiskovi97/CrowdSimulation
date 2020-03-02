@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2002152154697913499}
   - component: {fileID: 2002152154697913492}
   - component: {fileID: -1980776331931212350}
-  - component: {fileID: 2002152154697913497}
+  - component: {fileID: 5551743279192356052}
   m_Layer: 0
   m_Name: People_Walking
   m_TagString: Untagged
@@ -98,7 +98,7 @@ MonoBehaviour:
     x: -1
     y: 0
     z: 0
---- !u!114 &2002152154697913497
+--- !u!114 &5551743279192356052
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
