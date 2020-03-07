@@ -7,8 +7,8 @@ using UnityEngine;
 public class CrowdSpawner : MonoBehaviour
 {
     public GameObject entityObject;
+    public Transform goalPoint;
 
-    public float3 goalPoint;
     public float goalRadius;
 
     public static int Id = 0;
@@ -27,7 +27,7 @@ public class CrowdSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var cond = new GroupCondition() { goalPoint = goalPoint, goalRadius = goalRadius };
+        var cond = new GroupCondition() { goalPoint = goalPoint.position, goalRadius = goalRadius };
         Id++;
         for (int i = 0; i<sizeX; i++)
         {
@@ -54,8 +54,6 @@ public class CrowdSpawner : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(entities.Count);
-
         if (Input.GetKeyDown(KeyCode.A))
         {
             NewGoal();
