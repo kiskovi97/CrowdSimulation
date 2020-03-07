@@ -43,7 +43,7 @@ class DensitySystem : ComponentSystem
         public float distance;
     }
 
-    private static KeyDistance IndexFromPosition(float3 realWorldPosition)
+    private static KeyDistance IndexFromPosition(float3 realWorldPosition, float3 prev)
     {
         var position = ConvertToLocal(realWorldPosition);
 
@@ -57,7 +57,7 @@ class DensitySystem : ComponentSystem
         return new KeyDistance()
         {
             key = Index((int)math.round(position.x), (int)math.round(position.z)),
-            distance = math.length(position - math.round(position)),
+            distance = math.length(ConvertToLocal(prev) - math.round(position)),
         };
     }
 
@@ -74,16 +74,17 @@ class DensitySystem : ComponentSystem
 
         public void Execute(Entity entity, int index, ref Translation translation, ref Walker walker)
         {
-            Add(translation.Value);
-            Add(translation.Value + new float3(0, 0, 1));
-            Add(translation.Value + new float3(0, 0, -1));
-            Add(translation.Value + new float3(1, 0, 0));
-            Add(translation.Value + new float3(-1, 0, 0));
+            float3 pos = translation.Value;
+            Add(pos, pos);
+            Add(pos + new float3(0, 0, 1), pos);
+            Add(pos + new float3(0, 0, -1), pos);
+            Add(pos + new float3(1, 0, 0), pos);
+            Add(pos + new float3(-1, 0, 0), pos);
         }
 
-        private void Add(float3 position)
+        private void Add(float3 position, float3 prev)
         {
-            var keyDistance = IndexFromPosition(position);
+            var keyDistance = IndexFromPosition(position, prev);
             if (keyDistance.key >= 0)
                 quadrantHashMap[keyDistance.key] += math.max(0f, 1f - keyDistance.distance);
         }
@@ -109,7 +110,7 @@ class DensitySystem : ComponentSystem
             {
                 float height = densityMatrix[Index(i, j)];
                 var point = ConverToWorld(new float3(i, 0, j));
-                DebugProxy.DrawLine(point, point + new float3(0, height * 0.5f + 0.1f, 0), height > 0 ? Color.red : Color.grey);
+                DebugProxy.DrawLine(point, point + new float3(0, height + 0.1f, 0), height > 0 ? Color.red : Color.grey);
             }
     }
 }
