@@ -3,6 +3,7 @@ using Unity.Jobs;
 using Unity.Collections;
 
 [AlwaysSynchronizeSystem]
+[UpdateAfter(typeof(DensitySystem))]
 public class CrowdSystem : JobComponentSystem
 {
     protected override JobHandle OnUpdate(JobHandle inputDeps)

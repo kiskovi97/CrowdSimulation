@@ -30,7 +30,7 @@ public class DebugProxy : MonoBehaviour
         while (lines.Count > 0)
         {
             var line = lines.Dequeue();
-            Debug.DrawLine(line.X0, line.X1, line.Color);
+            Debug.DrawLine(line.X0, line.X1, line.Color, Time.deltaTime, true);
         }
     }
 }
