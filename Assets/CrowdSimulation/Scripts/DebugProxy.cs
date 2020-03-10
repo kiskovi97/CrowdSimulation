@@ -13,13 +13,32 @@ public struct Line
 public class DebugProxy : MonoBehaviour
 {
     private readonly static Queue<Line> lines = new Queue<Line>();
-    
+
     public static void DrawLine(Vector3 x, Vector3 y, Color color)
     {
+        var left = (x - y);
+        var tmp = left.x;
+        left.x = left.z;
+        left.z = -tmp;
+
         lines.Enqueue(new Line()
         {
             Color = color,
             X0 = x,
+            X1 = y,
+        });
+
+        lines.Enqueue(new Line()
+        {
+            Color = color,
+            X0 = (x + y) * 0.5f + left * 0.3f,
+            X1 = y,
+        });
+
+        lines.Enqueue(new Line()
+        {
+            Color = color,
+            X0 = (x + y) * 0.5f - left * 0.3f,
             X1 = y,
         });
     }

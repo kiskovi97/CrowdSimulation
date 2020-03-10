@@ -24,25 +24,25 @@ public struct CollisionJob : IJobForEach<Translation, Walker, CollisionParameter
     private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, float radius)
     {
         var position = me.position;
-        var key = FlockingQuadrantSystem.GetPositionHashMapKey(position);
+        var key = QuadrantSystem.GetPositionHashMapKey(position);
         Foreach(key, me, ref avoidanceForce, radius);
-        key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 0));
+        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 0));
         Foreach(key, me, ref avoidanceForce, radius);
-        key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 0));
+        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 0));
         Foreach(key, me, ref avoidanceForce, radius);
-        key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, 1));
+        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, 1));
         Foreach(key, me, ref avoidanceForce, radius);
-        key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, -1));
+        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, -1));
         Foreach(key, me, ref avoidanceForce, radius);
 
 
-        key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 1));
+        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 1));
         Foreach(key, me, ref avoidanceForce, radius);
-        key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 1));
+        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 1));
         Foreach(key, me, ref avoidanceForce, radius);
-        key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, -1));
+        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, -1));
         Foreach(key, me, ref avoidanceForce, radius);
-        key = FlockingQuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, -1));
+        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, -1));
         Foreach(key, me, ref avoidanceForce, radius);
     }
 

@@ -29,6 +29,10 @@ public class CrowdSpawner : MonoBehaviour
     {
         var cond = new GroupCondition() { goalPoint = goalPoint.position, goalRadius = goalRadius };
         Id++;
+        if (Id >= Map.MaxGroup)
+        {
+            Id = 0;
+        }
         for (int i = 0; i<sizeX; i++)
         {
             for (int j= 0; j<sizeZ; j++)

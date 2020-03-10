@@ -50,21 +50,21 @@ public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
 
     private void EdgeReaction(ref Translation transform)
     {
-        if (transform.Value.x < -Map.max)
+        if (transform.Value.x < -Map.maxWidth)
         {
-            transform.Value.x += 2 * Map.max;
+            transform.Value.x += 2 * Map.maxWidth;
         }
-        if (transform.Value.x > Map.max)
+        if (transform.Value.x > Map.maxWidth)
         {
-            transform.Value.x -= 2 * Map.max;
+            transform.Value.x -= 2 * Map.maxWidth;
         }
-        if (transform.Value.z < -Map.max)
+        if (transform.Value.z < -Map.maxHeight)
         {
-            transform.Value.z += 2 * Map.max;
+            transform.Value.z += 2 * Map.maxHeight;
         }
-        if (transform.Value.z > Map.max)
+        if (transform.Value.z > Map.maxHeight)
         {
-            transform.Value.z -= 2 * Map.max;
+            transform.Value.z -= 2 * Map.maxHeight;
         }
     }
 }

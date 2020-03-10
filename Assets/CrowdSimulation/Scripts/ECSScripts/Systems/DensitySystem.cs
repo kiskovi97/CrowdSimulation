@@ -5,16 +5,18 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+[AlwaysSynchronizeSystem]
 class DensitySystem : ComponentSystem
 {
-    public static readonly int Height = 40;
-    public static readonly int Width = 40;
-    public NativeArray<float> densityMatrix;
+    public static NativeArray<float> densityMatrix;
+
+    public static float3 Right => new float3((1f / Map.density), 0, 0);
+    public static float3 Up => new float3(0, 0, (1f / Map.density));
 
     protected override void OnCreate()
     {
-        densityMatrix = new NativeArray<float>(Width * Height, Allocator.Persistent);
-        for (int i = 0; i < Width * Height; i++)
+        densityMatrix = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
+        for (int i = 0; i < Map.AllPoints; i++)
         {
             densityMatrix[i] = 0f;
         }
@@ -29,25 +31,56 @@ class DensitySystem : ComponentSystem
 
     private static float3 ConvertToLocal(float3 realWorldPosition)
     {
-        return realWorldPosition + new float3(Width / 2, 0, Height / 2);
+        return (realWorldPosition + new float3(Map.maxWidth, 0, Map.maxHeight)) * Map.density;
     }
 
-    private static float3 ConverToWorld(float3 position)
+    private static float3 ConvertToWorld(float3 position)
     {
-        return position - new float3(Width / 2, 0, Height / 2);
+        return position * (1f / Map.density) - new float3(Map.maxWidth, 0, Map.maxHeight);
     }
 
-    private struct KeyDistance
+    public struct KeyDistance
     {
         public int key;
         public float distance;
     }
 
-    private static KeyDistance IndexFromPosition(float3 realWorldPosition, float3 prev)
+    public struct IndexAndPosition
     {
-        var position = ConvertToLocal(realWorldPosition);
+        public int index;
+        public float3 position;
+    }
 
-        if (position.x < 0 || position.z < 0 || position.x >= Width || position.z >= Height)
+    public static NativeArray<IndexAndPosition> IndexesFromPoisition(float3 position, float radius)
+    {
+        var width = (int)(radius * Map.density);
+        var array = new NativeArray<IndexAndPosition>(width * width * 4, Allocator.Temp);
+
+        int arrayIndex = 0;
+
+        for (int i = -width; i < width && arrayIndex < array.Length; i++)
+        {
+            for (int j = -width; j < width && arrayIndex < array.Length; j++)
+            {
+                var Index = IndexFromPosition(position + Up * i + Right * j, position);
+                array[arrayIndex++] = new IndexAndPosition()
+                {
+                    index = Index.key,
+                    position = position + Up * i + Right * j
+                };
+            }
+        }
+
+        return array;
+    }
+
+    public static KeyDistance IndexFromPosition(float3 realWorldPosition, float3 prev)
+    {
+        var indexPosition = ConvertToLocal(realWorldPosition);
+        var i = (int)math.round(indexPosition.x);
+        var j = (int)math.round(indexPosition.z);
+
+        if (i < 0 || j < 0 || i >= Map.widthPoints || j >= Map.heightPoints)
         {
             return new KeyDistance()
             {
@@ -56,44 +89,20 @@ class DensitySystem : ComponentSystem
         }
         return new KeyDistance()
         {
-            key = Index((int)math.round(position.x), (int)math.round(position.z)),
-            distance = math.length(ConvertToLocal(prev) - math.round(position)),
+            key = Index(i, j),
+            distance = math.length(ConvertToLocal(prev) - math.round(indexPosition)),
         };
     }
 
     private static int Index(int i, int j)
     {
-        return (Height * i) + j;
-    }
-
-    [BurstCompile]
-    private struct SetDensityGridJob : IJobForEachWithEntity<Translation, Walker>
-    {
-        [NativeDisableParallelForRestriction]
-        public NativeArray<float> quadrantHashMap;
-
-        public void Execute(Entity entity, int index, ref Translation translation, ref Walker walker)
-        {
-            float3 pos = translation.Value;
-            Add(pos, pos);
-            Add(pos + new float3(0, 0, 1), pos);
-            Add(pos + new float3(0, 0, -1), pos);
-            Add(pos + new float3(1, 0, 0), pos);
-            Add(pos + new float3(-1, 0, 0), pos);
-        }
-
-        private void Add(float3 position, float3 prev)
-        {
-            var keyDistance = IndexFromPosition(position, prev);
-            if (keyDistance.key >= 0)
-                quadrantHashMap[keyDistance.key] += math.max(0f, 1f - keyDistance.distance);
-        }
+        return (Map.heightPoints * i) + j;
     }
 
     protected override void OnUpdate()
     {
-        EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Walker));
-        for (int i = 0; i < Width * Height; i++)
+        EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Walker), typeof(CollisionParameters));
+        for (int i = 0; i < Map.AllPoints; i++)
         {
             densityMatrix[i] = 0f;
         }
@@ -104,13 +113,37 @@ class DensitySystem : ComponentSystem
 
         var handle = JobForEachExtensions.Schedule(job, entityQuery);
         handle.Complete();
+        int group = 3;
 
-        for (int j = 0; j < Height; j++)
-            for (int i = 0; i < Width; i++)
+        for (int j = 1; j < Map.heightPoints - 1; j++)
+            for (int i = 1; i < Map.widthPoints - 1; i++)
             {
-                float height = densityMatrix[Index(i, j)];
-                var point = ConverToWorld(new float3(i, 0, j));
-                DebugProxy.DrawLine(point, point + new float3(0, height + 0.1f, 0), height > 0 ? Color.red : Color.grey);
+                float right = densityMatrix[Map.OneLayer * group + Index(i + 1, j)];
+                float left = densityMatrix[Map.OneLayer * group + Index(i - 1, j)];
+                float up = densityMatrix[Map.OneLayer * group + Index(i, j + 1)];
+                float down = densityMatrix[Map.OneLayer * group + Index(i, j - 1)];
+
+                var point = ConvertToWorld(new float3(i, 0, j));
+                if (right < left && right < up && right < down)
+                {
+                    DebugProxy.DrawLine(point, point + new float3(0.2f, 0, 0), Color.red);
+                    continue;
+                }
+                if (left < up && left < down && left < right)
+                {
+                    DebugProxy.DrawLine(point, point + new float3(-0.2f, 0, 0), Color.red);
+                    continue;
+                }
+                if (up < down && up < right && up < left)
+                {
+                    DebugProxy.DrawLine(point, point + new float3(0, 0, 0.2f), Color.red);
+                    continue;
+                }
+                if (down < left && down < up && down < right)
+                {
+                    DebugProxy.DrawLine(point, point + new float3(0, 0, -0.2f), Color.red);
+                    continue;
+                }
             }
     }
 }
