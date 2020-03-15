@@ -181,6 +181,12 @@ PrefabInstance:
       propertyPath: goalPoint
       value: 
       objectReference: {fileID: 1281036401}
+    - target: {fileID: 7546938581977126686, guid: 834df9cd8aa3a1d43bb493e91d698d39,
+        type: 3}
+      propertyPath: entityObject
+      value: 
+      objectReference: {fileID: 2002152154697913493, guid: 8cd84340169230c4db1f3cdb3664dfe3,
+        type: 3}
     - target: {fileID: 7546938581977126687, guid: 834df9cd8aa3a1d43bb493e91d698d39,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -249,6 +255,7 @@ GameObject:
   - component: {fileID: 515814570}
   - component: {fileID: 515814569}
   - component: {fileID: 515814568}
+  - component: {fileID: 515814571}
   - component: {fileID: 515814567}
   m_Layer: 0
   m_Name: Plane
@@ -257,20 +264,79 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!64 &515814567
-MeshCollider:
+--- !u!114 &515814567
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 515814566}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b275e5f92732148048d7b77e264ac30e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShapeType: 4
+  m_PrimitiveCenter:
+    x: 0
+    y: 0
+    z: 0
+  m_PrimitiveSize:
+    x: 10
+    y: 0
+    z: 10
+  m_PrimitiveOrientation:
+    Value:
+      x: -0
+      y: 0
+      z: 0
+    RotationOrder: 4
+  m_Capsule:
+    Height: 10
+    Radius: 5
+    Axis: 2
+  m_Cylinder:
+    Height: 0
+    Radius: 5
+    Axis: 1
+  m_CylinderSideCount: 20
+  m_SphereRadius: 5
+  m_MinimumSkinnedVertexWeight: 0.1
+  m_ConvexHullGenerationParameters:
+    m_SimplificationTolerance: 0.14999999
+    m_BevelRadius: 2.220446e-17
+    m_MinimumAngle: 2.5000002
+  m_CustomMesh: {fileID: 0}
+  m_ForceUnique: 0
+  m_Material:
+    m_SupportsTemplate: 1
+    m_Template: {fileID: 0}
+    m_IsTrigger:
+      m_Override: 0
+      m_Value: 0
+    m_Friction:
+      m_Override: 0
+      m_Value:
+        Value: 0.5
+        CombineMode: 0
+    m_Restitution:
+      m_Override: 0
+      m_Value:
+        Value: 0
+        CombineMode: 2
+    m_BelongsTo:
+      m_Override: 0
+      m_Value: 0101010101010101010101010101010101010101010101010101010101010101
+    m_CollidesWith:
+      m_Override: 0
+      m_Value: 0101010101010101010101010101010101010101010101010101010101010101
+    m_RaisesCollisionEvents:
+      m_Override: 0
+      m_Value: 0
+    m_CustomTags:
+      m_Override: 0
+      m_Value: 0000000000000000
+  m_ConvexRadius_Deprecated: -1
 --- !u!23 &515814568
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -332,6 +398,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &515814571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515814566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ConversionMode: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,7 +626,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1281036401}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: GoalPoint
   m_TagString: Untagged
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0

@@ -9,6 +9,7 @@ public struct QuadrantData
     public float3 direction;
     public float3 position;
     public int broId;
+    public float radius;
 }
 
 public class QuadrantSystem : ComponentSystem
@@ -47,11 +48,11 @@ public class QuadrantSystem : ComponentSystem
     }
 
     [BurstCompile]
-    private struct SetQuadrantDataHashMapJob : IJobForEachWithEntity<Translation, Walker>
+    private struct SetQuadrantDataHashMapJob : IJobForEachWithEntity<Translation, Walker, CollisionParameters>
     {
         public NativeMultiHashMap<int, QuadrantData>.ParallelWriter quadrantHashMap;
 
-        public void Execute(Entity entity, int index, ref Translation translation, ref Walker walker)
+        public void Execute(Entity entity, int index, ref Translation translation, ref Walker walker, ref CollisionParameters parameters)
         {
             int key = GetPositionHashMapKey(translation.Value);
             quadrantHashMap.Add(key, new QuadrantData()
@@ -59,13 +60,14 @@ public class QuadrantSystem : ComponentSystem
                 position = translation.Value,
                 direction = walker.direction,
                 broId = walker.broId,
+                radius = parameters.innerRadius
             });
         }
     }
 
     protected override void OnUpdate()
     {
-        EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Walker));
+        EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Walker), typeof(CollisionParameters));
         quadrantHashMap.Clear();
         if (entityQuery.CalculateEntityCount() > quadrantHashMap.Capacity)
         {
