@@ -75,7 +75,7 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
         {
             force = float3.zero
         });
-
-        parent.AddEntity(entity);
+        if (parent != null)
+            parent.AddEntity(entity);
     }
 }

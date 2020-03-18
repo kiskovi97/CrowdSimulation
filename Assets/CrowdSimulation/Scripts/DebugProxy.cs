@@ -50,6 +50,7 @@ public class DebugProxy : MonoBehaviour
         {
             var line = lines.Dequeue();
             Debug.DrawLine(line.X0, line.X1, line.Color, Time.deltaTime, true);
+            Debug.Log(line.X0 + " " + line.X1);
         }
     }
 }

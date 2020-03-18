@@ -3,6 +3,8 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Burst;
 using Unity.Collections;
+using Unity.Physics;
+using UnityEngine;
 
 [BurstCompile]
 public struct CollisionResolve : IJobForEach<Translation, Walker, CollisionParameters>
@@ -11,12 +13,37 @@ public struct CollisionResolve : IJobForEach<Translation, Walker, CollisionParam
     [ReadOnly]
     public NativeMultiHashMap<int, QuadrantData> targetMap;
 
+    [NativeDisableParallelForRestriction]
+    [ReadOnly]
+    public NativeArray<MyCollider> colliders;
+
     public void Execute(ref Translation translation, ref Walker walker, ref CollisionParameters collision)
     {
         float3 correction = float3.zero;
         ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value , radius = collision.innerRadius},
             ref correction);
+
+        for (int i=0; i<colliders.Length; i++)
+        {
+            var collider = colliders[i];
+            var localPos = translation.Value - collider.localToWorld.Position;
+            localPos = math.mul(math.inverse(collider.localToWorld.Rotation), localPos);
+
+            if (collider.collider.Value.Value.CalculateDistance(new PointDistanceInput() {
+                Position = localPos , MaxDistance = float.MaxValue, Filter = CollisionFilter.Default
+            }, out DistanceHit hit))
+            {
+                if (hit.Distance < collision.innerRadius * 2)
+                {
+                    var normal =  math.mul(collider.localToWorld.Rotation, hit.SurfaceNormal);
+                    normal.y = 0;
+                    correction += math.normalize(normal) * (collision.innerRadius * 2 - hit.Distance + 0.1f);
+                }
+            }
+
+        }
         translation.Value += correction * 0.1f;
+
         if (math.length(correction) > 0.1f)
         {
             walker.direction += correction;
