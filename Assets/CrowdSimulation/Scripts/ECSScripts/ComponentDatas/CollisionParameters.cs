@@ -1,6 +1,7 @@
 ﻿
 using Unity.Entities;
 
+[GenerateAuthoringComponent]
 public struct CollisionParameters : IComponentData
 {
     public float innerRadius;

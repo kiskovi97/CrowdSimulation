@@ -47,23 +47,7 @@ public class QuadrantSystem : ComponentSystem
         base.OnDestroy();
     }
 
-    [BurstCompile]
-    private struct SetQuadrantDataHashMapJob : IJobForEachWithEntity<Translation, Walker, CollisionParameters>
-    {
-        public NativeMultiHashMap<int, QuadrantData>.ParallelWriter quadrantHashMap;
-
-        public void Execute(Entity entity, int index, ref Translation translation, ref Walker walker, ref CollisionParameters parameters)
-        {
-            int key = GetPositionHashMapKey(translation.Value);
-            quadrantHashMap.Add(key, new QuadrantData()
-            {
-                position = translation.Value,
-                direction = walker.direction,
-                broId = walker.broId,
-                radius = parameters.innerRadius
-            });
-        }
-    }
+    
 
     protected override void OnUpdate()
     {

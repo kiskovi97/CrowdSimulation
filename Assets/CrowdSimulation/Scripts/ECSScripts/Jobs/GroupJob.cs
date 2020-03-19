@@ -2,11 +2,12 @@
 using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Burst;
+using Unity.Collections;
 
 [BurstCompile]
 public struct GroupGoalJob : IJobForEach<Translation, Walker,  GroupCondition, GroupForce>
 {
-    public void Execute(ref Translation translation, ref Walker walker, ref GroupCondition groupCondition, ref GroupForce group)
+    public void Execute([ReadOnly] ref Translation translation, [ReadOnly] ref Walker walker, [ReadOnly] ref GroupCondition groupCondition, ref GroupForce group)
     {
         var force = (groupCondition.goalPoint - translation.Value);
         if (math.length(force) > groupCondition.goalRadius)

@@ -1,7 +1,8 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-public struct DecidedForce : IComponentData
+[GenerateAuthoringComponent]
+public struct GroupForce : IComponentData
 {
     public float3 force;
 }

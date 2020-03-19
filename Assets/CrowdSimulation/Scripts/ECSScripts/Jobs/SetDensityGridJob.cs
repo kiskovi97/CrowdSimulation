@@ -6,16 +6,16 @@ using Unity.Transforms;
 using UnityEngine;
 
 [BurstCompile]
-public struct SetDensityGridJob : IJobForEachWithEntity<Translation, Walker, CollisionParameters>
+public struct SetDensityGridJob : IJobForEach<Translation, Walker, CollisionParameters>
 {
     [NativeDisableParallelForRestriction]
     public NativeArray<float> quadrantHashMap;
 
-    public void Execute(Entity entity, int index, ref Translation translation, ref Walker walker, ref CollisionParameters collisionParameters)
+    public void Execute([ReadOnly]ref Translation translation, [ReadOnly] ref Walker walker, [ReadOnly] ref CollisionParameters collisionParameters)
     {
         float3 pos = translation.Value;
         var step = math.length(DensitySystem.Up);
-        var max = collisionParameters.outerRadius * 2;
+        var max = collisionParameters.outerRadius * 3;
 
         for (float i = -max; i < max; i += step)
             for (float j = -max; j < max; j += step)

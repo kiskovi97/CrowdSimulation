@@ -44,7 +44,7 @@ public class CollisionSystem : JobComponentSystem
         locals.Dispose();
         colliders.Dispose();
 
-        var collisionForce = new CollisionResolve() {
+        var collisionForce = new CollisionResolveJob() {
             targetMap = QuadrantSystem.quadrantHashMap,
             colliders = dataArray
         };

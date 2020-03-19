@@ -1,7 +1,8 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-public struct CollisionForce : IComponentData
+[GenerateAuthoringComponent]
+public struct PathForce : IComponentData
 {
     public float3 force;
 }

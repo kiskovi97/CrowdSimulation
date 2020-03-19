@@ -12,8 +12,8 @@ public struct PathFindingJob : IJobForEach<DecidedForce, CollisionParameters, Wa
     public NativeMultiHashMap<int, QuadrantData> targetMap;
 
 
-    public void Execute(ref DecidedForce decidedForce, ref CollisionParameters collisionParameters, ref Walker walker, 
-        ref Translation translation, ref PathForce pathForce)
+    public void Execute([ReadOnly]ref DecidedForce decidedForce, [ReadOnly]ref CollisionParameters collisionParameters, [ReadOnly]ref Walker walker,
+         [ReadOnly]ref Translation translation, ref PathForce pathForce)
     {
         var avoidanceForce = float3.zero;
         var convinientForce = float3.zero;

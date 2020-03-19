@@ -113,8 +113,13 @@ class DensitySystem : ComponentSystem
 
         var handle = JobForEachExtensions.Schedule(job, entityQuery);
         handle.Complete();
-        int group = 3;
 
+        
+    }
+
+    void Debug()
+    {
+        int group = 3;
         for (int j = 1; j < Map.heightPoints - 1; j++)
             for (int i = 1; i < Map.widthPoints - 1; i++)
             {
@@ -124,26 +129,26 @@ class DensitySystem : ComponentSystem
                 float down = densityMatrix[Map.OneLayer * group + Index(i, j - 1)];
 
                 var point = ConvertToWorld(new float3(i, 0, j));
-                //if (right < left && right < up && right < down)
-                //{
-                //    DebugProxy.DrawLine(point, point + new float3(0.2f, 0, 0), Color.red);
-                //    continue;
-                //}
-                //if (left < up && left < down && left < right)
-                //{
-                //    DebugProxy.DrawLine(point, point + new float3(-0.2f, 0, 0), Color.red);
-                //    continue;
-                //}
-                //if (up < down && up < right && up < left)
-                //{
-                //    DebugProxy.DrawLine(point, point + new float3(0, 0, 0.2f), Color.red);
-                //    continue;
-                //}
-                //if (down < left && down < up && down < right)
-                //{
-                //    DebugProxy.DrawLine(point, point + new float3(0, 0, -0.2f), Color.red);
-                //    continue;
-                //}
+                if (right < left && right < up && right < down)
+                {
+                    DebugProxy.DrawLine(point, point + new float3(0.2f, 0, 0), Color.red);
+                    continue;
+                }
+                if (left < up && left < down && left < right)
+                {
+                    DebugProxy.DrawLine(point, point + new float3(-0.2f, 0, 0), Color.red);
+                    continue;
+                }
+                if (up < down && up < right && up < left)
+                {
+                    DebugProxy.DrawLine(point, point + new float3(0, 0, 0.2f), Color.red);
+                    continue;
+                }
+                if (down < left && down < up && down < right)
+                {
+                    DebugProxy.DrawLine(point, point + new float3(0, 0, -0.2f), Color.red);
+                    continue;
+                }
             }
     }
 }

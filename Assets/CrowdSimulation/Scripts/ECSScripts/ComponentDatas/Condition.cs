@@ -1,5 +1,6 @@
 ﻿using Unity.Entities;
 
+[GenerateAuthoringComponent]
 public struct Condition : IComponentData
 {
     public float lifeLine;

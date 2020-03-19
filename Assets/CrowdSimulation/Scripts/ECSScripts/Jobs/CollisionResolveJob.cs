@@ -7,7 +7,7 @@ using Unity.Physics;
 using UnityEngine;
 
 [BurstCompile]
-public struct CollisionResolve : IJobForEach<Translation, Walker, CollisionParameters>
+public struct CollisionResolveJob : IJobForEach<Translation, Walker, CollisionParameters>
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
@@ -17,7 +17,7 @@ public struct CollisionResolve : IJobForEach<Translation, Walker, CollisionParam
     [ReadOnly]
     public NativeArray<MyCollider> colliders;
 
-    public void Execute(ref Translation translation, ref Walker walker, ref CollisionParameters collision)
+    public void Execute(ref Translation translation, ref Walker walker, [ReadOnly] ref CollisionParameters collision)
     {
         float3 correction = float3.zero;
         ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value , radius = collision.innerRadius},

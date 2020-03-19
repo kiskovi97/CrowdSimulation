@@ -10,7 +10,7 @@ public struct DensityAvoidanceJob : IJobForEach<DecidedForce, CollisionParameter
     [NativeDisableParallelForRestriction]
     [ReadOnly]
     public NativeArray<float> densityMap;
-    public void Execute(ref DecidedForce decidedForce, ref CollisionParameters collision, ref Walker walker, ref Translation translation, ref PathForce pathForce)
+    public void Execute([ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision, [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation, ref PathForce pathForce)
     {
         var group = Map.OneLayer * walker.broId;
 

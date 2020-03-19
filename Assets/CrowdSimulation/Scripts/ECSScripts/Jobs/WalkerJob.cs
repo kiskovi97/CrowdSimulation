@@ -3,22 +3,23 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Burst;
 using UnityEngine;
+using Unity.Collections;
 
 [BurstCompile]
 public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
 {
     public float deltaTime;
 
-    public void Execute(ref Rotation rotation, ref Translation transform, ref Walker walker)
+    public void Execute(ref Rotation rotation, ref Translation transform, [ReadOnly] ref Walker walker)
     {
-        RotateForward(ref walker, ref rotation, transform.Value);
+        RotateForward(ref walker, ref rotation);
 
         Step(ref transform, walker.direction);
 
         EdgeReaction(ref transform);
     }
 
-    private void RotateForward(ref Walker walker, ref Rotation rotation, float3 position)
+    private void RotateForward([ReadOnly] ref Walker walker, ref Rotation rotation)
     {
         var speed = math.length(walker.direction);
 
@@ -35,10 +36,6 @@ public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
             var avarage = realForward * dot + walker.direction * (1 - dot);
 
             rotation.Value = quaternion.LookRotationSafe(avarage, new float3(0, 1, 0));
-        }
-        if (speed > walker.maxSpeed)
-        {
-            walker.direction = math.normalize(walker.direction) * walker.maxSpeed;
         }
     }
 
