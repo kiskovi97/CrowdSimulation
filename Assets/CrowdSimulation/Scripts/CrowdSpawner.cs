@@ -48,8 +48,7 @@ public class CrowdSpawner : MonoBehaviour
                 var person = obj.GetComponent<PersonObject>();
                 if (person != null)
                 {
-                    person.ChangeGroup(cond);
-                    person.broId = Id;
+                    person.ChangeGroup(cond, Id);
                     person.ConnectParent(this);
                 }
             }

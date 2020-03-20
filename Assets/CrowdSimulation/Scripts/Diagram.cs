@@ -98,7 +98,7 @@ public class Diagram : MonoBehaviour
         {
             case 0: color = Color.black; break;
             case 1: color = Color.red; break;
-            case 2: color = Color.blue; break;
+            case 2: color = Color.green; break;
         }
         Debug.DrawLine(transform.TransformPoint(from),transform.TransformPoint(to), color);
     }

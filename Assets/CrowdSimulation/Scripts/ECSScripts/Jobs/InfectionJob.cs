@@ -22,7 +22,7 @@ public struct InfectionJob : IJobForEach<Infection, Translation>
             infection.infectionTime -= deltaTime;
             if (infection.infectionTime < 0f)
             {
-                infection.reverseImmunity *= 0.1f;
+                infection.reverseImmunity *= Infection.immunityMultiplyer;
             }
         }
         else
@@ -31,12 +31,12 @@ public struct InfectionJob : IJobForEach<Infection, Translation>
             {
                 var infectionData = dataArray[i];
                 var distance = math.length(translation.Value - infectionData.translation.Value);
-                if (infectionData.infection.infectionTime > 0f && distance < 1.5f)
+                if (infectionData.infection.infectionTime > 0f && distance < Infection.infectionDistance)
                 {
                     var value = random.NextFloat(0, 1);
-                    if (value < 0.1f * deltaTime * infection.reverseImmunity)
+                    if (value < Infection.infectionChance * deltaTime * infection.reverseImmunity)
                     {
-                        infection.infectionTime = 10f;
+                        infection.infectionTime = Infection.illTime;
                     }
                 }
             }

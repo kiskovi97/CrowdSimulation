@@ -24,17 +24,20 @@ public class InfectionCounter : MonoBehaviour
 
         var infections = quaery.ToComponentDataArray<Infection>(Unity.Collections.Allocator.TempJob);
         var count = 0;
-        var timeLeft = 0f;
+        var immunes = 0;
         for (int i=0; i< infections.Length; i++)
         {
             if (infections[i].infectionTime > 0f)
             {
                 count++;
-                timeLeft += infections[i].infectionTime;
+            }
+            if (infections[i].reverseImmunity < 1f)
+            {
+                immunes ++;
             }
         }
         infections.Dispose();
         diagram.AddPoint(count);
-        diagram.AddPoint2(timeLeft);
+        diagram.AddPoint2(immunes);
     }
 }

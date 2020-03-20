@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
 {
-    public int broId;
+    public float3 direction;
+    public float maxSpeed;
+    private int broId;
 
     CrowdSpawner parent;
     public void ConnectParent(CrowdSpawner parent)
@@ -12,58 +14,29 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
         this.parent = parent;
     }
 
-    private GroupCondition condition = new GroupCondition
-    {
-        goalPoint = new float3(-1, 0, 0)
-    };
+    private GroupCondition condition = new GroupCondition{};
+    private bool conditionAdded = false;
 
-    public void ChangeGroup(GroupCondition condition)
+    public void ChangeGroup(GroupCondition condition, int broId)
     {
         this.condition = condition;
+        this.broId = broId;
+        conditionAdded = true;
     }
 
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
-        //dstManager.AddComponentData(entity, new Condition
-        //{
-        //    hunger = 0f,
-        //    lifeLine = 1f,
-        //    thirst = 0f,
-        //});
-        //dstManager.AddComponentData(entity, new FoodHierarchie
-        //{
-        //    hierarchieNumber = 0
-        //});
-        dstManager.AddComponentData(entity, condition);
-        //dstManager.AddComponentData(entity, new CollisionParameters
-        //{
-        //    innerRadius = innerRadius,
-        //    outerRadius = outerRadius
-        //});
-        //dstManager.AddComponentData(entity, new Walker
-        //{
-        //    direction = direction,
-        //    maxSpeed = maxSpeed,
-        //    broId = broId,
-        //});
-
-        // Forces
-        dstManager.AddComponentData(entity, new DesireForce
+        if (conditionAdded)
         {
-            force = float3.zero
-        });
-        dstManager.AddComponentData(entity, new GroupForce
+            dstManager.AddComponentData(entity, condition);
+        }
+        dstManager.AddComponentData(entity, new Walker
         {
-            force = float3.zero
+                direction = direction,
+                maxSpeed = maxSpeed,
+                broId = broId,
         });
-        dstManager.AddComponentData(entity, new DecidedForce
-        {
-            force = float3.zero
-        });
-        dstManager.AddComponentData(entity, new PathForce
-        {
-            force = float3.zero
-        });
+        
         if (parent != null)
             parent.AddEntity(entity);
     }

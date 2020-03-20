@@ -348,6 +348,12 @@ PrefabInstance:
       propertyPath: goalPoint
       value: 
       objectReference: {fileID: 1281036401}
+    - target: {fileID: 7546938581977126686, guid: 834df9cd8aa3a1d43bb493e91d698d39,
+        type: 3}
+      propertyPath: entityObject
+      value: 
+      objectReference: {fileID: 2002152154697913493, guid: 075657d91661b3f4d84245f93047078a,
+        type: 3}
     - target: {fileID: 7546938581977126687, guid: 834df9cd8aa3a1d43bb493e91d698d39,
         type: 3}
       propertyPath: m_LocalPosition.x

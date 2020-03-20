@@ -57,9 +57,9 @@ public class InfectionSystem : ComponentSystem
 
         Entities.ForEach((Entity entity, ref Infection c0) =>
         {
+            var rendererMesh = World.DefaultGameObjectInjectionWorld.EntityManager.GetSharedComponentData<RenderMesh>(entity);
             if (c0.infectionTime > 0.2f)
             {
-                var rendererMesh = World.DefaultGameObjectInjectionWorld.EntityManager.GetSharedComponentData<RenderMesh>(entity);
                 PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
                 {
                     material = Materails.Instance.infected,
@@ -67,12 +67,21 @@ public class InfectionSystem : ComponentSystem
                 });
             } else
             {
-                var rendererMesh = World.DefaultGameObjectInjectionWorld.EntityManager.GetSharedComponentData<RenderMesh>(entity);
-                PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
+                if (c0.reverseImmunity < 1f)
                 {
-                    material = Materails.Instance.notInfected,
-                    mesh = rendererMesh.mesh
-                });
+                    PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
+                    {
+                        material = Materails.Instance.immune,
+                        mesh = rendererMesh.mesh
+                    });
+                } else
+                {
+                    PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
+                    {
+                        material = Materails.Instance.notInfected,
+                        mesh = rendererMesh.mesh
+                    });
+                }
             }
         });
 
