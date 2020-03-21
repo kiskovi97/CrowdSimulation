@@ -5,20 +5,28 @@ using Unity.Burst;
 using Unity.Collections;
 
 [BurstCompile]
-public struct PathFindingJob : IJobForEach<DecidedForce, CollisionParameters, Walker, Translation, PathForce>
+public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation, PathForce>
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
     public NativeMultiHashMap<int, QuadrantData> targetMap;
 
 
-    public void Execute([ReadOnly]ref DecidedForce decidedForce, [ReadOnly]ref CollisionParameters collisionParameters, [ReadOnly]ref Walker walker,
+    public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly]ref DecidedForce decidedForce, [ReadOnly]ref CollisionParameters collisionParameters, [ReadOnly]ref Walker walker,
          [ReadOnly]ref Translation translation, ref PathForce pathForce)
     {
+        if (!(data.method == PathFindingMethod.Forces))
+        {
+            if (data.method == PathFindingMethod.No)
+            {
+                pathForce.force = decidedForce.force;
+            }
+            return;
+        }
         var avoidanceForce = float3.zero;
         var convinientForce = float3.zero;
         var bros = 0;
-        ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId }, 
+        ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
             ref avoidanceForce, ref convinientForce, ref bros, collisionParameters.outerRadius);
 
         pathForce.force = decidedForce.force + avoidanceForce;

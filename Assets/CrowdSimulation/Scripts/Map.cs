@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Map : MonoBehaviour
 {
-    public static readonly int maxHeight = 20;
-    public static readonly int maxWidth = 20;
+    public static readonly int maxHeight = 30;
+    public static readonly int maxWidth = 50;
 
     public static readonly int density = 2;
 

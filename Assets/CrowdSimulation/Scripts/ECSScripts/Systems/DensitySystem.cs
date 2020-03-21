@@ -1,14 +1,21 @@
-﻿using Unity.Burst;
+﻿using System;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
 
+//CollisionSystem
+
 [AlwaysSynchronizeSystem]
+[UpdateAfter(typeof(CollisionSystem))]
 class DensitySystem : ComponentSystem
 {
     public static NativeArray<float> densityMatrix;
+
+    public static NativeArray<float> collidersDensity;
 
     public static float3 Right => new float3((1f / Map.density), 0, 0);
     public static float3 Up => new float3(0, 0, (1f / Map.density));
@@ -16,9 +23,11 @@ class DensitySystem : ComponentSystem
     protected override void OnCreate()
     {
         densityMatrix = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
+        collidersDensity = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
         for (int i = 0; i < Map.AllPoints; i++)
         {
             densityMatrix[i] = 0f;
+            collidersDensity[i] = 0f;
         }
         base.OnCreate();
     }
@@ -26,6 +35,7 @@ class DensitySystem : ComponentSystem
     protected override void OnDestroy()
     {
         densityMatrix.Dispose();
+        collidersDensity.Dispose();
         base.OnDestroy();
     }
 
@@ -34,7 +44,7 @@ class DensitySystem : ComponentSystem
         return (realWorldPosition + new float3(Map.maxWidth, 0, Map.maxHeight)) * Map.density;
     }
 
-    private static float3 ConvertToWorld(float3 position)
+    public static float3 ConvertToWorld(float3 position)
     {
         return position * (1f / Map.density) - new float3(Map.maxWidth, 0, Map.maxHeight);
     }
@@ -94,7 +104,7 @@ class DensitySystem : ComponentSystem
         };
     }
 
-    private static int Index(int i, int j)
+    public static int Index(int i, int j)
     {
         return (Map.heightPoints * i) + j;
     }
@@ -114,12 +124,40 @@ class DensitySystem : ComponentSystem
         var handle = JobForEachExtensions.Schedule(job, entityQuery);
         handle.Complete();
 
-        
+        ForeachColliders();
+
+        //Debug();
+    }
+
+    private bool First = true;
+    private void ForeachColliders()
+    {
+        if (First)
+        {
+            EntityQuery entityQuery = GetEntityQuery(typeof(PhysicsCollider), typeof(LocalToWorld));
+            var job = new SetDensityCollisionJob()
+            {
+                densityMatrix = collidersDensity
+            };
+            var handle = JobForEachExtensions.Schedule(job, entityQuery);
+            handle.Complete();
+        }
+        First = false;
+        for (int group = 0; group < Map.MaxGroup; group++)
+        {
+            for (int j = 0; j < Map.heightPoints - 1; j++)
+                for (int i = 0; i < Map.widthPoints - 1; i++)
+                {
+                    var index = Index(i, j);
+                    densityMatrix[Map.OneLayer * group + index] += collidersDensity[index] * 6f;
+                }
+        }
+            
     }
 
     void Debug()
     {
-        int group = 3;
+        int group = 1;
         for (int j = 1; j < Map.heightPoints - 1; j++)
             for (int i = 1; i < Map.widthPoints - 1; i++)
             {

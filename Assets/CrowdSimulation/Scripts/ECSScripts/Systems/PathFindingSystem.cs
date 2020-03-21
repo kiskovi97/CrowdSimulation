@@ -13,11 +13,12 @@ public class PathFindingSystem : JobComponentSystem
         var pathFindingJob = new PathFindingJob() {
             targetMap = QuadrantSystem.quadrantHashMap,
         };
+        var pathFindingHandle = pathFindingJob.Schedule(this, inputDeps);
         var denistyAvoidanceJob = new DensityAvoidanceJob()
         {
             densityMap = DensitySystem.densityMatrix,
         };
-        var handle = denistyAvoidanceJob.Schedule(this, inputDeps);
+        var handle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
 
         return handle;
     }

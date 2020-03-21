@@ -7,6 +7,8 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
     public float3 direction;
     public float maxSpeed;
     private int broId;
+    private PathFindingMethod method;
+
 
     CrowdSpawner parent;
     public void ConnectParent(CrowdSpawner parent)
@@ -17,10 +19,11 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
     private GroupCondition condition = new GroupCondition{};
     private bool conditionAdded = false;
 
-    public void ChangeGroup(GroupCondition condition, int broId)
+    public void ChangeGroup(GroupCondition condition, int broId, PathFindingMethod method)
     {
         this.condition = condition;
         this.broId = broId;
+        this.method = method;
         conditionAdded = true;
     }
 
@@ -36,7 +39,11 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
                 maxSpeed = maxSpeed,
                 broId = broId,
         });
-        
+        dstManager.AddComponentData(entity, new PathFindingData
+        {
+            method = method,
+        });
+
         if (parent != null)
             parent.AddEntity(entity);
     }

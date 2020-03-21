@@ -19,23 +19,23 @@ public struct MyCollider
 public class CollisionSystem : JobComponentSystem
 {
     [NativeDisableParallelForRestriction]
-    NativeArray<MyCollider> dataArray;
+    public static NativeArray<MyCollider> colliders;
 
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         EntityQuery entityQuery = GetEntityQuery(typeof(LocalToWorld), typeof(PhysicsCollider));
         var count = entityQuery.CalculateEntityCount();
-        if (count != dataArray.Length)
+        if (count != CollisionSystem.colliders.Length)
         {
-            dataArray.Dispose();
-            dataArray = new NativeArray<MyCollider>(count, Allocator.Persistent);
+            CollisionSystem.colliders.Dispose();
+            CollisionSystem.colliders = new NativeArray<MyCollider>(count, Allocator.Persistent);
         }
 
         var locals = entityQuery.ToComponentDataArray<LocalToWorld>(Allocator.TempJob);
         var colliders = entityQuery.ToComponentDataArray<PhysicsCollider>(Allocator.TempJob);
         for (int i=0; i< count; i++)
         {
-            dataArray[i] = new MyCollider()
+            CollisionSystem.colliders[i] = new MyCollider()
             {
                 localToWorld = locals[i],
                 collider = colliders[i]
@@ -46,7 +46,7 @@ public class CollisionSystem : JobComponentSystem
 
         var collisionForce = new CollisionResolveJob() {
             targetMap = QuadrantSystem.quadrantHashMap,
-            colliders = dataArray
+            colliders = CollisionSystem.colliders
         };
         var collisionHandle = collisionForce.Schedule(this, inputDeps);
 
@@ -55,14 +55,14 @@ public class CollisionSystem : JobComponentSystem
 
     protected override void OnCreate()
     {
-        dataArray = new NativeArray<MyCollider>(0, Allocator.Persistent);
+        colliders = new NativeArray<MyCollider>(0, Allocator.Persistent);
         base.OnCreate();
     }
 
 
     protected override void OnDestroy()
     {
-        dataArray.Dispose();
+        colliders.Dispose();
         base.OnDestroy();
     }
 }

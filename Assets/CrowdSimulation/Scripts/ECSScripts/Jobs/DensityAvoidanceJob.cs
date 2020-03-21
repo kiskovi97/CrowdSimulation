@@ -5,13 +5,23 @@ using Unity.Burst;
 using Unity.Collections;
 
 [BurstCompile]
-public struct DensityAvoidanceJob : IJobForEach<DecidedForce, CollisionParameters, Walker, Translation, PathForce>
+public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, CollisionParameters, Walker, Translation, PathForce>
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
     public NativeArray<float> densityMap;
-    public void Execute([ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision, [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation, ref PathForce pathForce)
+    public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision, 
+        [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation, ref PathForce pathForce)
     {
+        if (!(data.method == PathFindingMethod.DensityGrid))
+        {
+            if (data.method == PathFindingMethod.No)
+            {
+                pathForce.force = decidedForce.force;
+            }
+            return;
+        }
+
         var group = Map.OneLayer * walker.broId;
 
         var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * 2);

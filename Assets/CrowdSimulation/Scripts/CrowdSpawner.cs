@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
+using TMPro;
 
 public class CrowdSpawner : MonoBehaviour
 {
     public GameObject entityObject;
     public Transform goalPoint;
+    public PathFindingMethod method;
+    public TextMeshProUGUI info;
 
     public float goalRadius;
-
+    
     public static int Id = 0;
 
     public int sizeX = 5;
@@ -19,6 +23,21 @@ public class CrowdSpawner : MonoBehaviour
     public float distance = 1f;
 
     private List<Entity> entities = new List<Entity>();
+
+    public float EntitiesDistanceFromGoal()
+    {
+        var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        var avrgDistance = 0f;
+        foreach (var entity in entities)
+        {
+            var data = em.GetComponentData<Translation>(entity);
+            var pos = data.Value;
+            var distance = (new Vector3(pos.x, pos.y, pos.z) - goalPoint.position).magnitude;
+            avrgDistance += math.max(0f,(distance - goalRadius) / (float)entities.Count);
+        }
+        return avrgDistance;
+    }
+
     public void AddEntity(Entity entity)
     {
         entities.Add(entity);
@@ -31,7 +50,7 @@ public class CrowdSpawner : MonoBehaviour
         Id++;
         if (Id >= Map.MaxGroup)
         {
-            Id = 0;
+            Id = 1;
         }
         for (int i = 0; i<sizeX; i++)
         {
@@ -48,7 +67,7 @@ public class CrowdSpawner : MonoBehaviour
                 var person = obj.GetComponent<PersonObject>();
                 if (person != null)
                 {
-                    person.ChangeGroup(cond, Id);
+                    person.ChangeGroup(cond, Id, method);
                     person.ConnectParent(this);
                 }
             }
@@ -57,6 +76,11 @@ public class CrowdSpawner : MonoBehaviour
 
     private void Update()
     {
+        if (info != null)
+        {
+            info.text = "PathFinding: " + method.ToString();
+        }
+
         if (Input.GetKeyDown(KeyCode.A))
         {
             NewGoal();

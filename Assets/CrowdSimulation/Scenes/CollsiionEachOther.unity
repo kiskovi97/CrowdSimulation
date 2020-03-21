@@ -153,6 +153,8 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: 075657d91661b3f4d84245f93047078a,
     type: 3}
   goalPoint: {fileID: 974632901}
+  method: 0
+  info: {fileID: 0}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
@@ -303,7 +305,7 @@ Transform:
   m_GameObject: {fileID: 515814566}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.26, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 1, z: 4}
+  m_LocalScale: {x: 9.0624, y: 1, z: 4}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -432,6 +434,8 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: 075657d91661b3f4d84245f93047078a,
     type: 3}
   goalPoint: {fileID: 1957015263}
+  method: 0
+  info: {fileID: 0}
   goalRadius: 5
   sizeX: 10
   sizeZ: 10
@@ -503,7 +507,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 9.7
+  orthographic size: 18.59
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -565,6 +569,8 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: bf4459ca70511b045b40782f619c78e4,
     type: 3}
   goalPoint: {fileID: 90760629}
+  method: 0
+  info: {fileID: 0}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
@@ -615,6 +621,8 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: 075657d91661b3f4d84245f93047078a,
     type: 3}
   goalPoint: {fileID: 723637311}
+  method: 0
+  info: {fileID: 0}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
