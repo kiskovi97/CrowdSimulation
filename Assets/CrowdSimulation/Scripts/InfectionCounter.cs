@@ -6,6 +6,12 @@ using UnityEngine;
 public class InfectionCounter : MonoBehaviour
 {
     public Diagram diagram;
+
+    public Color infectedColor;
+    public Color immuneColor;
+
+    int infectedId;
+    int immuneId;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +19,9 @@ public class InfectionCounter : MonoBehaviour
         {
             diagram = GetComponent<Diagram>();
         }
+
+        infectedId = diagram.Register(infectedColor);
+        immuneId = diagram.Register(immuneColor);
     }
 
     // Update is called once per frame
@@ -37,7 +46,7 @@ public class InfectionCounter : MonoBehaviour
             }
         }
         infections.Dispose();
-        diagram.AddPoint(count);
-        diagram.AddPoint2(immunes);
+        diagram.AddPoint(infectedId, count);
+        diagram.AddPoint(immuneId, immunes);
     }
 }

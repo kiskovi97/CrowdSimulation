@@ -153,6 +153,9 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: bddec555ff4d8404fb6f129f7f8e4a7c,
     type: 3}
   goalPoint: {fileID: 974632901}
+  method: 2
+  info: {fileID: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
@@ -461,6 +464,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diagram: {fileID: 750702623}
+  infectedColor: {r: 1, g: 0, b: 0, a: 1}
+  immuneColor: {r: 0, g: 0.972549, b: 0.038050253, a: 1}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -576,6 +581,9 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: bddec555ff4d8404fb6f129f7f8e4a7c,
     type: 3}
   goalPoint: {fileID: 90760629}
+  method: 2
+  info: {fileID: 0}
+  color: {r: 0, g: 0, b: 0, a: 0}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10

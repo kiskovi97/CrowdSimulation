@@ -1,6 +1,7 @@
 ﻿using Unity.Entities;
 using Unity.Jobs;
 using Unity.Collections;
+using Unity.Rendering;
 
 [AlwaysSynchronizeSystem]
 [UpdateAfter(typeof(PathFindingSystem))]

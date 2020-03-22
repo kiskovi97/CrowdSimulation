@@ -7,7 +7,7 @@ public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
     public float3 direction;
     public float maxSpeed;
     private int broId;
-    private PathFindingMethod method;
+    private PathFindingMethod method = PathFindingMethod.No;
 
 
     CrowdSpawner parent;

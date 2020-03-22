@@ -111,6 +111,13 @@ class DensitySystem : ComponentSystem
 
     protected override void OnUpdate()
     {
+        bool hasDensityPresent = false;
+        Entities.ForEach((Entity entity, ref PathFindingData data) =>
+        {
+            if (data.method == PathFindingMethod.DensityGrid) hasDensityPresent = true;
+        });
+        if (!hasDensityPresent) return;
+
         EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Walker), typeof(CollisionParameters));
         for (int i = 0; i < Map.AllPoints; i++)
         {
@@ -152,7 +159,7 @@ class DensitySystem : ComponentSystem
                     densityMatrix[Map.OneLayer * group + index] += collidersDensity[index] * 6f;
                 }
         }
-            
+
     }
 
     void Debug()

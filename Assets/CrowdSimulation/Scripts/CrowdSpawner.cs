@@ -12,9 +12,10 @@ public class CrowdSpawner : MonoBehaviour
     public Transform goalPoint;
     public PathFindingMethod method;
     public TextMeshProUGUI info;
+    public Color color = Color.white;
 
     public float goalRadius;
-    
+
     public static int Id = 0;
 
     public int sizeX = 5;
@@ -33,7 +34,7 @@ public class CrowdSpawner : MonoBehaviour
             var data = em.GetComponentData<Translation>(entity);
             var pos = data.Value;
             var distance = (new Vector3(pos.x, pos.y, pos.z) - goalPoint.position).magnitude;
-            avrgDistance += math.max(0f,(distance - goalRadius) / (float)entities.Count);
+            avrgDistance += math.max(0f, (distance - goalRadius) / (float)entities.Count);
         }
         return avrgDistance;
     }
@@ -52,13 +53,16 @@ public class CrowdSpawner : MonoBehaviour
         {
             Id = 1;
         }
-        for (int i = 0; i<sizeX; i++)
+        for (int i = 0; i < sizeX; i++)
         {
-            for (int j= 0; j<sizeZ; j++)
+            for (int j = 0; j < sizeZ; j++)
             {
-                var position = new Vector3((i - sizeX/2) * distance, 0, (j - sizeZ / 2) * distance);
+                var position = new Vector3((i - sizeX / 2) * distance, 0, (j - sizeZ / 2) * distance);
                 var obj = Instantiate(entityObject, transform);
                 obj.transform.localPosition = position;
+                var renderer = obj.GetComponent<MeshRenderer>();
+                if (renderer != null)
+                    renderer.material.color = color;
                 var people = obj.GetComponent<PeopleAuth>();
                 if (people != null)
                 {

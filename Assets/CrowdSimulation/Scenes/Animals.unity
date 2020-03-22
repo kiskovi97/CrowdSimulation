@@ -155,6 +155,7 @@ MonoBehaviour:
   goalPoint: {fileID: 974632901}
   method: 0
   info: {fileID: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
@@ -436,6 +437,7 @@ MonoBehaviour:
   goalPoint: {fileID: 1957015263}
   method: 0
   info: {fileID: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}
   goalRadius: 5
   sizeX: 10
   sizeZ: 10
@@ -571,6 +573,7 @@ MonoBehaviour:
   goalPoint: {fileID: 90760629}
   method: 0
   info: {fileID: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
@@ -618,11 +621,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e04c7618c046b9a49be886719927d775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityObject: {fileID: 2002152154697913493, guid: 075657d91661b3f4d84245f93047078a,
+  entityObject: {fileID: 2002152154697913493, guid: e862c90a28677e140872ffc31855588b,
     type: 3}
   goalPoint: {fileID: 723637311}
   method: 0
   info: {fileID: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10

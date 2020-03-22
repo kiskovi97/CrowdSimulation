@@ -367,10 +367,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diagram: {fileID: 0}
-  crowd1: {fileID: 1710136345}
-  crowd2: {fileID: 1094584765}
-  crowd3: {fileID: 1829075213}
-  crowd4: {fileID: 464994463}
+  crowdSpawners:
+  - {fileID: 1710136345}
+  - {fileID: 1094584765}
+  - {fileID: 464994463}
+  - {fileID: 1829075213}
 --- !u!114 &518963819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -461,18 +462,48 @@ PrefabInstance:
     - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: method
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.b
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: entityObject
       value: 
-      objectReference: {fileID: 2002152154697913493, guid: 7cf67011c53a7b047940b41b051fbdf2,
+      objectReference: {fileID: 2002152154697913493, guid: fe38362a22f0293439bd1c993e634954,
         type: 3}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: method
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.g
+      value: 0.69389236
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.b
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
@@ -826,23 +857,53 @@ PrefabInstance:
         type: 3}
       propertyPath: entityObject
       value: 
-      objectReference: {fileID: 2002152154697913493, guid: 2d845bd2d646aad41a19b9287873a147,
+      objectReference: {fileID: 2002152154697913493, guid: fe38362a22f0293439bd1c993e634954,
         type: 3}
     - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: method
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.r
+      value: 0.20508051
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.b
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: entityObject
       value: 
-      objectReference: {fileID: 2002152154697913493, guid: 2900d40f439c3264a85f54c494af6f3a,
+      objectReference: {fileID: 2002152154697913493, guid: fe38362a22f0293439bd1c993e634954,
         type: 3}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: method
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.g
+      value: 0.8384061
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: color.b
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}

@@ -5,10 +5,8 @@ using UnityEngine;
 public class EntitiesPathQuality : MonoBehaviour
 {
     public Diagram diagram;
-    public CrowdSpawner crowd1;
-    public CrowdSpawner crowd2;
-    public CrowdSpawner crowd3;
-    public CrowdSpawner crowd4;
+    public List<CrowdSpawner> crowdSpawners;
+    private List<int> ids;
 
     private void Start()
     {
@@ -16,18 +14,23 @@ public class EntitiesPathQuality : MonoBehaviour
         {
             diagram = GetComponent<Diagram>();
         }
+        ids = new List<int>();
+        for (int i = 0; i < crowdSpawners.Count; i++)
+        {
+            var crowd = crowdSpawners[i];
+            var id = diagram.Register(crowd.color);
+            ids.Add(id);
+        }
     }
 
     private void Update()
     {
         if (diagram == null) return;
-        if (crowd1 != null)
-            diagram.AddPoint(crowd1.EntitiesDistanceFromGoal());
-        if (crowd2 != null)
-            diagram.AddPoint2(crowd2.EntitiesDistanceFromGoal());
-        if (crowd3 != null)
-            diagram.AddPoint3(crowd3.EntitiesDistanceFromGoal());
-        if (crowd4 != null)
-            diagram.AddPoint4(crowd4.EntitiesDistanceFromGoal());
+
+        for (int i = 0; i < crowdSpawners.Count; i++)
+        {
+            var crowd = crowdSpawners[i];
+            diagram.AddPoint(ids[i], crowd.EntitiesDistanceFromGoal());
+        }
     }
 }

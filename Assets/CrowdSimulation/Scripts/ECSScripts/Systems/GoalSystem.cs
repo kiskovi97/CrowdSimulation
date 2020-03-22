@@ -7,11 +7,18 @@ public class GoalSystem : JobComponentSystem
 {
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var groupGoalJob = new GroupGoalJob();
-        var groupHandle = groupGoalJob.Schedule(this, inputDeps);
+        var desireJob = new DesireJob();
+        var desireHandle = desireJob.Schedule(this, inputDeps);
 
+        var groupGoalJob = new GroupGoalJob();
+        var groupHandle = groupGoalJob.Schedule(this, desireHandle);
+
+        var gfJob = new SetGroupForceJob();
+        var gfHandle = gfJob.Schedule(this, groupHandle);
+        var dfJob = new SetDesireForceJob();
+        var dfHandle = dfJob.Schedule(this, gfHandle);
         var decisionJob = new DecisionJob();
-        var decisionHandle = decisionJob.Schedule(this, groupHandle);
+        var decisionHandle = decisionJob.Schedule(this, dfHandle);
 
         return decisionHandle;
     }
