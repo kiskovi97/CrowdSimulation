@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e04c7618c046b9a49be886719927d775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityObject: {fileID: 2002152154697913493, guid: 075657d91661b3f4d84245f93047078a,
+  entityObject: {fileID: 2002152154697913493, guid: 675604770c7ff234386cd3a516950b97,
     type: 3}
   goalPoint: {fileID: 974632901}
   method: 0
@@ -432,7 +432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e04c7618c046b9a49be886719927d775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityObject: {fileID: 2002152154697913493, guid: 075657d91661b3f4d84245f93047078a,
+  entityObject: {fileID: 2002152154697913493, guid: 675604770c7ff234386cd3a516950b97,
     type: 3}
   goalPoint: {fileID: 1957015263}
   method: 0
