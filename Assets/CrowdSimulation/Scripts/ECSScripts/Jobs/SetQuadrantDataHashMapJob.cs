@@ -11,7 +11,7 @@ public struct SetQuadrantDataHashMapJob : IJobForEach<Translation, Walker, Colli
 
     public void Execute([ReadOnly]ref Translation translation, [ReadOnly]ref Walker walker, [ReadOnly]ref CollisionParameters parameters)
     {
-        int key = QuadrantSystem.GetPositionHashMapKey(translation.Value);
+        int key = QuadrantVariables.GetPositionHashMapKey(translation.Value);
         quadrantHashMap.Add(key, new QuadrantData()
         {
             position = translation.Value,

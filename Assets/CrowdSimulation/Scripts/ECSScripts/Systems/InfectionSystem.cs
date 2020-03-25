@@ -6,59 +6,26 @@ using Unity.Rendering;
 using Unity.Transforms;
 
 [AlwaysSynchronizeSystem]
-//World.Active.GetOrCreateManager<EntityManager>();
+[UpdateAfter(typeof(InfectionHashMap))]
 public class InfectionSystem : ComponentSystem
 {
-    public struct InfectionData
-    {
-        [ReadOnly]
-        public Translation translation;
-        [ReadOnly]
-        public Infection infection;
-    }
-
-
-    [NativeDisableParallelForRestriction]
-    private NativeArray<InfectionData> dataArray;
-
     protected override void OnUpdate()
     {
-        EntityQuery entityQuery = GetEntityQuery(typeof(Infection), typeof(Translation));
-        var count = entityQuery.CalculateEntityCount();
-        if (count != dataArray.Length)
-        {
-            dataArray.Dispose();
-            dataArray = new NativeArray<InfectionData>(count, Allocator.Persistent);
-        }
-
-        var infections = entityQuery.ToComponentDataArray<Infection>(Allocator.TempJob);
-        var translations = entityQuery.ToComponentDataArray<Translation>(Allocator.TempJob);
-        for (int i = 0; i < count; i++)
-        {
-            dataArray[i] = new InfectionData()
-            {
-                translation = translations[i],
-                infection = infections[i],
-            };
-        }
-        infections.Dispose();
-        translations.Dispose();
-
         var random = new Random((uint)UnityEngine.Random.Range(1, 100000));
 
         var job = new InfectionJob()
         {
-            dataArray = dataArray,
+            targetMap = InfectionHashMap.quadrantHashMap,
             deltaTime = Time.DeltaTime,
             random = random,
         };
         var handle = job.Schedule(this);
         handle.Complete();
 
-        Entities.ForEach((Entity entity, ref Infection c0) =>
+        Entities.ForEach((Entity entity, ref Infection infection) =>
         {
             var rendererMesh = World.DefaultGameObjectInjectionWorld.EntityManager.GetSharedComponentData<RenderMesh>(entity);
-            if (c0.infectionTime > 0.2f)
+            if (infection.infectionTime > 0.2f)
             {
                 PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
                 {
@@ -67,7 +34,7 @@ public class InfectionSystem : ComponentSystem
                 });
             } else
             {
-                if (c0.reverseImmunity < 1f)
+                if (infection.reverseImmunity < 1f)
                 {
                     PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
                     {
@@ -85,18 +52,5 @@ public class InfectionSystem : ComponentSystem
             }
         });
 
-    }
-
-    protected override void OnCreate()
-    {
-        dataArray = new NativeArray<InfectionData>(0, Allocator.Persistent);
-        base.OnCreate();
-    }
-
-
-    protected override void OnDestroy()
-    {
-        dataArray.Dispose();
-        base.OnDestroy();
     }
 }

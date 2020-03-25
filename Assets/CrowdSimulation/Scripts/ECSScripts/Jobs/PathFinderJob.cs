@@ -40,18 +40,17 @@ public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, Collis
     private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, ref float3 convinientForce, ref int bros,float radius)
     {
         var position = me.position;
-        var key = QuadrantSystem.GetPositionHashMapKey(position);
+        var key = QuadrantVariables.GetPositionHashMapKey(position);
         Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 0));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
         Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 0));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
         Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, 1));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
         Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, -1));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
         Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
     }
-
 
     private void Foreach(int key, QuadrantData me, ref float3 avoidanceForce, ref float3 convinientForce, ref int bros, float radius)
     {

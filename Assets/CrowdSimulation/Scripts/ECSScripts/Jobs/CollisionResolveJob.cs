@@ -64,25 +64,25 @@ public struct CollisionResolveJob : IJobForEach<Translation, Walker, CollisionPa
     private void ForeachAround(QuadrantData me, ref float3 correction)
     {
         var position = me.position;
-        var key = QuadrantSystem.GetPositionHashMapKey(position);
+        var key = QuadrantVariables.GetPositionHashMapKey(position);
         Foreach(key, me, ref correction);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 0));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
         Foreach(key, me, ref correction);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 0));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
         Foreach(key, me, ref correction);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, 1));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
         Foreach(key, me, ref correction);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(0, 0, -1));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
         Foreach(key, me, ref correction);
 
 
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, 1));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 1));
         Foreach(key, me, ref correction);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, 1));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 1));
         Foreach(key, me, ref correction);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(-1, 0, -1));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, -1));
         Foreach(key, me, ref correction);
-        key = QuadrantSystem.GetPositionHashMapKey(position, new float3(1, 0, -1));
+        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, -1));
         Foreach(key, me, ref correction);
     }
 
