@@ -29,17 +29,28 @@ public struct CollisionResolveJob : IJobForEach<Translation, Walker, CollisionPa
             var localPos = translation.Value - collider.localToWorld.Position;
             localPos = math.mul(math.inverse(collider.localToWorld.Rotation), localPos);
 
-            if (collider.collider.Value.Value.CalculateDistance(new PointDistanceInput() {
-                Position = localPos , MaxDistance = float.MaxValue, Filter = CollisionFilter.Default
-            }, out DistanceHit hit))
+            var aab = collider.collider.Value.Value.CalculateAabb();
+            var distance = math.length(aab.Max - aab.Min);
+
+            if (math.length(localPos) < distance)
             {
-                if (hit.Distance < collision.innerRadius * 2)
+                if (collider.collider.Value.Value.CalculateDistance(new PointDistanceInput()
                 {
-                    var normal =  math.mul(collider.localToWorld.Rotation, hit.SurfaceNormal);
-                    normal.y = 0;
-                    correction += math.normalize(normal) * (collision.innerRadius * 2 - hit.Distance + 0.1f);
+                    Position = localPos,
+                    MaxDistance = float.MaxValue,
+                    Filter = CollisionFilter.Default
+                }, out DistanceHit hit))
+                {
+                    if (hit.Distance < collision.innerRadius * 2)
+                    {
+                        var normal = math.mul(collider.localToWorld.Rotation, hit.SurfaceNormal);
+                        normal.y = 0;
+                        correction += math.normalize(normal) * (collision.innerRadius * 2 - hit.Distance + 0.1f);
+                    }
                 }
             }
+
+           
 
         }
         translation.Value += correction * 0.1f;

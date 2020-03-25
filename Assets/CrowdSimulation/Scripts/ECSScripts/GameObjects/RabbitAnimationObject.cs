@@ -50,12 +50,6 @@ public class RabbitAnimationObject : MonoBehaviour, IConvertGameObjectToEntity
                 position = new float3(0f,0,0),
                 rotation = quaternion.EulerXYZ(- math.radians(90),0,0),
                 time = 1f
-            },
-            new AnimationStep()
-            {
-                position = new float3(0f,0,0),
-                rotation = quaternion.EulerXYZ(- math.radians(90),0,0),
-                time = 1.2f
             }
         }, Allocator.Persistent);
     }
