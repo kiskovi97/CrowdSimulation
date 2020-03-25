@@ -7,7 +7,8 @@ using Unity.Transforms;
 using UnityEngine;
 
 [AlwaysSynchronizeSystem]
-[UpdateAfter(typeof(QuadrantSystem))]
+[UpdateAfter(typeof(EntitiesHashMap))]
+[UpdateAfter(typeof(CollidersHashMap))]
 public class CollisionSystem : JobComponentSystem
 {
     protected override JobHandle OnUpdate(JobHandle inputDeps)

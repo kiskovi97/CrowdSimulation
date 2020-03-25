@@ -6,6 +6,8 @@ using Unity.Collections;
 using Unity.Physics;
 using UnityEngine;
 
+
+
 [BurstCompile]
 public struct CollisionResolveJob : IJobForEach<Translation, Walker, CollisionParameters>
 {
@@ -67,7 +69,7 @@ public struct CollisionResolveJob : IJobForEach<Translation, Walker, CollisionPa
         var length = math.length(direction);
         if (length > 0.1f)
         {
-            var distance = math.max(0f, me.radius + other.data3.innerRadius - length);
+            var distance = math.max(0f, me.radius + other.data.innerRadius - length);
             avoidanceForce += distance * math.normalize(direction);
         }
     }

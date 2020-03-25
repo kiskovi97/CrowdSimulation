@@ -9,7 +9,7 @@ public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, Collis
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
-    public NativeMultiHashMap<int, QuadrantData> targetMap;
+    public NativeMultiHashMap<int, EntitiesHashMap.MyData> targetMap;
 
 
     public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly]ref DecidedForce decidedForce, [ReadOnly]ref CollisionParameters collisionParameters, [ReadOnly]ref Walker walker,
@@ -54,12 +54,12 @@ public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, Collis
 
     private void Foreach(int key, QuadrantData me, ref float3 avoidanceForce, ref float3 convinientForce, ref int bros, float radius)
     {
-        if (targetMap.TryGetFirstValue(key, out QuadrantData other, out NativeMultiHashMapIterator<int> iterator))
+        if (targetMap.TryGetFirstValue(key, out EntitiesHashMap.MyData other, out NativeMultiHashMapIterator<int> iterator))
         {
             do
             {
-                if (me.broId == other.broId) {
-                    convinientForce += other.direction;
+                if (me.broId == other.data2.broId) {
+                    convinientForce += other.data2.direction;
                     bros++;
                     continue;
                 }
@@ -72,13 +72,13 @@ public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, Collis
                 {
                     var dot = (math.dot(math.normalize(-direction), math.normalize(me.direction)) + 1f) * 0.5f;
 
-                    var forceMultiplyer = math.length(other.direction) + 0.7f;
+                    var forceMultiplyer = math.length(other.data2.direction) + 0.7f;
 
                     var multiplyer = distanceNormalized * dot * forceMultiplyer;
 
                     var multiplyerSin = math.sin(multiplyer * math.PI / 2f);
 
-                    avoidanceForce += math.normalize(other.direction) * multiplyerSin;
+                    avoidanceForce += math.normalize(other.data2.direction) * multiplyerSin;
 
                     avoidanceForce += direction / radius;
                 }

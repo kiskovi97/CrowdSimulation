@@ -5,13 +5,13 @@ using Unity.Collections;
 [AlwaysSynchronizeSystem]
 [UpdateAfter(typeof(DensitySystem))]
 [UpdateAfter(typeof(GoalSystem))]
-[UpdateAfter(typeof(QuadrantSystem))]
+[UpdateAfter(typeof(EntitiesHashMap))]
 public class PathFindingSystem : JobComponentSystem
 {
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var pathFindingJob = new PathFindingJob() {
-            targetMap = QuadrantSystem.quadrantHashMap,
+            targetMap = EntitiesHashMap.quadrantHashMap,
         };
         var pathFindingHandle = pathFindingJob.Schedule(this, inputDeps);
         var denistyAvoidanceJob = new DensityAvoidanceJob()
