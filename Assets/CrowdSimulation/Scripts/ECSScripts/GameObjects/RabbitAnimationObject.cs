@@ -19,7 +19,8 @@ public class RabbitAnimationObject : MonoBehaviour, IConvertGameObjectToEntity
 
     void Awake()
     {
-        jumping = new NativeArray<AnimationStep>(new AnimationStep[] {
+        if (jumping.Length == 0)
+            jumping = new NativeArray<AnimationStep>(new AnimationStep[] {
             new AnimationStep()
             {
                 position = new float3(0,0,0),
@@ -67,17 +68,5 @@ public class RabbitAnimationObject : MonoBehaviour, IConvertGameObjectToEntity
             localPos = transform.localPosition,
             localRotation = transform.rotation,
         });
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }
