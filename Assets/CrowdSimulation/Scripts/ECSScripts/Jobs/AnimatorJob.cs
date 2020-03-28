@@ -7,6 +7,7 @@ public struct AnimatorJob : IJobForEach<Translation, Rotation, Animator>
 {
     public float deltaTime;
 
+    [ReadOnly]
     public NativeArray<AnimationStep> animation;
 
     public void Execute(ref Translation translation, ref Rotation rotation, ref Animator animator)
