@@ -33,7 +33,7 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
                 walker.direction *= 0.9f;
             }
 
-            if (length < 0.2f)
+            if (length < 0.4f)
             {
                 commandBuffer.DestroyEntity(index, foundFoodEntity);
                 condition.hunger -= 1f;
