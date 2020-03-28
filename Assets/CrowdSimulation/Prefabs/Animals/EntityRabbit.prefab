@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f9929b1ee559a418388742331ea262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  innerRadius: 0.5
+  innerRadius: 0.4
   outerRadius: 2
 --- !u!114 &3524544514489451338
 MonoBehaviour:
@@ -131,7 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifeLine: 0
-  hunger: 0
+  hunger: 2
   thirst: 0
 --- !u!114 &2823695101134469478
 MonoBehaviour:

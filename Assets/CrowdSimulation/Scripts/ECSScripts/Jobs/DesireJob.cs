@@ -5,7 +5,7 @@ using Unity.Collections;
 using Unity.Mathematics;
 
 [BurstCompile]
-public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHierarchie, DesireForce>
+public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHierarchie, DesireForce, Walker>
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
@@ -13,26 +13,41 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
 
     public EntityCommandBuffer.Concurrent commandBuffer;
 
-    public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, [ReadOnly]  ref Condition condition, [ReadOnly] ref FoodHierarchie foodHierarchie, ref DesireForce desireForce)
+    public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, [ReadOnly] ref FoodHierarchie foodHierarchie, ref DesireForce desireForce, ref Walker walker)
     {
+        if (condition.hunger < 0.1f) {
+            walker.maxSpeed = 0f;
+        }
+
         float3 closestPoint = translation.Value;
         bool found = false;
         Entity foundFoodEntity = Entity.Null;
         ForeachAround(translation.Value, ref closestPoint, ref foundFoodEntity, ref found);
         if (found)
         {
+            var length = math.length(closestPoint - translation.Value);
             desireForce.force = math.normalize(closestPoint - translation.Value);
-            if (math.length(closestPoint - translation.Value) < 0.2f)
+
+            if (length < math.dot(desireForce.force, walker.direction))
+            {
+                walker.direction *= 0.9f;
+            }
+
+            if (length < 0.2f)
             {
                 commandBuffer.DestroyEntity(index, foundFoodEntity);
+                condition.hunger -= 1f;
             }
-        }        
+        } else
+        {
+            desireForce.force = new float3(1, 0, 1);
+        }
     }
 
     private void ForeachAround(float3 position, ref float3 closestPoint, ref Entity foundFoodEntity, ref bool found)
     {
         var key = QuadrantVariables.GetPositionHashMapKey(position);
-        Foreach(key, position, ref closestPoint,ref foundFoodEntity, ref found);
+        Foreach(key, position, ref closestPoint, ref foundFoodEntity, ref found);
         key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
         Foreach(key, position, ref closestPoint, ref foundFoodEntity, ref found);
         key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));

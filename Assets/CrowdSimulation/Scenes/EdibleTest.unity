@@ -174,7 +174,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8.14
+  orthographic size: 4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -235,15 +235,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7e1a38a4325bf498ba701b05d24f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InputMaxHeight: 15
-  InputMaxWidth: 15
+  InputMaxHeight: 5
+  InputMaxWidth: 5
   edibles:
   - {fileID: 2495770316834136449, guid: 6c326ab3ad9c2ca47ae0cf934f2d77a8, type: 3}
   obstacles:
   - {fileID: 6354888578694029785, guid: c4ae2b301538bf9409d27997edb92eff, type: 3}
   - {fileID: 6642191171866384085, guid: e8257701361d4d948820c4448e28221f, type: 3}
   - {fileID: 2081934484873819357, guid: ae4cb74a2ef1dc244bc281ba1371afaa, type: 3}
-  beginingNumber: 10
+  beginingNumber: 32
   obstaclesNumber: 0
 --- !u!23 &952388293
 MeshRenderer:
@@ -301,7 +301,7 @@ Transform:
   m_GameObject: {fileID: 952388291}
   m_LocalRotation: {x: 0.70710576, y: -0, z: -0, w: 0.70710784}
   m_LocalPosition: {x: 0.26, y: 0, z: 0}
-  m_LocalScale: {x: 30, y: 30, z: 30}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -356,8 +356,8 @@ MonoBehaviour:
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 4
-  sizeX: 10
-  sizeZ: 10
+  sizeX: 4
+  sizeZ: 4
   distance: 2
 --- !u!1 &1260833129
 GameObject:
