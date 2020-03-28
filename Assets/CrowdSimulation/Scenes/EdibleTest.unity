@@ -352,7 +352,7 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: e862c90a28677e140872ffc31855588b,
     type: 3}
   goalPoint: {fileID: 0}
-  method: 1
+  method: 2
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 4

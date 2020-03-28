@@ -256,7 +256,7 @@ MonoBehaviour:
   - {fileID: 6354888578694029785, guid: c4ae2b301538bf9409d27997edb92eff, type: 3}
   - {fileID: 6642191171866384085, guid: e8257701361d4d948820c4448e28221f, type: 3}
   - {fileID: 2081934484873819357, guid: ae4cb74a2ef1dc244bc281ba1371afaa, type: 3}
-  beginingNumber: 50
+  beginingNumber: 0
   obstaclesNumber: 25
 --- !u!23 &515814568
 MeshRenderer:
@@ -517,7 +517,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 6.65
+  orthographic size: 15.24
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
