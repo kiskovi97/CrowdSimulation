@@ -50,8 +50,27 @@ public class Map : MonoBehaviour
         }
     }
 
-    public static int maxHeight = 30;
-    public static int maxWidth = 50;
+    public int InputMaxHeight = 30;
+    public int InputMaxWidth = 50;
+
+    public static int maxHeight
+    {
+        get
+        {
+            if (Instance != null)
+                return Instance.InputMaxHeight;
+            return 30;
+        }
+    }
+    public static int maxWidth
+    {
+        get
+        {
+            if (Instance != null)
+                return Instance.InputMaxWidth;
+            return 50;
+        }
+    }
 
     public static float2 max { get => new float2(maxWidth, maxHeight); }
 

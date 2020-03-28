@@ -155,7 +155,7 @@ MonoBehaviour:
   goalPoint: {fileID: 974632901}
   method: 1
   info: {fileID: 0}
-  color: {r: 1, g: 1, b: 1, a: 1}
+  color: {fileID: 0}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
@@ -248,6 +248,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a7e1a38a4325bf498ba701b05d24f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InputMaxHeight: 25
+  InputMaxWidth: 25
   edibles:
   - {fileID: 2495770316834136449, guid: 6c326ab3ad9c2ca47ae0cf934f2d77a8, type: 3}
   obstacles:
@@ -255,7 +257,7 @@ MonoBehaviour:
   - {fileID: 6642191171866384085, guid: e8257701361d4d948820c4448e28221f, type: 3}
   - {fileID: 2081934484873819357, guid: ae4cb74a2ef1dc244bc281ba1371afaa, type: 3}
   beginingNumber: 50
-  obstaclesNumber: 50
+  obstaclesNumber: 25
 --- !u!23 &515814568
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -443,7 +445,7 @@ MonoBehaviour:
   goalPoint: {fileID: 1957015263}
   method: 1
   info: {fileID: 0}
-  color: {r: 1, g: 1, b: 1, a: 1}
+  color: {fileID: 0}
   goalRadius: 5
   sizeX: 10
   sizeZ: 10
@@ -579,7 +581,7 @@ MonoBehaviour:
   goalPoint: {fileID: 90760629}
   method: 1
   info: {fileID: 0}
-  color: {r: 1, g: 1, b: 1, a: 1}
+  color: {fileID: 0}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
@@ -632,7 +634,7 @@ MonoBehaviour:
   goalPoint: {fileID: 723637311}
   method: 1
   info: {fileID: 0}
-  color: {r: 1, g: 1, b: 1, a: 1}
+  color: {fileID: 0}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10
