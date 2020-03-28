@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using TMPro;
+using System;
 
 public class CrowdSpawner : MonoBehaviour
 {
@@ -37,6 +38,11 @@ public class CrowdSpawner : MonoBehaviour
             avrgDistance += math.max(0f, (distance - goalRadius) / (float)entities.Count);
         }
         return avrgDistance;
+    }
+
+    internal bool HasEnties()
+    {
+        return entities != null && entities.Count > 0;
     }
 
     public void AddEntity(Entity entity)

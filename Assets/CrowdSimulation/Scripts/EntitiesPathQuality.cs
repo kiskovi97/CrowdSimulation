@@ -30,6 +30,7 @@ public class EntitiesPathQuality : MonoBehaviour
         for (int i = 0; i < crowdSpawners.Count; i++)
         {
             var crowd = crowdSpawners[i];
+            if (crowd.HasEnties())
             diagram.AddPoint(ids[i], crowd.EntitiesDistanceFromGoal());
         }
     }

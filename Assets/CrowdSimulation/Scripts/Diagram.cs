@@ -7,7 +7,6 @@ public class Diagram : MonoBehaviour
 {
     public float arrowScale = 0.2f;
     public float maxValue = 20f;
-    public float maxValue2 = 40f;
     public float maxTime = 20f;
 
     private List<Color> colors = new List<Color>();
