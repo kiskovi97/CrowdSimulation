@@ -10,6 +10,9 @@ public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, Co
     [NativeDisableParallelForRestriction]
     [ReadOnly]
     public NativeArray<float> densityMap;
+
+    public int oneLayer;
+
     public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision, 
         [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation, ref PathForce pathForce)
     {
@@ -22,7 +25,7 @@ public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, Co
             return;
         }
 
-        var group = Map.OneLayer * walker.broId;
+        var group = oneLayer * walker.broId;
 
         var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * 2);
 

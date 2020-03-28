@@ -15,8 +15,9 @@ public class Map : MonoBehaviour
 
     public static readonly int heightPoints = maxHeight * density * 2;
     public static readonly int widthPoints = maxWidth * density * 2;
-    public static readonly int OneLayer = heightPoints * widthPoints;
-    public static readonly int AllPoints = OneLayer * MaxGroup;
+
+    public static int OneLayer { get => heightPoints * widthPoints; }
+    public static int AllPoints { get => OneLayer * MaxGroup; }
 
     public GameObject[] edibles;
     public GameObject[] obstacles;

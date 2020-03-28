@@ -10,6 +10,8 @@ public struct SetDensityCollisionJob : IJobForEach<PhysicsCollider, LocalToWorld
     [NativeDisableParallelForRestriction]
     public NativeArray<float> densityMatrix;
 
+    public int oneLayer;
+
     public void Execute(ref PhysicsCollider collider, ref LocalToWorld localToWorld)
     {
         var aabb = collider.Value.Value.CalculateAabb();
@@ -33,7 +35,7 @@ public struct SetDensityCollisionJob : IJobForEach<PhysicsCollider, LocalToWorld
                     }, out DistanceHit hit))
                     {
                         if (distance - hit.Distance > 0f)
-                            densityMatrix[group * Map.OneLayer + DensitySystem.Index(i, j)] += math.max(0f, distance - hit.Distance);
+                            densityMatrix[group * oneLayer + DensitySystem.Index(i, j)] += math.max(0f, distance - hit.Distance);
                     }
                 }
     }

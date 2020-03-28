@@ -27,11 +27,6 @@ class DensitySystem : ComponentSystem
     {
         densityMatrix = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
         collidersDensity = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
-        for (int i = 0; i < Map.AllPoints; i++)
-        {
-            densityMatrix[i] = 0f;
-            collidersDensity[i] = 0f;
-        }
         base.OnCreate();
     }
 
@@ -144,17 +139,28 @@ class DensitySystem : ComponentSystem
         });
         if (!hasDensityPresent) return;
 
+        MapChanged();
+
         EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Walker), typeof(CollisionParameters));
 
         var clearJob = new ClearJob() { array = densityMatrix };
         var clearHandle = clearJob.Schedule(densityMatrix.Length, batchSize);
-        var job = new SetDensityGridJob() { quadrantHashMap = densityMatrix, };
+        var job = new SetDensityGridJob() { quadrantHashMap = densityMatrix, oneLayer=Map.OneLayer };
         var handle = JobForEachExtensions.Schedule(job, entityQuery, clearHandle);
         ForeachColliders();
         var addJob = new AddArrayJob() { from = collidersDensity, to = densityMatrix };
         var addHandle = addJob.Schedule(densityMatrix.Length, batchSize, handle);
         addHandle.Complete();
         //Debug();
+    }
+
+    private void MapChanged()
+    {
+        if (Map.AllPoints != densityMatrix.Length)
+        {
+            densityMatrix = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
+            collidersDensity = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
+        }
     }
 
     private bool First = true;
@@ -165,7 +171,8 @@ class DensitySystem : ComponentSystem
             EntityQuery entityQuery = GetEntityQuery(typeof(PhysicsCollider), typeof(LocalToWorld));
             var job = new SetDensityCollisionJob()
             {
-                densityMatrix = collidersDensity
+                densityMatrix = collidersDensity,
+                oneLayer = Map.OneLayer,
             };
             var handle = JobForEachExtensions.Schedule(job, entityQuery);
             handle.Complete();
