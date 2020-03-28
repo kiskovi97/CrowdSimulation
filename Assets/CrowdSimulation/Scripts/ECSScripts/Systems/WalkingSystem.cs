@@ -15,7 +15,7 @@ public class WalkingSystem : JobComponentSystem
         var forceJob = new ForceJob() { deltaTime = deltaTime };
         var forceHandle = forceJob.Schedule(this, inputDeps);
 
-        var walker = new WalkerJob() { deltaTime = deltaTime };
+        var walker = new WalkerJob() { deltaTime = deltaTime, maxWidth = Map.maxWidth, maxHeight = Map.maxHeight };
         var walkerHandle = walker.Schedule(this, forceHandle);
 
         return walkerHandle;

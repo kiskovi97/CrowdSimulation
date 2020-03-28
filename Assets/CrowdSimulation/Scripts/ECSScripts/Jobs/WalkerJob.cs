@@ -9,6 +9,8 @@ using Unity.Collections;
 public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
 {
     public float deltaTime;
+    public float maxWidth;
+    public float maxHeight;
 
     public void Execute(ref Rotation rotation, ref Translation transform, [ReadOnly] ref Walker walker)
     {
@@ -47,21 +49,21 @@ public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
 
     private void EdgeReaction(ref Translation transform)
     {
-        if (transform.Value.x < -Map.maxWidth)
+        if (transform.Value.x < -maxWidth)
         {
-            transform.Value.x += 2 * Map.maxWidth;
+            transform.Value.x += 2 * maxWidth;
         }
-        if (transform.Value.x > Map.maxWidth)
+        if (transform.Value.x > maxWidth)
         {
-            transform.Value.x -= 2 * Map.maxWidth;
+            transform.Value.x -= 2 * maxWidth;
         }
-        if (transform.Value.z < -Map.maxHeight)
+        if (transform.Value.z < -maxHeight)
         {
-            transform.Value.z += 2 * Map.maxHeight;
+            transform.Value.z += 2 * maxHeight;
         }
-        if (transform.Value.z > Map.maxHeight)
+        if (transform.Value.z > maxHeight)
         {
-            transform.Value.z -= 2 * Map.maxHeight;
+            transform.Value.z -= 2 * maxHeight;
         }
     }
 }

@@ -3,6 +3,7 @@ using Unity.Transforms;
 using Unity.Physics;
 using Unity.Collections;
 using Unity.Mathematics;
+using static Map;
 
 public struct SetDensityCollisionJob : IJobForEach<PhysicsCollider, LocalToWorld>
 {
@@ -14,6 +15,7 @@ public struct SetDensityCollisionJob : IJobForEach<PhysicsCollider, LocalToWorld
     public int widthPoints;
     public int heightPoints;
     public int maxGroup;
+    public MapValues max;
 
     public void Execute(ref PhysicsCollider collider, ref LocalToWorld localToWorld)
     {
@@ -22,7 +24,7 @@ public struct SetDensityCollisionJob : IJobForEach<PhysicsCollider, LocalToWorld
             for (int j = 0; j < heightPoints - 1; j++)
                 for (int i = 0; i < widthPoints - 1; i++)
                 {
-                    var point = DensitySystem.ConvertToWorld(new float3(i, 0, j));
+                    var point = DensitySystem.ConvertToWorld(new float3(i, 0, j), max);
                     var localPos = point - localToWorld.Position;
                     localPos = math.mul(math.inverse(localToWorld.Rotation), localPos);
                     if (aabb.Min.x - distance > localPos.x) continue;
@@ -38,7 +40,7 @@ public struct SetDensityCollisionJob : IJobForEach<PhysicsCollider, LocalToWorld
                     }, out DistanceHit hit))
                     {
                         if (distance - hit.Distance > 0f)
-                            densityMatrix[group * oneLayer + DensitySystem.Index(i, j)] += math.max(0f, distance - hit.Distance);
+                            densityMatrix[group * oneLayer + DensitySystem.Index(i, j, max)] += math.max(0f, distance - hit.Distance);
                     }
                 }
     }

@@ -17,7 +17,8 @@ public class PathFindingSystem : JobComponentSystem
         var denistyAvoidanceJob = new DensityAvoidanceJob()
         {
             densityMap = DensitySystem.densityMatrix,
-            oneLayer = Map.OneLayer
+            oneLayer = Map.OneLayer,
+            max = Map.Values
         };
         var handle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
 

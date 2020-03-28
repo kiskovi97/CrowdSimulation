@@ -7,6 +7,7 @@ using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 using UnityEngine;
+using static Map;
 
 //CollisionSystem
 
@@ -37,14 +38,14 @@ class DensitySystem : ComponentSystem
         base.OnDestroy();
     }
 
-    private static float3 ConvertToLocal(float3 realWorldPosition)
+    private static float3 ConvertToLocal(float3 realWorldPosition, MapValues max)
     {
-        return (realWorldPosition + new float3(Map.maxWidth, 0, Map.maxHeight)) * Map.density;
+        return (realWorldPosition + new float3(max.maxWidth, 0, max.maxHeight)) * Map.density;
     }
 
-    public static float3 ConvertToWorld(float3 position)
+    public static float3 ConvertToWorld(float3 position, MapValues max)
     {
-        return position * (1f / Map.density) - new float3(Map.maxWidth, 0, Map.maxHeight);
+        return position * (1f / Map.density) - new float3(max.maxWidth, 0, max.maxHeight);
     }
 
     public struct KeyDistance
@@ -59,7 +60,7 @@ class DensitySystem : ComponentSystem
         public float3 position;
     }
 
-    public static NativeArray<IndexAndPosition> IndexesFromPoisition(float3 position, float radius)
+    public static NativeArray<IndexAndPosition> IndexesFromPoisition(float3 position, float radius, MapValues max)
     {
         var width = (int)(radius * Map.density);
         var array = new NativeArray<IndexAndPosition>(width * width * 4, Allocator.Temp);
@@ -70,7 +71,7 @@ class DensitySystem : ComponentSystem
         {
             for (int j = -width; j < width && arrayIndex < array.Length; j++)
             {
-                var Index = IndexFromPosition(position + Up * i + Right * j, position);
+                var Index = IndexFromPosition(position + Up * i + Right * j, position, max);
                 array[arrayIndex++] = new IndexAndPosition()
                 {
                     index = Index.key,
@@ -82,13 +83,13 @@ class DensitySystem : ComponentSystem
         return array;
     }
 
-    public static KeyDistance IndexFromPosition(float3 realWorldPosition, float3 prev)
+    public static KeyDistance IndexFromPosition(float3 realWorldPosition, float3 prev, MapValues max)
     {
-        var indexPosition = ConvertToLocal(realWorldPosition);
+        var indexPosition = ConvertToLocal(realWorldPosition, max);
         var i = (int)math.round(indexPosition.x);
         var j = (int)math.round(indexPosition.z);
 
-        if (i < 0 || j < 0 || i >= Map.widthPoints || j >= Map.heightPoints)
+        if (i < 0 || j < 0 || i >= max.widthPoints || j >= max.heightPoints)
         {
             return new KeyDistance()
             {
@@ -97,14 +98,14 @@ class DensitySystem : ComponentSystem
         }
         return new KeyDistance()
         {
-            key = Index(i, j),
-            distance = math.length(ConvertToLocal(prev) - math.round(indexPosition)),
+            key = Index(i, j, max),
+            distance = math.length(ConvertToLocal(prev, max) - math.round(indexPosition)),
         };
     }
 
-    public static int Index(int i, int j)
+    public static int Index(int i, int j, MapValues max)
     {
-        return (Map.heightPoints * i) + j;
+        return (max.heightPoints * i) + j;
     }
 
     [BurstCompile]
@@ -145,7 +146,7 @@ class DensitySystem : ComponentSystem
 
         var clearJob = new ClearJob() { array = densityMatrix };
         var clearHandle = clearJob.Schedule(densityMatrix.Length, batchSize);
-        var job = new SetDensityGridJob() { quadrantHashMap = densityMatrix, oneLayer = Map.OneLayer, maxGroup = Map.MaxGroup };
+        var job = new SetDensityGridJob() { quadrantHashMap = densityMatrix, oneLayer = Map.OneLayer, maxGroup = Map.MaxGroup, max = Map.Values };
         var handle = JobForEachExtensions.Schedule(job, entityQuery, clearHandle);
         ForeachColliders();
         var addJob = new AddArrayJob() { from = collidersDensity, to = densityMatrix };
@@ -176,6 +177,7 @@ class DensitySystem : ComponentSystem
                 widthPoints = Map.widthPoints,
                 heightPoints = Map.heightPoints,
                 maxGroup = Map.MaxGroup,
+                max = Map.Values
             };
             var handle = JobForEachExtensions.Schedule(job, entityQuery);
             handle.Complete();
@@ -189,12 +191,12 @@ class DensitySystem : ComponentSystem
         for (int j = 1; j < Map.heightPoints - 1; j++)
             for (int i = 1; i < Map.widthPoints - 1; i++)
             {
-                float right = densityMatrix[Map.OneLayer * group + Index(i + 1, j)];
-                float left = densityMatrix[Map.OneLayer * group + Index(i - 1, j)];
-                float up = densityMatrix[Map.OneLayer * group + Index(i, j + 1)];
-                float down = densityMatrix[Map.OneLayer * group + Index(i, j - 1)];
+                float right = densityMatrix[Map.OneLayer * group + Index(i + 1, j, Map.Values)];
+                float left = densityMatrix[Map.OneLayer * group + Index(i - 1, j, Map.Values)];
+                float up = densityMatrix[Map.OneLayer * group + Index(i, j + 1, Map.Values)];
+                float down = densityMatrix[Map.OneLayer * group + Index(i, j - 1, Map.Values)];
 
-                var point = ConvertToWorld(new float3(i, 0, j));
+                var point = ConvertToWorld(new float3(i, 0, j), Map.Values);
                 if (right < left && right < up && right < down)
                 {
                     DebugProxy.DrawLine(point, point + new float3(0.2f, 0, 0), Color.red);

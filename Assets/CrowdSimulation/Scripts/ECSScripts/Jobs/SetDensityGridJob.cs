@@ -4,6 +4,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using static Map;
 
 [BurstCompile]
 public struct SetDensityGridJob : IJobForEach<Translation, Walker, CollisionParameters>
@@ -13,6 +14,7 @@ public struct SetDensityGridJob : IJobForEach<Translation, Walker, CollisionPara
 
     public int oneLayer;
     public int maxGroup;
+    public MapValues max;
 
     public void Execute([ReadOnly]ref Translation translation, [ReadOnly] ref Walker walker, [ReadOnly] ref CollisionParameters collisionParameters)
     {
@@ -29,7 +31,7 @@ public struct SetDensityGridJob : IJobForEach<Translation, Walker, CollisionPara
 
     private void Add(float3 position, float3 prev, float maxdistance, int gid)
     {
-        var keyDistance = DensitySystem.IndexFromPosition(position, prev);
+        var keyDistance = DensitySystem.IndexFromPosition(position, prev, max);
         if (keyDistance.key < 0)
         {
             return;

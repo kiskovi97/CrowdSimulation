@@ -3,6 +3,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Burst;
 using Unity.Collections;
+using static Map;
 
 [BurstCompile]
 public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, CollisionParameters, Walker, Translation, PathForce>
@@ -12,6 +13,7 @@ public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, Co
     public NativeArray<float> densityMap;
 
     public int oneLayer;
+    public MapValues max;
 
     public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision, 
         [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation, ref PathForce pathForce)
@@ -27,7 +29,7 @@ public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, Co
 
         var group = oneLayer * walker.broId;
 
-        var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * 2);
+        var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * 2, max);
 
         var force = float3.zero;
         var multiMin = float.MaxValue;
