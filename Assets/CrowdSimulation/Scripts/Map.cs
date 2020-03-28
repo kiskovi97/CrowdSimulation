@@ -7,6 +7,8 @@ public class Map : MonoBehaviour
     public static readonly int maxHeight = 30;
     public static readonly int maxWidth = 50;
 
+    public static readonly float innerRadius = 0.8f;
+
     public static readonly int density = 2;
 
     public static readonly int MaxGroup = 5;
@@ -25,8 +27,8 @@ public class Map : MonoBehaviour
     {
         for (int i=0; i< beginingNumber; i++)
         {
-            var height = Random.value * maxHeight * 2 - maxHeight;
-            var width = Random.value * maxWidth * 2 - maxWidth;
+            var height = Random.value * maxHeight * innerRadius * 2 - maxHeight * innerRadius;
+            var width = Random.value * maxWidth * innerRadius * 2 - maxWidth * innerRadius;
             var index = (int)(Random.value * edibles.Length);
             var obj = Instantiate(edibles[index], new Vector3(width, 0, height), Quaternion.identity);
             obj.transform.Rotate(new Vector3(0, Random.value * 180, 0));
@@ -34,8 +36,8 @@ public class Map : MonoBehaviour
 
         for (int i = 0; i < obstaclesNumber; i++)
         {
-            var height = Random.value * maxHeight * 2 - maxHeight;
-            var width = Random.value * maxWidth * 2 - maxWidth;
+            var height = Random.value * maxHeight * innerRadius * 2 - maxHeight * innerRadius;
+            var width = Random.value * maxWidth * innerRadius * 2 - maxWidth * innerRadius;
             var index = (int)(Random.value * obstacles.Length);
             var obj = Instantiate(obstacles[index], new Vector3(width, 0, height), Quaternion.identity);
             obj.transform.Rotate(new Vector3(0, Random.value * 180, 0));

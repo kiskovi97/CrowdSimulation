@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 9def691ecb1387843a1ab8619e3db3bc, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.5331555, g: 0.5833647, b: 0.66944414, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e04c7618c046b9a49be886719927d775, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityObject: {fileID: 2002152154697913493, guid: 675604770c7ff234386cd3a516950b97,
+  entityObject: {fileID: 2002152154697913493, guid: bf4459ca70511b045b40782f619c78e4,
     type: 3}
   goalPoint: {fileID: 974632901}
   method: 1
@@ -254,8 +254,8 @@ MonoBehaviour:
   - {fileID: 6354888578694029785, guid: c4ae2b301538bf9409d27997edb92eff, type: 3}
   - {fileID: 6642191171866384085, guid: e8257701361d4d948820c4448e28221f, type: 3}
   - {fileID: 2081934484873819357, guid: ae4cb74a2ef1dc244bc281ba1371afaa, type: 3}
-  beginingNumber: 10
-  obstaclesNumber: 100
+  beginingNumber: 50
+  obstaclesNumber: 50
 --- !u!23 &515814568
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -312,7 +312,7 @@ Transform:
   m_GameObject: {fileID: 515814566}
   m_LocalRotation: {x: 0.70710576, y: -0, z: -0, w: 0.70710784}
   m_LocalPosition: {x: 0.26, y: 0, z: 0}
-  m_LocalScale: {x: 100, y: 60, z: 4}
+  m_LocalScale: {x: 50, y: 50, z: 50}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -515,7 +515,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 18.59
+  orthographic size: 6.65
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -538,13 +538,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 22.99, z: -0.74}
+  m_LocalRotation: {x: 0.39709252, y: 0.09114795, z: -0.039670095, w: 0.91237926}
+  m_LocalPosition: {x: -4.04, y: 26.7, z: -23.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 47.04, y: 11.41, z: 0}
 --- !u!1 &974632899
 GameObject:
   m_ObjectHideFlags: 0

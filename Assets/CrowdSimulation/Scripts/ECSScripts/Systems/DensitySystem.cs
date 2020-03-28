@@ -2,6 +2,7 @@
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
@@ -13,6 +14,8 @@ using UnityEngine;
 [UpdateAfter(typeof(CollisionSystem))]
 class DensitySystem : ComponentSystem
 {
+    private static int batchSize = 64;
+
     public static NativeArray<float> densityMatrix;
 
     public static NativeArray<float> collidersDensity;
@@ -109,6 +112,29 @@ class DensitySystem : ComponentSystem
         return (Map.heightPoints * i) + j;
     }
 
+    [BurstCompile]
+    struct ClearJob : IJobParallelFor
+    {
+        public NativeArray<float> array;
+        public void Execute(int index)
+        {
+            array[index] = 0f;
+        }
+    }
+
+    [BurstCompile]
+    struct AddArrayJob : IJobParallelFor
+    {
+        [ReadOnly]
+        public NativeArray<float> from;
+
+        public NativeArray<float> to;
+        public void Execute(int index)
+        {
+            to[index] += from[index] * 6f;
+        }
+    }
+
     protected override void OnUpdate()
     {
         bool hasDensityPresent = false;
@@ -119,20 +145,15 @@ class DensitySystem : ComponentSystem
         if (!hasDensityPresent) return;
 
         EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Walker), typeof(CollisionParameters));
-        for (int i = 0; i < Map.AllPoints; i++)
-        {
-            densityMatrix[i] = 0f;
-        }
-        var job = new SetDensityGridJob()
-        {
-            quadrantHashMap = densityMatrix,
-        };
 
-        var handle = JobForEachExtensions.Schedule(job, entityQuery);
-        handle.Complete();
-
+        var clearJob = new ClearJob() { array = densityMatrix };
+        var clearHandle = clearJob.Schedule(densityMatrix.Length, batchSize);
+        var job = new SetDensityGridJob() { quadrantHashMap = densityMatrix, };
+        var handle = JobForEachExtensions.Schedule(job, entityQuery, clearHandle);
         ForeachColliders();
-
+        var addJob = new AddArrayJob() { from = collidersDensity, to = densityMatrix };
+        var addHandle = addJob.Schedule(densityMatrix.Length, batchSize, handle);
+        addHandle.Complete();
         //Debug();
     }
 
@@ -150,16 +171,6 @@ class DensitySystem : ComponentSystem
             handle.Complete();
         }
         First = false;
-        for (int group = 0; group < Map.MaxGroup; group++)
-        {
-            for (int j = 0; j < Map.heightPoints - 1; j++)
-                for (int i = 0; i < Map.widthPoints - 1; i++)
-                {
-                    var index = Index(i, j);
-                    densityMatrix[Map.OneLayer * group + index] += collidersDensity[index] * 6f;
-                }
-        }
-
     }
 
     void Debug()

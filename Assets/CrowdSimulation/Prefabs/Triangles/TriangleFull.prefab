@@ -13,8 +13,6 @@ GameObject:
   - component: {fileID: 4532932655226561705}
   - component: {fileID: -1980776331931212350}
   - component: {fileID: 7485702805668398495}
-  - component: {fileID: 3439931779323062130}
-  - component: {fileID: 6905670702339336196}
   - component: {fileID: 2002152154697913497}
   - component: {fileID: 507381195719950296}
   - component: {fileID: 5316944907716031032}
@@ -119,34 +117,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   innerRadius: 0.5
   outerRadius: 2
---- !u!114 &3439931779323062130
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002152154697913493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65cfcb17db904fd478151f980b167471, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lifeLine: 0
-  hunger: 1
-  thirst: 0
---- !u!114 &6905670702339336196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002152154697913493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6be57a894b8a3514f819858e95603990, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  hierarchieNumber: 0
 --- !u!114 &2002152154697913497
 MonoBehaviour:
   m_ObjectHideFlags: 0

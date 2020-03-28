@@ -18,7 +18,7 @@ public class EntitiesPathQuality : MonoBehaviour
         for (int i = 0; i < crowdSpawners.Count; i++)
         {
             var crowd = crowdSpawners[i];
-            var id = diagram.Register(crowd.color);
+            var id = diagram.Register(crowd.color.color);
             ids.Add(id);
         }
     }

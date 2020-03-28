@@ -45,10 +45,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityObject: {fileID: 2002152154697913493, guid: e862c90a28677e140872ffc31855588b,
     type: 3}
-  goalPoint:
-    x: -10
-    y: 0
-    z: 0
+  goalPoint: {fileID: 0}
+  method: 0
+  info: {fileID: 0}
+  color: {fileID: 2100000, guid: dcc27c178343c6c48bb68fdca8f7021b, type: 2}
   goalRadius: 4
   sizeX: 10
   sizeZ: 10

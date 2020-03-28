@@ -86,7 +86,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force:
-    x: -1
+    x: 0
     y: 0
     z: 0
 --- !u!114 &-1318973680164845000

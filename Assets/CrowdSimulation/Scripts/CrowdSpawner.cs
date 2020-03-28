@@ -12,7 +12,7 @@ public class CrowdSpawner : MonoBehaviour
     public Transform goalPoint;
     public PathFindingMethod method;
     public TextMeshProUGUI info;
-    public Color color = Color.white;
+    public Material color;
 
     public float goalRadius;
 
@@ -61,8 +61,10 @@ public class CrowdSpawner : MonoBehaviour
                 var obj = Instantiate(entityObject, transform);
                 obj.transform.localPosition = position;
                 var renderer = obj.GetComponent<MeshRenderer>();
-                if (renderer != null)
-                    renderer.material.color = color;
+                if (renderer != null && color != null)
+                {
+                    renderer.material = color;
+                }
                 var people = obj.GetComponent<PeopleAuth>();
                 if (people != null)
                 {
