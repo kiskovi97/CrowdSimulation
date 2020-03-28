@@ -3,11 +3,15 @@ using Unity.Jobs;
 using Unity.Collections;
 
 [AlwaysSynchronizeSystem]
+[UpdateAfter(typeof(EdibleHashMap))]
 public class GoalSystem : JobComponentSystem
 {
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
-        var desireJob = new DesireJob();
+        var desireJob = new DesireJob()
+        {
+            targetMap = EdibleHashMap.quadrantHashMap
+        };
         var desireHandle = desireJob.Schedule(this, inputDeps);
 
         var groupGoalJob = new GroupGoalJob();
