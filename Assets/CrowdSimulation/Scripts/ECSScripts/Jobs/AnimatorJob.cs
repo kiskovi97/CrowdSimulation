@@ -1,17 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
+using static AnimatorSystem;
 
 public struct AnimatorJob : IJobForEach<Translation, Rotation, Animator>
 {
     public float deltaTime;
 
+    public NativeArray<AnimationStep> animation;
+
     public void Execute(ref Translation translation, ref Rotation rotation, ref Animator animator)
     {
         animator.currentTime += deltaTime;
-        var animation = RabbitAnimationObject.jumping;
 
         for (int i = 0; i < animation.Length - 1; i++)
         {
