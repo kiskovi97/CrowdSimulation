@@ -6,13 +6,28 @@ using Unity.Collections;
 [UpdateAfter(typeof(EdibleHashMap))]
 public class GoalSystem : JobComponentSystem
 {
+    private EndSimulationEntityCommandBufferSystem endSimulation;
+
+    protected override void OnCreate()
+    {
+        endSimulation = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+        base.OnCreate();
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+    }
+
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var desireJob = new DesireJob()
         {
-            targetMap = EdibleHashMap.quadrantHashMap
+            targetMap = EdibleHashMap.quadrantHashMap,
+            commandBuffer = endSimulation.CreateCommandBuffer().ToConcurrent()
         };
         var desireHandle = desireJob.Schedule(this, inputDeps);
+        
 
         var groupGoalJob = new GroupGoalJob();
         var groupHandle = groupGoalJob.Schedule(this, desireHandle);

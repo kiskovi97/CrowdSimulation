@@ -11,6 +11,7 @@ public class HashMapBase<Tdata> : ComponentSystem where Tdata : struct, ICompone
 
     public struct MyData
     {
+        public Entity entity;
         public Tdata data;
         public float3 position;
     }
@@ -33,15 +34,16 @@ public class HashMapBase<Tdata> : ComponentSystem where Tdata : struct, ICompone
     }
 
     [BurstCompile]
-    public struct SetHashMapJob : IJobForEach<Translation, Tdata>
+    public struct SetHashMapJob : IJobForEachWithEntity<Translation, Tdata>
     {
         public NativeMultiHashMap<int, MyData>.ParallelWriter quadrantHashMap;
-
-        public void Execute([ReadOnly]ref Translation translation, [ReadOnly]ref Tdata data)
+        
+        public void Execute(Entity entity, int index, [ReadOnly]ref Translation translation, [ReadOnly]ref Tdata data)
         {
             int key = QuadrantVariables.GetPositionHashMapKey(translation.Value);
             quadrantHashMap.Add(key, new MyData()
             {
+                entity = entity,
                 position = translation.Value,
                 data = data
             });
