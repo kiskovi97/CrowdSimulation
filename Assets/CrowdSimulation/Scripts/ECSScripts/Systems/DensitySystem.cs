@@ -145,7 +145,7 @@ class DensitySystem : ComponentSystem
 
         var clearJob = new ClearJob() { array = densityMatrix };
         var clearHandle = clearJob.Schedule(densityMatrix.Length, batchSize);
-        var job = new SetDensityGridJob() { quadrantHashMap = densityMatrix, oneLayer=Map.OneLayer };
+        var job = new SetDensityGridJob() { quadrantHashMap = densityMatrix, oneLayer = Map.OneLayer, maxGroup = Map.MaxGroup };
         var handle = JobForEachExtensions.Schedule(job, entityQuery, clearHandle);
         ForeachColliders();
         var addJob = new AddArrayJob() { from = collidersDensity, to = densityMatrix };
@@ -173,6 +173,9 @@ class DensitySystem : ComponentSystem
             {
                 densityMatrix = collidersDensity,
                 oneLayer = Map.OneLayer,
+                widthPoints = Map.widthPoints,
+                heightPoints = Map.heightPoints,
+                maxGroup = Map.MaxGroup,
             };
             var handle = JobForEachExtensions.Schedule(job, entityQuery);
             handle.Complete();

@@ -11,10 +11,10 @@ public class Map : MonoBehaviour
 
     public static readonly int density = 2;
 
-    public static readonly int MaxGroup = 5;
+    public static int MaxGroup { get; set; } = 5;
 
-    public static readonly int heightPoints = maxHeight * density * 2;
-    public static readonly int widthPoints = maxWidth * density * 2;
+    public static int heightPoints { get => maxHeight* density * 2; }
+    public static int widthPoints { get => maxWidth * density * 2; }
 
     public static int OneLayer { get => heightPoints * widthPoints; }
     public static int AllPoints { get => OneLayer * MaxGroup; }

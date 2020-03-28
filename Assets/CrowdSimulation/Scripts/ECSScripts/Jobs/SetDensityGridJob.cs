@@ -12,6 +12,7 @@ public struct SetDensityGridJob : IJobForEach<Translation, Walker, CollisionPara
     public NativeArray<float> quadrantHashMap;
 
     public int oneLayer;
+    public int maxGroup;
 
     public void Execute([ReadOnly]ref Translation translation, [ReadOnly] ref Walker walker, [ReadOnly] ref CollisionParameters collisionParameters)
     {
@@ -33,7 +34,7 @@ public struct SetDensityGridJob : IJobForEach<Translation, Walker, CollisionPara
         {
             return;
         }
-        for (int group = 0; group < Map.MaxGroup; group++)
+        for (int group = 0; group < maxGroup; group++)
         {
             if (group != gid)
             {

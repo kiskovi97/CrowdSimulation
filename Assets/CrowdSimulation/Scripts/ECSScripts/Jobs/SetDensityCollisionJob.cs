@@ -11,13 +11,16 @@ public struct SetDensityCollisionJob : IJobForEach<PhysicsCollider, LocalToWorld
     public NativeArray<float> densityMatrix;
 
     public int oneLayer;
+    public int widthPoints;
+    public int heightPoints;
+    public int maxGroup;
 
     public void Execute(ref PhysicsCollider collider, ref LocalToWorld localToWorld)
     {
         var aabb = collider.Value.Value.CalculateAabb();
-        for (int group = 0; group < Map.MaxGroup; group++)
-            for (int j = 0; j < Map.heightPoints - 1; j++)
-                for (int i = 0; i < Map.widthPoints - 1; i++)
+        for (int group = 0; group < maxGroup; group++)
+            for (int j = 0; j < heightPoints - 1; j++)
+                for (int i = 0; i < widthPoints - 1; i++)
                 {
                     var point = DensitySystem.ConvertToWorld(new float3(i, 0, j));
                     var localPos = point - localToWorld.Position;
