@@ -12,7 +12,11 @@ public struct AnimatorJob : IJobForEach<Translation, Rotation, Animator>
 
     public void Execute(ref Translation translation, ref Rotation rotation, ref Animator animator)
     {
-        animator.currentTime += deltaTime;
+        animator.currentTime += deltaTime * animator.speed;
+        if (animator.speed < 0.3f)
+        {
+            animator.currentTime = 0f;
+        }
 
         for (int i = 0; i < animation.Length - 1; i++)
         {

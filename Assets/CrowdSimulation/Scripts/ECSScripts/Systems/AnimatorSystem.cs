@@ -2,8 +2,9 @@
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Transforms;
 
-public class AnimatorSystem : JobComponentSystem
+public class AnimatorSystem : ComponentSystem
 {
     public struct AnimationStep
     {
@@ -57,10 +58,20 @@ public class AnimatorSystem : JobComponentSystem
         base.OnDestroy();
     }
 
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
+    protected override void OnUpdate()
     {
+        Entities.ForEach((ref Parent parent, ref Animator animator) =>
+        {
+            if (EntityManager.HasComponent<Walker>(parent.Value))
+            {
+                var walker = EntityManager.GetComponentData<Walker>(parent.Value);
+                animator.speed = math.length(walker.direction) * 2f;
+            }
+        });
+
         var deltaTime = Time.DeltaTime;
         var job = new AnimatorJob() { deltaTime = deltaTime, animation = jumping };
-        return job.Schedule(this, inputDeps);
+        var handle = job.Schedule(this);
+        handle.Complete();
     }
 }

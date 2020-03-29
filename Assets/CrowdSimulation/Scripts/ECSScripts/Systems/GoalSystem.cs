@@ -18,7 +18,7 @@ public class GoalSystem : JobComponentSystem
     {
         base.OnDestroy();
     }
-
+    
     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var desireJob = new DesireJob()

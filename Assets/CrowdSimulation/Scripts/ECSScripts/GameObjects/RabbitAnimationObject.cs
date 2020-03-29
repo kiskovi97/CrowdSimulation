@@ -8,6 +8,7 @@ public class RabbitAnimationObject : MonoBehaviour, IConvertGameObjectToEntity
     {
         dstManager.AddComponentData(entity, new Animator()
         {
+            speed = 1f,
             currentTime = UnityEngine.Random.value,
             localPos = transform.localPosition,
             localRotation = transform.rotation,

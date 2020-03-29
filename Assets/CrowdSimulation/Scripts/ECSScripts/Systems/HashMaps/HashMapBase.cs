@@ -3,7 +3,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-
+using UnityEngine;
 
 public class HashMapBase<Tdata> : ComponentSystem where Tdata : struct, IComponentData
 {

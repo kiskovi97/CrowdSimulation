@@ -16,7 +16,8 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
     public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, [ReadOnly] ref FoodHierarchie foodHierarchie, ref DesireForce desireForce, ref Walker walker)
     {
         if (condition.hunger < 0.1f) {
-            walker.maxSpeed = 0f;
+            desireForce.force = walker.direction * -1;
+            return;
         }
 
         float3 closestPoint = translation.Value;
@@ -31,6 +32,7 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
             {
                 commandBuffer.DestroyEntity(index, foundFoodEntity);
                 condition.hunger -= 1f;
+                if (condition.hunger < 0) condition.hunger = 0;
                 if (length < 0.01f)
                 {
                     desireForce.force = float3.zero;

@@ -9,6 +9,7 @@ using Unity.Mathematics;
 [GenerateAuthoringComponent]
 public struct Animator : IComponentData
 {
+    public float speed;
     public float currentTime;
     public float3 localPos;
     public quaternion localRotation;
