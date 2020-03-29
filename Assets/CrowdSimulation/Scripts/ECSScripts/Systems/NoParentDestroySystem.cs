@@ -21,6 +21,7 @@ public class NoParentDestroySystem : ComponentSystem
         {
             var entity = entities[i];
             DestroyChild(entity);
+            Debug.Log(EntityManager.GetName(entity));
         }
         entities.Dispose();
         EntityManager.DestroyEntity(query);
@@ -37,6 +38,7 @@ public class NoParentDestroySystem : ComponentSystem
             var child = children[i];
             DestroyChild(child.Value);
             entities[i] = child.Value;
+            Debug.Log(EntityManager.GetName(child.Value));
         }
         EntityManager.DestroyEntity(entities);
         entities.Dispose();

@@ -5,116 +5,113 @@ using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+public struct MapValues
+{
+    public int maxHeight;
+    public int maxWidth;
+    public int density;
+    public int MaxGroup;
+    public int heightPoints;
+    public int widthPoints;
+}
+
 public class Map : MonoBehaviour
 {
-    public struct MapValues
-    {
-        public int maxHeight;
-        public int maxWidth;
-        public int density;
-        public int MaxGroup;
-        public int heightPoints;
-        public int widthPoints;
-    }
+
+    public GameObject[] edibles;
+    public GameObject[] obstacles;
+    public float distance = 1f;
+    public int ediblesNumber = 30;
+    public int obstaclesNumber = 30;
+    public int InputMaxHeight = 30;
+    public int InputMaxWidth = 50;
+
+    public static int MaxHeight { get => Instance != null ? Instance.InputMaxHeight : 30; }
+    public static int MaxWidth { get => Instance != null ? Instance.InputMaxWidth : 50; }
+
+    public static readonly int density = 2;
+    private static readonly float innerRadius = 0.8f;
+
+    public static int MaxGroup { get; set; } = 5;
+
+    public static int HeightPoints { get => MaxHeight * density * 2; }
+    public static int WidthPoints { get => MaxWidth * density * 2; }
+
+    public static int OneLayer { get => HeightPoints * WidthPoints; }
+    public static int AllPoints { get => OneLayer * MaxGroup; }
 
     private static Map Instance;
 
     public static MapValues Values
     {
-        get
+        get => new MapValues()
         {
-            var maxHeight = 30;
-            var density = 2;
-            var maxWidth = 50;
-            if (Instance == null) return new MapValues()
-            {
-                maxHeight = maxHeight,
-                maxWidth = maxWidth,
-                density = density,
-                MaxGroup = 5,
-                heightPoints = maxHeight * density * 2,
-                widthPoints = maxWidth * density * 2,
-            };
-            maxHeight = Map.maxHeight;
-            density = Map.density;
-            maxWidth = Map.maxWidth;
-            return new MapValues()
-            {
-                maxHeight = maxHeight,
-                maxWidth = maxWidth,
-                density = density,
-                MaxGroup = Map.MaxGroup,
-                heightPoints = maxHeight * density * 2,
-                widthPoints = maxWidth * density * 2,
-            };
-
-        }
+            maxHeight = MaxHeight,
+            maxWidth = MaxWidth,
+            density = density,
+            MaxGroup = MaxGroup,
+            heightPoints = MaxHeight * density * 2,
+            widthPoints = MaxWidth * density * 2,
+        };
     }
-
-    public int InputMaxHeight = 30;
-    public int InputMaxWidth = 50;
-
-    public static int maxHeight
-    {
-        get
-        {
-            if (Instance != null)
-                return Instance.InputMaxHeight;
-            return 30;
-        }
-    }
-    public static int maxWidth
-    {
-        get
-        {
-            if (Instance != null)
-                return Instance.InputMaxWidth;
-            return 50;
-        }
-    }
-
-    public static float2 max { get => new float2(maxWidth, maxHeight); }
-
-    public static readonly float innerRadius = 0.8f;
-
-    public static readonly int density = 2;
-
-    public static int MaxGroup { get; set; } = 5;
-
-    public static int heightPoints { get => maxHeight * density * 2; }
-    public static int widthPoints { get => maxWidth * density * 2; }
-
-    public static int OneLayer { get => heightPoints * widthPoints; }
-    public static int AllPoints { get => OneLayer * MaxGroup; }
-
-    public GameObject[] edibles;
-    public GameObject[] obstacles;
-    public int beginingNumber = 30;
-    public int obstaclesNumber = 30;
 
     private void Awake()
     {
         Instance = this;
     }
 
+    List<Vector3> prevPositions;
+
     private void Start()
     {
-        for (int i = 0; i < beginingNumber; i++)
-        {
-            var height = Random.value * maxHeight * innerRadius * 2 - maxHeight * innerRadius;
-            var width = Random.value * maxWidth * innerRadius * 2 - maxWidth * innerRadius;
-            var index = (int)(Random.value * edibles.Length);
-            var obj = Instantiate(edibles[index], new Vector3(width, 0, height), Quaternion.identity);
-            obj.transform.Rotate(new Vector3(0, Random.value * 180, 0));
-        }
+        prevPositions = new List<Vector3>();
 
         for (int i = 0; i < obstaclesNumber; i++)
         {
-            var height = Random.value * maxHeight * innerRadius * 2 - maxHeight * innerRadius;
-            var width = Random.value * maxWidth * innerRadius * 2 - maxWidth * innerRadius;
             var index = (int)(Random.value * obstacles.Length);
-            var obj = Instantiate(obstacles[index], new Vector3(width, 0, height), Quaternion.identity);
+            Vector3 pos;
+            int max = 0;
+            do
+            {
+                max++;
+                var height = Random.value * MaxHeight * innerRadius * 2 - MaxHeight * innerRadius;
+                var width = Random.value * MaxWidth * innerRadius * 2 - MaxWidth * innerRadius;
+                pos = new Vector3(width, 0, height);
+            } while (IsNear(pos, distance * 3f) && max < 100);
+
+            var obj = Instantiate(obstacles[index], pos, Quaternion.identity);
+            prevPositions.Add(pos);
             obj.transform.Rotate(new Vector3(0, Random.value * 180, 0));
         }
+
+        for (int i = 0; i < ediblesNumber; i++)
+        {
+            var index = (int)(Random.value * edibles.Length);
+            Vector3 pos;
+            int max = 0;
+            do
+            {
+                max++;
+                var height = Random.value * MaxHeight * innerRadius * 2 - MaxHeight * innerRadius;
+                var width = Random.value * MaxWidth * innerRadius * 2 - MaxWidth * innerRadius;
+                pos = new Vector3(width, 0, height);
+            } while (IsNear(pos, distance) && max < 100);
+
+            var obj = Instantiate(edibles[index], pos, Quaternion.identity);
+            prevPositions.Add(pos);
+            obj.transform.Rotate(new Vector3(0, Random.value * 180, 0));
+        }
+    }
+
+    bool IsNear(Vector3 pos, float dist)
+    {
+        foreach (var position in prevPositions)
+        {
+            if ((pos - position).magnitude < dist)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

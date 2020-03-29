@@ -26,17 +26,21 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
         if (found)
         {
             var length = math.length(closestPoint - translation.Value);
-            desireForce.force = math.normalize(closestPoint - translation.Value);
-
-            if (length < math.dot(desireForce.force, walker.direction))
-            {
-                walker.direction *= 0.9f;
-            }
 
             if (length < 0.4f)
             {
                 commandBuffer.DestroyEntity(index, foundFoodEntity);
                 condition.hunger -= 1f;
+                if (length < 0.01f)
+                {
+                    desireForce.force = float3.zero;
+                    return;
+                }
+            }
+            desireForce.force =  math.normalize(closestPoint - translation.Value);
+            if (length < math.dot(desireForce.force, walker.direction))
+            {
+                walker.direction *= 0.9f;
             }
         } else
         {

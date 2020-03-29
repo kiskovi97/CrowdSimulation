@@ -174,8 +174,8 @@ class DensitySystem : ComponentSystem
             {
                 densityMatrix = collidersDensity,
                 oneLayer = Map.OneLayer,
-                widthPoints = Map.widthPoints,
-                heightPoints = Map.heightPoints,
+                widthPoints = Map.WidthPoints,
+                heightPoints = Map.HeightPoints,
                 maxGroup = Map.MaxGroup,
                 max = Map.Values
             };
@@ -188,8 +188,8 @@ class DensitySystem : ComponentSystem
     void Debug()
     {
         int group = 1;
-        for (int j = 1; j < Map.heightPoints - 1; j++)
-            for (int i = 1; i < Map.widthPoints - 1; i++)
+        for (int j = 1; j < Map.HeightPoints - 1; j++)
+            for (int i = 1; i < Map.WidthPoints - 1; i++)
             {
                 float right = densityMatrix[Map.OneLayer * group + Index(i + 1, j, Map.Values)];
                 float left = densityMatrix[Map.OneLayer * group + Index(i - 1, j, Map.Values)];

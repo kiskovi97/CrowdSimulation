@@ -386,7 +386,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowScale: 0.01
   maxValue: 30
-  maxValue2: 30
   maxTime: 40
 --- !u!4 &518963820
 Transform:
@@ -518,7 +517,7 @@ PrefabInstance:
     - target: {fileID: 4803896741180113344, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: m_Name
-      value: CollisionGroup 1 (1)
+      value: CollisionGroup Right
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113345, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
@@ -558,7 +557,7 @@ PrefabInstance:
     - target: {fileID: 4803896741180113345, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113345, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
@@ -903,7 +902,7 @@ PrefabInstance:
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: method
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
@@ -968,7 +967,7 @@ PrefabInstance:
     - target: {fileID: 4803896741180113345, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113345, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}

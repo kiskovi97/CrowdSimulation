@@ -93,6 +93,7 @@ public class CrowdSpawner : MonoBehaviour
         if (info != null)
         {
             info.text = "PathFinding: " + method.ToString();
+            info.color = color.color;
         }
 
         if (Input.GetKeyDown(KeyCode.A))
