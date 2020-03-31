@@ -19,7 +19,7 @@ public struct GroupGoalJob : IJobForEach<Translation, Walker,  GroupCondition, G
             group.force = force;
         } else
         {
-            group.force = walker.direction * -1;
+            group.force = float3.zero;// walker.direction * -0.9f;
         }
     }
 }

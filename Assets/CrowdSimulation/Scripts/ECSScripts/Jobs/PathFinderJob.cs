@@ -15,9 +15,9 @@ public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, Collis
     public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly]ref DecidedForce decidedForce, [ReadOnly]ref CollisionParameters collisionParameters, [ReadOnly]ref Walker walker,
          [ReadOnly]ref Translation translation, ref PathForce pathForce)
     {
-        if (!(data.method == PathFindingMethod.Forces))
+        if (!(data.pathFindingMethod == PathFindingMethod.Forces))
         {
-            if (data.method == PathFindingMethod.No)
+            if (data.pathFindingMethod == PathFindingMethod.No)
             {
                 pathForce.force = decidedForce.force;
             }
@@ -58,15 +58,17 @@ public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, Collis
         {
             do
             {
-                if (me.broId == other.data2.broId) {
-                    convinientForce += other.data2.direction;
-                    bros++;
-                    continue;
-                }
 
                 var direction = me.position - other.position;
                 var distance = math.length(direction);
                 var distanceNormalized = (radius - distance) / (radius);
+
+                if (me.broId == other.data2.broId) {
+                    convinientForce += other.data2.direction;
+                    bros++;
+                    distanceNormalized *= 5f;
+                    //continue;
+                }
 
                 if (distanceNormalized > 0f && distanceNormalized < 1f)
                 {

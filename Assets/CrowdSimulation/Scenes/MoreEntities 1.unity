@@ -178,6 +178,16 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_Name
@@ -295,6 +305,16 @@ PrefabInstance:
     - target: {fileID: 2448988819961043914, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,
@@ -416,6 +436,16 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_Name
@@ -535,6 +565,16 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_Name
@@ -652,6 +692,16 @@ PrefabInstance:
     - target: {fileID: 2448988819961043914, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,
@@ -872,6 +922,16 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_Name
@@ -989,6 +1049,16 @@ PrefabInstance:
     - target: {fileID: 2448988819961043914, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,
@@ -1202,6 +1272,16 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_Name
@@ -1341,7 +1421,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1615177871}
   m_LocalRotation: {x: 0.656555, y: -0, z: -0, w: 0.7542782}
-  m_LocalPosition: {x: 0, y: 91.3, z: -10}
+  m_LocalPosition: {x: 0, y: 90.4, z: -16.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1402,6 +1482,16 @@ PrefabInstance:
     - target: {fileID: 2448988819961043914, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,

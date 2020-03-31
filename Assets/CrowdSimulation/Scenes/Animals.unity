@@ -134,10 +134,10 @@ GameObject:
   m_Layer: 0
   m_Name: Crowd 4
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7174288486110832750, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &90760628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,7 +153,9 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: bf4459ca70511b045b40782f619c78e4,
     type: 3}
   goalPoint: {fileID: 974632901}
-  method: 1
+  data:
+    pathFindingMethod: 0
+    decisionMethod: 1
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 4
@@ -255,8 +257,8 @@ MonoBehaviour:
   - {fileID: 6642191171866384085, guid: e8257701361d4d948820c4448e28221f, type: 3}
   - {fileID: 2081934484873819357, guid: ae4cb74a2ef1dc244bc281ba1371afaa, type: 3}
   distance: 1
-  ediblesNumber: 200
-  obstaclesNumber: 25
+  ediblesNumber: 1000
+  obstaclesNumber: 0
   InputMaxHeight: 25
   InputMaxWidth: 25
 --- !u!23 &515814568
@@ -425,7 +427,7 @@ GameObject:
   m_Layer: 0
   m_Name: Crowd 2
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -443,8 +445,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityObject: {fileID: 2002152154697913493, guid: e862c90a28677e140872ffc31855588b,
     type: 3}
-  goalPoint: {fileID: 1957015263}
-  method: 1
+  goalPoint: {fileID: 723637311}
+  data:
+    pathFindingMethod: 1
+    decisionMethod: 1
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 5
@@ -561,10 +565,10 @@ GameObject:
   m_Layer: 0
   m_Name: Crowd 3
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &974632900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -580,7 +584,9 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: bf4459ca70511b045b40782f619c78e4,
     type: 3}
   goalPoint: {fileID: 90760629}
-  method: 1
+  data:
+    pathFindingMethod: 0
+    decisionMethod: 1
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 4
@@ -614,7 +620,7 @@ GameObject:
   m_Layer: 0
   m_Name: Crowd 1
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -632,8 +638,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityObject: {fileID: 2002152154697913493, guid: e862c90a28677e140872ffc31855588b,
     type: 3}
-  goalPoint: {fileID: 723637311}
-  method: 1
+  goalPoint: {fileID: 1957015263}
+  data:
+    pathFindingMethod: 1
+    decisionMethod: 1
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 4

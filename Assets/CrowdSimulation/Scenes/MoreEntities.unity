@@ -433,11 +433,16 @@ PrefabInstance:
     - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: goalRadius
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: method
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468628, guid: 41d9ff82e42324447b35925e27b06721,
@@ -468,12 +473,17 @@ PrefabInstance:
     - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: goalRadius
-      value: 20
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: method
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3250417541908103756, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
@@ -493,12 +503,12 @@ PrefabInstance:
     - target: {fileID: 4803896739919772903, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -32.2
+      value: -37.2
       objectReference: {fileID: 0}
     - target: {fileID: 4803896739919772903, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -27
+      value: -38.5
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
@@ -578,12 +588,12 @@ PrefabInstance:
     - target: {fileID: 4803896741190647249, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 24.1
+      value: 31.4
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741190647249, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -27
+      value: -37.5
       objectReference: {fileID: 0}
     - target: {fileID: 5465220993731620344, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
@@ -692,6 +702,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: RabbitCrowd (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7546938581977126685, guid: 834df9cd8aa3a1d43bb493e91d698d39,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7546938581977126686, guid: 834df9cd8aa3a1d43bb493e91d698d39,
         type: 3}
       propertyPath: goalPoint
@@ -752,6 +767,11 @@ PrefabInstance:
         type: 3}
       propertyPath: sizeZ
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7546938581977126686, guid: 834df9cd8aa3a1d43bb493e91d698d39,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7546938581977126687, guid: 834df9cd8aa3a1d43bb493e91d698d39,
         type: 3}

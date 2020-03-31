@@ -14,7 +14,14 @@ public struct ForceJob : IJobForEach<PathForce, Walker>
         var b3 = math.isnan(pathForce.force);
         if (!b3.x && !b3.y && !b3.z)
         {
-            walker.direction += pathForce.force * deltaTime * 4f;
+
+            if (math.length(pathForce.force) == 0f)
+            {
+                walker.direction -= walker.direction * deltaTime * 4f;
+            } else
+            {
+                walker.direction += pathForce.force * deltaTime * 4f;
+            }
         }
 
         var speed = math.length(walker.direction);

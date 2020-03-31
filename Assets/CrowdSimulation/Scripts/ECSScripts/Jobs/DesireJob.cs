@@ -24,7 +24,7 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
     {
         condition.hunger += deltaTime / secondPerHunger;
         if (condition.hunger < hungerLimit) {
-            desireForce.force = walker.direction * -1;
+            desireForce.force = float3.zero;
             return;
         }
 

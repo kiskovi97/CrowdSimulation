@@ -18,9 +18,9 @@ public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, Co
     public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision, 
         [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation, ref PathForce pathForce)
     {
-        if (!(data.method == PathFindingMethod.DensityGrid))
+        if (!(data.pathFindingMethod == PathFindingMethod.DensityGrid))
         {
-            if (data.method == PathFindingMethod.No)
+            if (data.pathFindingMethod == PathFindingMethod.No)
             {
                 pathForce.force = decidedForce.force;
             }

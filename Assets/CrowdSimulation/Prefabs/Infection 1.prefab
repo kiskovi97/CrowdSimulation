@@ -125,7 +125,9 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: bddec555ff4d8404fb6f129f7f8e4a7c,
     type: 3}
   goalPoint: {fileID: 7986457785359142440}
-  method: 2
+  data:
+    pathFindingMethod: 1
+    decisionMethod: 1
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 4
@@ -178,7 +180,9 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: bddec555ff4d8404fb6f129f7f8e4a7c,
     type: 3}
   goalPoint: {fileID: 7986457784898247768}
-  method: 2
+  data:
+    pathFindingMethod: 1
+    decisionMethod: 1
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 4

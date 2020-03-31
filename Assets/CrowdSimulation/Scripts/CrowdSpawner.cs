@@ -11,7 +11,8 @@ public class CrowdSpawner : MonoBehaviour
 {
     public GameObject entityObject;
     public Transform goalPoint;
-    public PathFindingMethod method;
+    [SerializeField]
+    public PathFindingData data;
     public TextMeshProUGUI info;
     public Material color;
 
@@ -100,7 +101,7 @@ public class CrowdSpawner : MonoBehaviour
                 var person = obj.GetComponent<PersonObject>();
                 if (person != null)
                 {
-                    person.ChangeGroup(cond, Id, method);
+                    person.ChangeGroup(cond, Id, data);
                     person.ConnectParent(this);
                 }
             }
@@ -111,7 +112,7 @@ public class CrowdSpawner : MonoBehaviour
     {
         if (info != null)
         {
-            info.text = "PathFinding: " + method.ToString();
+            info.text = "PathFinding: " + data.pathFindingMethod.ToString() + ", Decision: " + data.decisionMethod.ToString();
             info.color = color.color;
         }
 

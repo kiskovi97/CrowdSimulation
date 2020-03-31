@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1117985598801270842}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.0125, y: 0, z: 0}
-  m_LocalScale: {x: 0.003, y: 0.001, z: 0.001}
+  m_LocalScale: {x: 0.003, y: 0.001, z: 0.003}
   m_Children: []
   m_Father: {fileID: 2002152154697913498}
   m_RootOrder: 2
@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: -2176088025487669420}
   - component: {fileID: 2823695101134469478}
   - component: {fileID: 2577643803585070198}
+  - component: {fileID: 926144872029399367}
   m_Layer: 0
   m_Name: EntityRabbit
   m_TagString: Untagged
@@ -253,6 +254,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &926144872029399367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2002152154697913493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75076d8447cbb5e48990d6012bf9c747, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  force:
+    x: 0
+    y: 0
+    z: 0
 --- !u!1 &5755317093515833458
 GameObject:
   m_ObjectHideFlags: 0

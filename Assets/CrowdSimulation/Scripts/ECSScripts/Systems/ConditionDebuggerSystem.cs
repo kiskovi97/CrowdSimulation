@@ -18,7 +18,10 @@ class ConditionDebuggerSystem : ComponentSystem
             {
                 var condition = EntityManager.GetComponentData<Condition>(parent.Value);
                 //translation.Value.y = (condition.hunger) - localToWorld.Up.y * 0.5f;
+                if (condition.hunger > 1f)
                 compositeScale.Value.y = condition.hunger * 0.01f;
+                else
+                    compositeScale.Value.y = 0f;
             }
         });
     }
