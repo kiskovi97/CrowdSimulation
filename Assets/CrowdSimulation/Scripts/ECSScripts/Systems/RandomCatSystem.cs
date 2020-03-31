@@ -19,6 +19,14 @@ public class RandomCatSystem : JobComponentSystem
 
         var forceHandle = forceJob.Schedule(this, inputDeps);
 
-        return forceHandle;
+        var forceJob2 = new RandomCatGroupJob()
+        {
+            deltaTime = deltaTime,
+            random = random
+        };
+
+        var forceHandle2 = forceJob2.Schedule(this, forceHandle);
+
+        return forceHandle2;
     }
 }

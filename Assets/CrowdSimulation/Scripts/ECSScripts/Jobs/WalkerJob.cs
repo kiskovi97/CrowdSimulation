@@ -8,6 +8,7 @@ using Unity.Collections;
 [BurstCompile]
 public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
 {
+    private static readonly float radiantperSecond = 2f;
     public float deltaTime;
     public float maxWidth;
     public float maxHeight;
@@ -27,17 +28,8 @@ public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
 
         if (speed > 0.1f)
         {
-            var forward = new float3(0, 0, 1);
-            var realForward = math.mul(rotation.Value, forward);
-
-            var dot = (math.dot(math.normalize(realForward), math.normalize(walker.direction)) + 1f) * 0.5f; // 0-1
-                    
-            dot = math.min(1.0f, dot);
-            dot = math.max(0.5f, dot);
-
-            var avarage = realForward * dot + walker.direction * (1 - dot);
-
-            rotation.Value = quaternion.LookRotationSafe(avarage, new float3(0, 1, 0));
+            var toward = quaternion.LookRotationSafe(walker.direction, new float3(0, 1, 0));
+            rotation.Value = math.slerp(rotation.Value, toward, deltaTime * radiantperSecond);
         }
     }
 

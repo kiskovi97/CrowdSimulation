@@ -28,6 +28,25 @@ public class CrowdSpawner : MonoBehaviour
 
     private List<Entity> entities = new List<Entity>();
 
+    public (int infected, int immune) GetEntities(EntityManager em)
+    {
+        var infected = 0;
+        var immune = 0;
+        foreach(var entity in entities)
+        {
+            var infection = em.GetComponentData<Infection>(entity);
+            if (infection.infectionTime > 0f)
+            {
+                infected++;
+            }
+            if (infection.reverseImmunity < 1f)
+            {
+                immune++;
+            }
+        }
+        return (infected, immune);
+    }
+
     public float EntitiesDistanceFromGoal()
     {
         var em = World.DefaultGameObjectInjectionWorld.EntityManager;

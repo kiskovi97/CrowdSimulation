@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
+﻿using Unity.Entities;
 using UnityEngine;
 
 public class InfectionCounter : MonoBehaviour
 {
     public Diagram diagram;
+
+    public CrowdSpawner[] crowds;
 
     public Color infectedColor;
     public Color immuneColor;
@@ -29,24 +29,20 @@ public class InfectionCounter : MonoBehaviour
     {
         var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-        var quaery = em.CreateEntityQuery(typeof(Infection));
-
-        var infections = quaery.ToComponentDataArray<Infection>(Unity.Collections.Allocator.TempJob);
-        var count = 0;
-        var immunes = 0;
-        for (int i=0; i< infections.Length; i++)
+        if (crowds.Length > 0)
         {
-            if (infections[i].infectionTime > 0f)
+            var mInfected = 0;
+            var mImmune = 0;
+            foreach(var crowd in crowds)
             {
-                count++;
+                var (infected, immune) = crowd.GetEntities(em);
+                mInfected += infected;
+                mImmune += immune;
             }
-            if (infections[i].reverseImmunity < 1f)
-            {
-                immunes ++;
-            }
+
+            diagram.AddPoint(infectedId, mInfected);
+            diagram.AddPoint(immuneId, mImmune);
+            return;
         }
-        infections.Dispose();
-        diagram.AddPoint(infectedId, count);
-        diagram.AddPoint(immuneId, immunes);
     }
 }
