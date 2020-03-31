@@ -7,31 +7,39 @@ using Unity.Mathematics;
 [BurstCompile]
 public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHierarchie, DesireForce, Walker>
 {
+    private static readonly float secondPerHunger = 10f;
+    private static readonly float hungerLimit = 1f;
+    private static readonly float3 noFoodVector = new float3(0, 0, 0); //1,0,1
+
+
     [NativeDisableParallelForRestriction]
     [ReadOnly]
     public NativeMultiHashMap<int, EdibleHashMap.MyData> targetMap;
 
     public EntityCommandBuffer.Concurrent commandBuffer;
 
+    public float deltaTime;
+
     public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, [ReadOnly] ref FoodHierarchie foodHierarchie, ref DesireForce desireForce, ref Walker walker)
     {
-        if (condition.hunger < 0.1f) {
+        condition.hunger += deltaTime / secondPerHunger;
+        if (condition.hunger < hungerLimit) {
             desireForce.force = walker.direction * -1;
             return;
         }
 
-        float3 closestPoint = translation.Value;
         bool found = false;
-        Entity foundFoodEntity = Entity.Null;
-        ForeachAround(translation.Value, ref closestPoint, ref foundFoodEntity, ref found);
+        EdibleHashMap.MyData foundFood = new HashMapBase<Edible>.MyData();
+        ForeachAround(translation.Value, ref foundFood, ref found);
+
         if (found)
         {
-            var length = math.length(closestPoint - translation.Value);
+            var length = math.length(foundFood.position - translation.Value);
 
             if (length < 0.4f)
             {
-                commandBuffer.DestroyEntity(index, foundFoodEntity);
-                condition.hunger -= 1f;
+                commandBuffer.DestroyEntity(index, foundFood.entity);
+                condition.hunger -= foundFood.data.nutrition;
                 if (condition.hunger < 0) condition.hunger = 0;
                 if (length < 0.01f)
                 {
@@ -39,32 +47,32 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
                     return;
                 }
             }
-            desireForce.force =  math.normalize(closestPoint - translation.Value);
+            desireForce.force =  math.normalize(foundFood.position - translation.Value);
             if (length < math.dot(desireForce.force, walker.direction))
             {
                 walker.direction *= 0.9f;
             }
         } else
         {
-            desireForce.force = new float3(1, 0, 1);
+            desireForce.force = noFoodVector;
         }
     }
 
-    private void ForeachAround(float3 position, ref float3 closestPoint, ref Entity foundFoodEntity, ref bool found)
+    private void ForeachAround(float3 position, ref EdibleHashMap.MyData foundFood, ref bool found)
     {
         var key = QuadrantVariables.GetPositionHashMapKey(position);
-        Foreach(key, position, ref closestPoint, ref foundFoodEntity, ref found);
+        Foreach(key, position, ref foundFood, ref found);
         key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
-        Foreach(key, position, ref closestPoint, ref foundFoodEntity, ref found);
+        Foreach(key, position, ref foundFood, ref found);
         key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
-        Foreach(key, position, ref closestPoint, ref foundFoodEntity, ref found);
+        Foreach(key, position, ref foundFood, ref found);
         key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
-        Foreach(key, position, ref closestPoint, ref foundFoodEntity, ref found);
+        Foreach(key, position, ref foundFood, ref found);
         key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
-        Foreach(key, position, ref closestPoint, ref foundFoodEntity, ref found);
+        Foreach(key, position, ref foundFood, ref found);
     }
 
-    private void Foreach(int key, float3 me, ref float3 closestPoint, ref Entity foundFoodEntity, ref bool found)
+    private void Foreach(int key, float3 me, ref EdibleHashMap.MyData foundFood, ref bool found)
     {
         if (targetMap.TryGetFirstValue(key, out EdibleHashMap.MyData food, out NativeMultiHashMapIterator<int> iterator))
         {
@@ -72,18 +80,16 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
             {
                 if (!found)
                 {
-                    closestPoint = food.position;
-                    foundFoodEntity = food.entity;
+                    foundFood = food;
                     found = true;
                 }
                 else
                 {
-                    var prev = math.lengthsq(closestPoint - me);
+                    var prev = math.lengthsq(foundFood.position - me);
                     var next = math.lengthsq(food.position - me);
                     if (next < prev)
                     {
-                        closestPoint = food.position;
-                        foundFoodEntity = food.entity;
+                        foundFood = food;
                     }
                 }
 

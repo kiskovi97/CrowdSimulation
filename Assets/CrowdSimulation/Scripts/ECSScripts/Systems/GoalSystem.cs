@@ -24,7 +24,8 @@ public class GoalSystem : JobComponentSystem
         var desireJob = new DesireJob()
         {
             targetMap = EdibleHashMap.quadrantHashMap,
-            commandBuffer = endSimulation.CreateCommandBuffer().ToConcurrent()
+            commandBuffer = endSimulation.CreateCommandBuffer().ToConcurrent(),
+            deltaTime = Time.DeltaTime
         };
         var desireHandle = desireJob.Schedule(this, inputDeps);
         

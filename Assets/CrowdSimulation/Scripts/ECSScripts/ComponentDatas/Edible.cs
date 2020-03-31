@@ -6,5 +6,5 @@ using UnityEngine;
 [GenerateAuthoringComponent]
 public struct Edible : IComponentData
 {
-    
+    public float nutrition;
 }
