@@ -29,7 +29,7 @@ public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, Co
 
         var group = oneLayer * walker.broId;
 
-        var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * 2, max);
+        var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * math.length(decidedForce.force), max);
 
         var force = float3.zero;
         var multiMin = float.MaxValue;

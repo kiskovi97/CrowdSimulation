@@ -7,9 +7,8 @@ using Unity.Mathematics;
 [BurstCompile]
 public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHierarchie, DesireForce, Walker>
 {
-    private static readonly float secondPerHunger = 10f;
+    private static readonly float secondPerHunger = 60f;
     private static readonly float hungerLimit = 1f;
-    private static readonly float3 noFoodVector = new float3(0, 0, 0); //1,0,1
 
 
     [NativeDisableParallelForRestriction]
@@ -22,7 +21,7 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
 
     public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, [ReadOnly] ref FoodHierarchie foodHierarchie, ref DesireForce desireForce, ref Walker walker)
     {
-        condition.hunger += deltaTime / secondPerHunger;
+        //condition.hunger += deltaTime / secondPerHunger;
         if (condition.hunger < hungerLimit) {
             desireForce.force = float3.zero;
             return;
@@ -54,7 +53,7 @@ public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHier
             }
         } else
         {
-            desireForce.force = noFoodVector;
+            desireForce.force = float3.zero;
         }
     }
 

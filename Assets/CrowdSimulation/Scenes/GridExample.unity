@@ -222,7 +222,7 @@ PrefabInstance:
     - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
@@ -263,7 +263,7 @@ PrefabInstance:
     - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3720750032603052822, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}

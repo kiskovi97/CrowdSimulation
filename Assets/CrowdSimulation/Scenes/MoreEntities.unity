@@ -433,7 +433,7 @@ PrefabInstance:
     - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: goalRadius
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
@@ -443,7 +443,7 @@ PrefabInstance:
     - target: {fileID: 3032824728808921739, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468628, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
@@ -473,7 +473,7 @@ PrefabInstance:
     - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: goalRadius
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
@@ -483,7 +483,7 @@ PrefabInstance:
     - target: {fileID: 3032824729261468629, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3250417541908103756, guid: 41d9ff82e42324447b35925e27b06721,
         type: 3}
@@ -705,7 +705,7 @@ PrefabInstance:
     - target: {fileID: 7546938581977126685, guid: 834df9cd8aa3a1d43bb493e91d698d39,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7546938581977126686, guid: 834df9cd8aa3a1d43bb493e91d698d39,
         type: 3}

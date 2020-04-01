@@ -23,12 +23,17 @@ public struct SetDesireForceJob : IJobForEach<DesireForce, DecidedForce>
 }
 
 [BurstCompile]
-public struct DecisionJob : IJobForEach<GroupForce, DesireForce, DecidedForce, PathFindingData>
+public struct DecisionJob : IJobForEach<GroupForce, DesireForce, DecidedForce, PathFindingData, Walker>
 {
-    public void Execute([ReadOnly] ref GroupForce groupForce, [ReadOnly] ref DesireForce desireForce, ref DecidedForce decidedForce, ref PathFindingData pathFindingData)
+    public void Execute([ReadOnly] ref GroupForce groupForce, [ReadOnly] ref DesireForce desireForce, ref DecidedForce decidedForce, ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker)
     {
         if (math.length(desireForce.force) == 0f)
         {
+            if (math.length(groupForce.force) == 0f)
+            {
+                decidedForce.force = -walker.direction;
+                return;
+            }
             decidedForce.force = groupForce.force;
             return;
         }

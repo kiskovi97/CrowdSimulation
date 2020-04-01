@@ -66,8 +66,7 @@ public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, Collis
                 if (me.broId == other.data2.broId) {
                     convinientForce += other.data2.direction;
                     bros++;
-                    distanceNormalized *= 5f;
-                    //continue;
+                    continue;
                 }
 
                 if (distanceNormalized > 0f && distanceNormalized < 1f)
