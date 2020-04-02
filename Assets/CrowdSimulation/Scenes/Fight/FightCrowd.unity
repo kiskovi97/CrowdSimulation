@@ -294,7 +294,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 48.674004, y: 319.905, z: 107.075005}
 --- !u!1 &959943451
 GameObject:
@@ -305,7 +305,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 959943453}
-  - component: {fileID: 959943452}
+  - component: {fileID: 959943454}
   m_Layer: 0
   m_Name: FightGroup
   m_TagString: Untagged
@@ -313,30 +313,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &959943452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 959943451}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e04c7618c046b9a49be886719927d775, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  entityObject: {fileID: 6014953267392912931, guid: 0f60b4319b792b943b26eec6c968fb88,
-    type: 3}
-  goalPoint: {fileID: 1750300192}
-  data:
-    pathFindingMethod: 1
-    decisionMethod: 1
-  info: {fileID: 0}
-  color: {fileID: 0}
-  goalRadius: 5
-  sizeX: 10
-  sizeZ: 10
-  distance: 1
 --- !u!4 &959943453
 Transform:
   m_ObjectHideFlags: 0
@@ -345,12 +321,35 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959943451}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 15.8}
+  m_LocalPosition: {x: 0, y: 0, z: 9.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &959943454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 959943451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb396aa8cd72cd648b73cb648a357893, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  entityObject: {fileID: 6014953267392912931, guid: 0f60b4319b792b943b26eec6c968fb88,
+    type: 3}
+  targetCrowd: {fileID: 1745306128}
+  data:
+    pathFindingMethod: 2
+    decisionMethod: 1
+  color: {fileID: 0}
+  restRadius: 3
+  sizeX: 5
+  sizeZ: 5
+  distance: 1
 --- !u!1 &1134148544
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,20 +475,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1745306127}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e04c7618c046b9a49be886719927d775, type: 3}
+  m_Script: {fileID: 11500000, guid: bb396aa8cd72cd648b73cb648a357893, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   entityObject: {fileID: 6014953267392912931, guid: d6d20079ee99d334f944448b1586bca6,
     type: 3}
-  goalPoint: {fileID: 1750300192}
+  targetCrowd: {fileID: 959943454}
   data:
-    pathFindingMethod: 1
+    pathFindingMethod: 2
     decisionMethod: 1
-  info: {fileID: 0}
   color: {fileID: 0}
-  goalRadius: 5
+  restRadius: 3
   sizeX: 10
-  sizeZ: 10
+  sizeZ: 2
   distance: 1
 --- !u!4 &1745306129
 Transform:
@@ -499,11 +497,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1745306127}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -18.5}
+  m_LocalPosition: {x: 0, y: 0, z: -9.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1750300191
 GameObject:
@@ -533,5 +531,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

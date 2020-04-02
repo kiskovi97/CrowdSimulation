@@ -88,12 +88,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3077000596222250766}
-  - component: {fileID: 9196559712112668196}
   - component: {fileID: 2548299281673808476}
   - component: {fileID: 4364145007350262585}
   - component: {fileID: 6400707534058334412}
-  - component: {fileID: 4213065976682361160}
   - component: {fileID: 5318790643383939231}
+  - component: {fileID: 7020279327375492474}
   m_Layer: 0
   m_Name: Fighter 2
   m_TagString: Untagged
@@ -117,23 +116,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9196559712112668196
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6014953267392912931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38c070b67c83c044f8df7a8424076608, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  direction:
-    x: 0
-    y: 0
-    z: 0
-  maxSpeed: 2
 --- !u!114 &2548299281673808476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,22 +162,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   innerRadius: 0.5
   outerRadius: 2
---- !u!114 &4213065976682361160
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6014953267392912931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75076d8447cbb5e48990d6012bf9c747, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force:
-    x: 0
-    y: 0
-    z: 0
 --- !u!114 &5318790643383939231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +175,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &7020279327375492474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6014953267392912931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36eea429e1e03ff439d461b11906c333, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxSpeed: 2
 --- !u!1001 &8389834025345406882
 PrefabInstance:
   m_ObjectHideFlags: 0

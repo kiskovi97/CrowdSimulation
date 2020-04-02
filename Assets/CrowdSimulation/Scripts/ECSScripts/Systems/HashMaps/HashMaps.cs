@@ -10,21 +10,12 @@ public struct QuadrantData
     public float radius;
 }
 
-public class InfectionHashMap : HashMapBase<Infection>
-{
-}
+public class InfectionHashMap : HashMapBase<Infection>{}
 
-public class EdibleHashMap : HashMapBase<Edible>
-{
+public class EdibleHashMap : HashMapBase<Edible>{}
 
-}
+public class CollidersHashMap : HashMapBase<PhysicsCollider, LocalToWorld>{}
 
-public class CollidersHashMap : HashMapBase<PhysicsCollider, LocalToWorld>
-{
+public class EntitiesHashMap : HashMapBase<CollisionParameters, Walker>{}
 
-}
-
-public class EntitiesHashMap : HashMapBase<CollisionParameters, Walker>
-{
-
-}
+public class FightersHashMap : HashMapBase<Fighter, Walker>{}

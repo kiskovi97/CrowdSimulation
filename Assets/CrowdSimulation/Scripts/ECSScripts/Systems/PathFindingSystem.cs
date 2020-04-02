@@ -6,9 +6,10 @@ using Unity.Collections;
 [UpdateAfter(typeof(DensitySystem))]
 [UpdateAfter(typeof(GoalSystem))]
 [UpdateAfter(typeof(EntitiesHashMap))]
+[UpdateAfter(typeof(FighterSystem))]
 public class PathFindingSystem : JobComponentSystem
 {
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
+     protected override JobHandle OnUpdate(JobHandle inputDeps)
     {
         var pathFindingJob = new PathFindingJob() {
             targetMap = EntitiesHashMap.quadrantHashMap,
