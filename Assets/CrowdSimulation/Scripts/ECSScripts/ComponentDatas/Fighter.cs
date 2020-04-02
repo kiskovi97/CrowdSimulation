@@ -9,5 +9,13 @@ public struct Fighter : IComponentData
     public float3 targetPos;
     public float3 restPos;
     public float restRadius;
-    public bool fight;
+
+    public FightState state;
+}
+
+public enum FightState
+{
+    Rest,
+    GoToFight,
+    Fight
 }

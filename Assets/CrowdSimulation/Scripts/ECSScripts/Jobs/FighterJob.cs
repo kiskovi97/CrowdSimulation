@@ -7,15 +7,15 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 [BurstCompile]
-public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation>
+public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, CollisionParameters>
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
     public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
 
-    public void Execute(ref Fighter fighter, ref DecidedForce decidedForce, ref Translation translation)
+    public void Execute(ref Fighter fighter, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters)
     {
-        if (!fighter.fight)
+        if (fighter.state == FightState.Rest)
         {
             var force = (fighter.restPos - translation.Value);
             if (math.length(force) > fighter.restRadius)
@@ -36,10 +36,23 @@ public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation>
         var found = ForeachAround(translation.Value, ref selected, fighter.targetId);
         if (found)
         {
-            decidedForce.force = selected.position - translation.Value;
+            var direction = selected.position - translation.Value;
+
+            if (math.length(direction) < collisionParameters.outerRadius)
+            {
+                decidedForce.force = float3.zero;
+                fighter.state = FightState.Fight;
+            }
+            else
+            {
+                decidedForce.force = direction;
+                fighter.state = FightState.GoToFight;
+            }
+
         } else
         {
             decidedForce.force = fighter.targetPos - translation.Value;
+            fighter.state = FightState.GoToFight;
         }
     }
 

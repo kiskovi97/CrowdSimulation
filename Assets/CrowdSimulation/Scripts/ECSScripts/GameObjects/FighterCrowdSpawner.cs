@@ -47,7 +47,7 @@ public class FighterCrowdSpawner : MonoBehaviour
             targetId = targetCrowd.myId,
             targetPos = targetCrowd.gameObject.transform.position,
             restPos = transform.position,
-            fight = false,
+            state = FightState.Rest,
             restRadius = radius,
         };
         for (int i = 0; i < sizeX; i++)
@@ -91,7 +91,7 @@ public class FighterCrowdSpawner : MonoBehaviour
         foreach (var entity in entities)
         {
             var data = em.GetComponentData<Fighter>(entity);
-            data.fight = fight;
+            data.state = fight ? FightState.GoToFight : FightState.Rest;
             em.SetComponentData(entity, data);
         }
     }
