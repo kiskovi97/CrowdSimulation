@@ -249,6 +249,7 @@ GameObject:
   - component: {fileID: 6977072293245481831}
   - component: {fileID: 5048196126265479658}
   - component: {fileID: 5551817254383162920}
+  - component: {fileID: 494209149312996156}
   m_Layer: 0
   m_Name: ManMesh
   m_TagString: Untagged
@@ -320,6 +321,18 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &494209149312996156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5298257882320577891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690713a0d6feca1428d97fd15724c76c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9169696235492816420
 GameObject:
   m_ObjectHideFlags: 0

@@ -49,7 +49,8 @@ public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, Colli
                 fighter.state = FightState.GoToFight;
             }
 
-        } else
+        }
+        else
         {
             decidedForce.force = fighter.targetPos - translation.Value;
             fighter.state = FightState.GoToFight;

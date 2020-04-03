@@ -13,17 +13,23 @@ public class AnimatorSystem : ComponentSystem
         public float time;
     }
 
-    public static NativeArray<AnimationStep> jumping;
+    public struct Animation
+    {
+        public int startIndex;
+        public int endIndex;
+    }
+
+    public static NativeArray<Animation> animations;
+    public static NativeArray<AnimationStep> animationSteps;
 
     protected override void OnCreate()
     {
         base.OnCreate();
-        jumping = new NativeArray<AnimationStep>(new AnimationStep[] {
+        animationSteps = new NativeArray<AnimationStep>(new AnimationStep[] {
+            /// RABBIT STEPS
             new AnimationStep()
             {
-                position = new float3(0,0,0),
-                rotation = quaternion.EulerXYZ(- math.radians(90),0,0),
-                time = 0f
+                position = new float3(0,0,0), rotation = quaternion.EulerXYZ(- math.radians(90),0,0), time = 0f
             },
             new AnimationStep()
             {
@@ -48,13 +54,39 @@ public class AnimatorSystem : ComponentSystem
                 position = new float3(0f,0,0),
                 rotation = quaternion.EulerXYZ(- math.radians(90),0,0),
                 time = 1f
+            },
+
+            /// ARM STEPS
+            new AnimationStep()
+            {
+                position = new float3(0f,0,0),
+                rotation = quaternion.EulerXYZ(- math.radians(0),0,0),
+                time = 0f
+            },
+            new AnimationStep()
+            {
+                position = new float3(0f,0,0),
+                rotation = quaternion.EulerXYZ(- math.radians(-90),0,0),
+                time = 0.2f
+            },
+            new AnimationStep()
+            {
+                position = new float3(0f,0,0),
+                rotation = quaternion.EulerXYZ(- math.radians(0),0,0),
+                time = 0.4f
             }
+        }, Allocator.Persistent);
+
+        animations = new NativeArray<Animation>(new Animation[] {
+            new Animation() { startIndex = 0, endIndex = 4, },
+            new Animation() { startIndex = 5, endIndex = 7, },
         }, Allocator.Persistent);
     }
 
     protected override void OnDestroy()
     {
-        jumping.Dispose();
+        animationSteps.Dispose();
+        animations.Dispose();
         base.OnDestroy();
     }
 
@@ -70,7 +102,7 @@ public class AnimatorSystem : ComponentSystem
         });
 
         var deltaTime = Time.DeltaTime;
-        var job = new AnimatorJob() { deltaTime = deltaTime, animation = jumping };
+        var job = new AnimatorJob() { deltaTime = deltaTime, animations = animations, steps = animationSteps };
         var handle = job.Schedule(this);
         handle.Complete();
     }

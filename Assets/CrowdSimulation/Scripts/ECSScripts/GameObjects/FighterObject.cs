@@ -6,6 +6,7 @@ public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
 {
     public float maxSpeed;
     private int broId;
+
     private PathFindingData pathFindingData = new PathFindingData()
     {
         decisionMethod = DecisionMethod.Max,
@@ -34,6 +35,7 @@ public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
 
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
+
         if (changedGroup)
         {
             dstManager.AddComponentData(entity, fighter);

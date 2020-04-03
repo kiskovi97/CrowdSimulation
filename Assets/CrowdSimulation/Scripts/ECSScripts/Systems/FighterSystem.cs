@@ -11,6 +11,14 @@ class FighterSystem : ComponentSystem
         };
         var handle = job.Schedule(this);
         handle.Complete();
+        var hJob = new HurtingJob()
+        {
+            targetMap = FightersHashMap.quadrantHashMap,
+            deltaTime = Time.DeltaTime,
+        };
+        var hHandle = hJob.Schedule(this);
+        hHandle.Complete();
+
     }
 }
 

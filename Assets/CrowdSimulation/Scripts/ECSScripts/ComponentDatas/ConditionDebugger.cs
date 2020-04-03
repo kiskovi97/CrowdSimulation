@@ -6,5 +6,11 @@ using UnityEngine;
 [GenerateAuthoringComponent]
 public struct ConditionDebugger : IComponentData
 {
-    
+    public ConditionType type;
+}
+
+public enum ConditionType
+{
+    Hunger,
+    LifeLine
 }

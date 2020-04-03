@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
+using System.Linq;
 
 public class FighterCrowdSpawner : MonoBehaviour
 {
@@ -88,6 +89,7 @@ public class FighterCrowdSpawner : MonoBehaviour
     private void NewGoal(bool fight)
     {
         var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        entities = entities.Where((entity) => em.Exists(entity)).ToList();
         foreach (var entity in entities)
         {
             var data = em.GetComponentData<Fighter>(entity);

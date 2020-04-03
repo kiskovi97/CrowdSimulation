@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 863509851830448466}
   - component: {fileID: 253707813617818707}
   - component: {fileID: 6786087094044393783}
+  - component: {fileID: 2868090195979902995}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -79,6 +80,18 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!114 &2868090195979902995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5348719687629936188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 690713a0d6feca1428d97fd15724c76c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6014953267392912931
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,6 +106,7 @@ GameObject:
   - component: {fileID: 6400707534058334412}
   - component: {fileID: 5318790643383939231}
   - component: {fileID: -4169761829770335084}
+  - component: {fileID: 7306792675790663045}
   m_Layer: 0
   m_Name: Fighter
   m_TagString: Untagged
@@ -188,6 +202,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 2
+--- !u!114 &7306792675790663045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6014953267392912931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65cfcb17db904fd478151f980b167471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifeLine: 60
+  hunger: 0
+  thirst: 0
 --- !u!1001 &8389834025345406882
 PrefabInstance:
   m_ObjectHideFlags: 0
