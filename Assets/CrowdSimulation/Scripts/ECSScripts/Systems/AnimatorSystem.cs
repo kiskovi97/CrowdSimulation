@@ -9,7 +9,7 @@ public class AnimatorSystem : ComponentSystem
     public struct AnimationStep
     {
         public float3 position;
-        public quaternion rotation;
+        public float3 rotation;
         public float time;
     }
 
@@ -29,30 +29,31 @@ public class AnimatorSystem : ComponentSystem
             /// RABBIT STEPS
             new AnimationStep()
             {
-                position = new float3(0,0,0), rotation = quaternion.EulerXYZ(- math.radians(90),0,0), time = 0f
+                position = new float3(0,0,0),
+                rotation = new float3(- math.radians(90),0,0), time = 0f
             },
             new AnimationStep()
             {
                 position = new float3(0,0.002f,0),
-                rotation = quaternion.EulerXYZ(-0.4f - math.radians(90),0,0),
+                rotation = new float3(-0.4f - math.radians(90),0,0),
                 time = 0.1f
             },
             new AnimationStep()
             {
                 position = new float3(0,0.02f,0),
-                rotation = quaternion.EulerXYZ(- math.radians(90),0,0),
+                rotation = new float3(- math.radians(90),0,0),
                 time = 0.5f
             },
             new AnimationStep()
             {
                 position = new float3(0,0.002f,0),
-                rotation = quaternion.EulerXYZ(0.4f - math.radians(90),0,0),
+                rotation = new float3(0.4f - math.radians(90),0,0),
                 time = 0.8f
             },
             new AnimationStep()
             {
                 position = new float3(0f,0,0),
-                rotation = quaternion.EulerXYZ(- math.radians(90),0,0),
+                rotation = new float3(- math.radians(90),0,0),
                 time = 1f
             },
 
@@ -60,26 +61,68 @@ public class AnimatorSystem : ComponentSystem
             new AnimationStep()
             {
                 position = new float3(0f,0,0),
-                rotation = quaternion.EulerXYZ(- math.radians(0),0,0),
+                rotation = new float3(- math.radians(0),0,0),
                 time = 0f
             },
             new AnimationStep()
             {
                 position = new float3(0f,0,0),
-                rotation = quaternion.EulerXYZ(- math.radians(-90),0,0),
+                rotation = new float3(- math.radians(-90),0,0),
                 time = 0.2f
             },
             new AnimationStep()
             {
                 position = new float3(0f,0,0),
-                rotation = quaternion.EulerXYZ(- math.radians(0),0,0),
+                rotation = new float3(- math.radians(0),0,0),
                 time = 0.4f
-            }
+            },
+
+             /// BodySteps
+            new AnimationStep()
+            {
+                position = new float3(0f,0,0),
+                rotation = new float3(math.radians(-90),math.PI,0),
+                time = 0f
+            },
+            new AnimationStep()
+            {
+                position = new float3(0f,0,0),
+                rotation = new float3(math.radians(-90),math.PI * 1.9f,0),
+                time = 0.1f
+            },
+            new AnimationStep()
+            {
+                position = new float3(0f,0,0),
+                rotation = new float3(math.radians(-90), math.PI * 2.7f,0),
+                time = 0.2f
+            },
+            new AnimationStep()
+            {
+                position = new float3(0f,0,0),
+                rotation = new float3(math.radians(-90), math.PI * 3f,0),
+                time = 0.21f
+            },
+
+             /// ArmLong
+            new AnimationStep()
+            {
+                position = new float3(0f,0,0),
+                rotation = new float3(0,-math.PI / 4,0),
+                time = 0f
+            },
+            new AnimationStep()
+            {
+                position = new float3(0f,0,0),
+                rotation = new float3(0,-math.PI / 4,0),
+                time = 0.1f
+            },
         }, Allocator.Persistent);
 
         animations = new NativeArray<Animation>(new Animation[] {
             new Animation() { startIndex = 0, endIndex = 4, },
             new Animation() { startIndex = 5, endIndex = 7, },
+            new Animation() { startIndex = 8, endIndex = 11, },
+            new Animation() { startIndex = 12, endIndex = 13, },
         }, Allocator.Persistent);
     }
 
@@ -97,7 +140,10 @@ public class AnimatorSystem : ComponentSystem
             if (EntityManager.HasComponent<Walker>(parent.Value))
             {
                 var walker = EntityManager.GetComponentData<Walker>(parent.Value);
-                animator.speed = math.length(walker.direction) * 2f;
+                if (animator.animationIndex == 0)
+                {
+                    animator.speed = math.length(walker.direction) * 2f;
+                }
             }
         });
 
@@ -116,13 +162,13 @@ public class AnimatorSystem : ComponentSystem
 
         for (int i = 0; i < entities.Length; i++)
         {
-            ForeachChildren(entities[i], fighters[i].state == FightState.Fight ? 1f : 0f);
+            ForeachChildren(entities[i], fighters[i].state, fighters[i].attack);
         }
         entities.Dispose();
         fighters.Dispose();
     }
 
-    private void ForeachChildren(Entity entity, float speed)
+    private void ForeachChildren(Entity entity, FightState state, AttackType attack)
     {
         if (!EntityManager.HasComponent<Child>(entity)) return;
         var children = EntityManager.GetBuffer<Child>(entity);
@@ -132,12 +178,50 @@ public class AnimatorSystem : ComponentSystem
             if (EntityManager.HasComponent<Animator>(child.Value))
             {
                 var animator = EntityManager.GetComponentData<Animator>(child.Value);
-                if (animator.speed < speed)
-                    animator.currentTime = UnityEngine.Random.value;
-                animator.speed = speed;
+
+                if (animator.animationIndex == 1 || animator.animationIndex == 3)
+                {
+                    if (attack == AttackType.All)
+                    {
+                        animator.animationIndex = 3;
+                    } else
+                    {
+                        animator.animationIndex = 1;
+                    }
+                    if (state == FightState.Fight)
+                    {
+                        if (animator.speed < 1f)
+                            animator.currentTime = UnityEngine.Random.value;
+                        animator.speed = 1f;
+                    }
+                    else
+                    {
+                        animator.animationIndex = 1;
+                        animator.speed = 0;
+                        animator.currentTime = 0;
+                    }
+                }
+
+                if (animator.animationIndex == 2)
+                {
+                    if (state == FightState.Fight && attack == AttackType.All)
+                    {
+                        if (animator.speed < 1f)
+                        {
+                            animator.currentTime = UnityEngine.Random.value;
+                        }
+                        animator.speed = 1f;
+                    }
+                    else
+                    {
+                        animator.speed = 0;
+                        animator.currentTime = 0;
+                    }
+                }
+
                 EntityManager.SetComponentData(child.Value, animator);
             }
-            ForeachChildren(child.Value, speed);
+            ForeachChildren(child.Value, state, attack);
         }
     }
 }

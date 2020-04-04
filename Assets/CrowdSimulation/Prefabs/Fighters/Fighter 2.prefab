@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AnimationIndex: 1
+  reverseY: 0
 --- !u!114 &4550864752303700498
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26,6 +27,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AnimationIndex: 1
+  reverseY: 1
+--- !u!114 &6973241453424512987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461269394878853825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef90a88852389e4abeee5f8c03cd1bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AnimationIndex: 2
+  reverseY: 0
 --- !u!1 &5348719687629936188
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 2
+  attackRadius: 2
 --- !u!114 &7077505924600496519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AnimationIndex: 1
+  reverseY: 0
 --- !u!1 &7020313252070831793
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,6 +381,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AnimationIndex: 1
+  reverseY: 0
 --- !u!1001 &8389834025345406882
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -472,6 +491,12 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 1f2ddb154f20892478e9f299354defa5, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f6abe0b88252e74e8d8633034095441, type: 3}
+--- !u!1 &4461269394878853825 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5298257882320577891, guid: 2f6abe0b88252e74e8d8633034095441,
+    type: 3}
+  m_PrefabInstance: {fileID: 8389834025345406882}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1494394428317443269 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6977072293245481831, guid: 2f6abe0b88252e74e8d8633034095441,

@@ -4,7 +4,8 @@ using Unity.Mathematics;
 
 public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
 {
-    public float maxSpeed;
+    public float maxSpeed = 2f;
+    public float attackRadius = 2f;
     private int broId;
 
     private PathFindingData pathFindingData = new PathFindingData()
@@ -14,7 +15,7 @@ public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
     };
     private Fighter fighter = new Fighter()
     {
-        targetId = 0
+        targerGroupId = 0
     };
 
     FighterCrowdSpawner parent;
@@ -30,6 +31,7 @@ public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
         this.broId = broId;
         this.pathFindingData = pathFindingData;
         this.fighter = fighter;
+        this.fighter.attackRadius = attackRadius;
         changedGroup = true;
     }
 
@@ -38,6 +40,7 @@ public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
 
         if (changedGroup)
         {
+            this.fighter.Id = entity.Index;
             dstManager.AddComponentData(entity, fighter);
             dstManager.AddComponentData(entity, pathFindingData);
         }

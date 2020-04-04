@@ -9,7 +9,9 @@ public class FighterCrowdSpawner : MonoBehaviour
     public FighterCrowdSpawner targetCrowd;
     [SerializeField]
     public PathFindingData data;
+    public AttackType attackType;
     public Material color;
+    public float attackStrength = 2f;
 
     public static int Id = 0;
     
@@ -44,11 +46,16 @@ public class FighterCrowdSpawner : MonoBehaviour
         var area = sizeX * sizeZ * distance * distance;
         var radius = Mathf.Sqrt(area / Mathf.PI);
         var fighterComp = new Fighter() {
-            targetId = targetCrowd.myId,
-            targetPos = targetCrowd.gameObject.transform.position,
             restPos = transform.position,
-            state = FightState.Rest,
             restRadius = radius,
+            attack = attackType,
+            groupId = myId,
+            attackStrength = attackStrength,
+
+            targerGroupId = targetCrowd.myId,
+            targetId = -1,
+            targetGroupPos = targetCrowd.gameObject.transform.position,
+            state = FightState.Rest,
         };
         for (int i = 0; i < sizeX; i++)
         {

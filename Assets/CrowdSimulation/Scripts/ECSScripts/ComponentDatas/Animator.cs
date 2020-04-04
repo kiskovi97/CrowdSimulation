@@ -14,4 +14,6 @@ public struct Animator : IComponentData
     public float currentTime;
     public float3 localPos;
     public quaternion localRotation;
+
+    public bool reverseY;
 }

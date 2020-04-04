@@ -5,6 +5,7 @@ using Unity.Entities;
 public class BaseAnimationbject : MonoBehaviour, IConvertGameObjectToEntity
 {
     public int AnimationIndex = 1;
+    public bool reverseY = false;
 
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
@@ -15,6 +16,7 @@ public class BaseAnimationbject : MonoBehaviour, IConvertGameObjectToEntity
             currentTime = UnityEngine.Random.value,
             localPos = transform.localPosition,
             localRotation = transform.rotation,
+            reverseY = reverseY,
         });
     }
 }

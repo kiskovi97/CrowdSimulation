@@ -7,54 +7,54 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 [BurstCompile]
-public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, CollisionParameters, Walker>
+public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, Walker>
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
     public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
 
-    public void Execute(ref Fighter fighter, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters, ref Walker walker)
+    public void Execute(ref Fighter fighter, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, ref Walker walker)
     {
         if (fighter.state == FightState.Rest)
         {
-            var force = (fighter.restPos - translation.Value);
-            if (math.length(force) > fighter.restRadius)
-            {
-                if (math.length(force) > 1f)
-                {
-                    force = math.normalize(force);
-                }
-                decidedForce.force = force;
-            }
-            else
-            {
-                decidedForce.force = float3.zero;
-            }
+            Rest(fighter, translation, ref decidedForce);
             return;
         }
         var selected = new FightersHashMap.MyData();
-        var found = ForeachAround(translation.Value, ref selected, fighter.targetId);
+        var found = ForeachAround(translation.Value, ref selected, fighter.targerGroupId);
+
+        fighter.targetId = -1;
         if (found)
         {
             var direction = selected.position - translation.Value;
+            fighter.targetId = selected.data.Id;
 
-            if (math.length(direction) < collisionParameters.outerRadius)
+            if (math.length(direction) < fighter.attackRadius)
             {
                 decidedForce.force = float3.zero;
                 fighter.state = FightState.Fight;
                 walker.direction = direction;
+                return;
             }
-            else
-            {
-                decidedForce.force = direction;
-                fighter.state = FightState.GoToFight;
-            }
+        }
+        decidedForce.force = fighter.targetGroupPos - translation.Value;
+        fighter.state = FightState.GoToFight;
+    }
 
+    private void Rest(Fighter fighter, Translation translation, ref DecidedForce decidedForce)
+    {
+        var force = (fighter.restPos - translation.Value);
+        if (math.length(force) > fighter.restRadius)
+        {
+            if (math.length(force) > 1f)
+            {
+                force = math.normalize(force);
+            }
+            decidedForce.force = force;
         }
         else
         {
-            decidedForce.force = fighter.targetPos - translation.Value;
-            fighter.state = FightState.GoToFight;
+            decidedForce.force = float3.zero;
         }
     }
 

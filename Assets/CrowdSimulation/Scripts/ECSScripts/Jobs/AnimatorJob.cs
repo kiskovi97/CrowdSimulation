@@ -1,5 +1,6 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
 using static AnimatorSystem;
 
@@ -20,7 +21,8 @@ public struct AnimatorJob : IJobForEach<Translation, Rotation, Animator>
         {
             animator.currentTime = 0f;
         }
-        
+
+        var reverse = new float3(1, animator.reverseY ? -1 : 1, 1);
 
         for (int i = animations[animator.animationIndex].startIndex; i < animations[animator.animationIndex].endIndex; i++)
         {
@@ -32,15 +34,18 @@ public struct AnimatorJob : IJobForEach<Translation, Rotation, Animator>
             var deltaTime = (animator.currentTime - prevTime) / (nextTime - prevTime);
 
             var deltaTranslation = steps[i].position * (1 - deltaTime) + steps[i + 1].position * deltaTime;
-            
 
-            var deltaRotation = steps[i].rotation.value * (1 - deltaTime) + steps[i + 1].rotation.value * deltaTime;
+            var prev = quaternion.EulerXYZ(steps[i].rotation * reverse);
+            var next = quaternion.EulerXYZ(steps[i + 1].rotation * reverse);
+
+            var deltaRotation = math.nlerp(prev, next, deltaTime);
+
             translation.Value = deltaTranslation + animator.localPos;
 
-            rotation.Value.value = deltaRotation;
+            rotation.Value = deltaRotation;
             return;
         }
-        var lastTime = steps[steps.Length - 1].time;
+        var lastTime = steps[animations[animator.animationIndex].endIndex].time;
         if (lastTime < animator.currentTime)
         {
             animator.currentTime -= lastTime;
