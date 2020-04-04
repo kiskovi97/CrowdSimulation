@@ -246,6 +246,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 2
   attackRadius: 2
+  attackStrength: 2
+  attackType: 1
 --- !u!114 &7077505924600496519
 MonoBehaviour:
   m_ObjectHideFlags: 0

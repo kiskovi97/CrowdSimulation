@@ -345,10 +345,8 @@ MonoBehaviour:
   data:
     pathFindingMethod: 2
     decisionMethod: 1
-  attackType: 0
   color: {fileID: 0}
-  attackStrength: 2
-  sizeX: 3
+  sizeX: 5
   sizeZ: 1
   distance: 1
 --- !u!1 &1134148544
@@ -485,10 +483,8 @@ MonoBehaviour:
   data:
     pathFindingMethod: 2
     decisionMethod: 1
-  attackType: 1
   color: {fileID: 0}
-  attackStrength: 10
-  sizeX: 1
+  sizeX: 3
   sizeZ: 1
   distance: 1
 --- !u!4 &1745306129

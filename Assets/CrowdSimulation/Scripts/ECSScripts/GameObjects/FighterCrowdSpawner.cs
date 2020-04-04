@@ -9,9 +9,7 @@ public class FighterCrowdSpawner : MonoBehaviour
     public FighterCrowdSpawner targetCrowd;
     [SerializeField]
     public PathFindingData data;
-    public AttackType attackType;
     public Material color;
-    public float attackStrength = 2f;
 
     public static int Id = 0;
     
@@ -48,9 +46,7 @@ public class FighterCrowdSpawner : MonoBehaviour
         var fighterComp = new Fighter() {
             restPos = transform.position,
             restRadius = radius,
-            attack = attackType,
             groupId = myId,
-            attackStrength = attackStrength,
 
             targerGroupId = targetCrowd.myId,
             targetId = -1,

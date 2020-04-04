@@ -7,6 +7,8 @@ public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
     public float maxSpeed = 2f;
     public float attackRadius = 2f;
     private int broId;
+    public float attackStrength = 2f;
+    public AttackType attackType = AttackType.One;
 
     private PathFindingData pathFindingData = new PathFindingData()
     {
@@ -32,6 +34,8 @@ public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
         this.pathFindingData = pathFindingData;
         this.fighter = fighter;
         this.fighter.attackRadius = attackRadius;
+        this.fighter.attack = attackType;
+        this.fighter.attackStrength = attackStrength;
         changedGroup = true;
     }
 
