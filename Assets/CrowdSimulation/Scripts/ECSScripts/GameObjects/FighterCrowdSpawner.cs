@@ -5,7 +5,7 @@ using System.Linq;
 
 public class FighterCrowdSpawner : MonoBehaviour
 {
-    public GameObject entityObject;
+    public GameObject[] entityObjects;
     public FighterCrowdSpawner targetCrowd;
     [SerializeField]
     public PathFindingData data;
@@ -58,7 +58,8 @@ public class FighterCrowdSpawner : MonoBehaviour
             for (int j = 0; j < sizeZ; j++)
             {
                 var position = new Vector3((i - sizeX / 2) * distance, 0, (j - sizeZ / 2) * distance);
-                var obj = Instantiate(entityObject, transform);
+                var index = (int)( Random.value * entityObjects.Length);
+                var obj = Instantiate(entityObjects[index], transform);
                 obj.transform.localPosition = position;
                 var renderer = obj.GetComponent<MeshRenderer>();
                 if (renderer != null && color != null)
