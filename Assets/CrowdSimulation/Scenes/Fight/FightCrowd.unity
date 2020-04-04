@@ -346,7 +346,6 @@ MonoBehaviour:
     pathFindingMethod: 2
     decisionMethod: 1
   color: {fileID: 0}
-  restRadius: 3
   sizeX: 5
   sizeZ: 5
   distance: 1
@@ -485,7 +484,6 @@ MonoBehaviour:
     pathFindingMethod: 2
     decisionMethod: 1
   color: {fileID: 0}
-  restRadius: 3
   sizeX: 5
   sizeZ: 5
   distance: 1

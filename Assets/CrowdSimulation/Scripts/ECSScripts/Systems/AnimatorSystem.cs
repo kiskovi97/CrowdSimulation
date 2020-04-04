@@ -105,5 +105,39 @@ public class AnimatorSystem : ComponentSystem
         var job = new AnimatorJob() { deltaTime = deltaTime, animations = animations, steps = animationSteps };
         var handle = job.Schedule(this);
         handle.Complete();
+
+        var eqd = new EntityQueryDesc
+        {
+            All = new ComponentType[] { typeof(Fighter) }
+        };
+        var query = GetEntityQuery(eqd);
+        var entities = query.ToEntityArray(Allocator.TempJob);
+        var fighters = query.ToComponentDataArray<Fighter>(Allocator.TempJob);
+
+        for (int i = 0; i < entities.Length; i++)
+        {
+            ForeachChildren(entities[i], fighters[i].state == FightState.Fight ? 1f : 0f);
+        }
+        entities.Dispose();
+        fighters.Dispose();
+    }
+
+    private void ForeachChildren(Entity entity, float speed)
+    {
+        if (!EntityManager.HasComponent<Child>(entity)) return;
+        var children = EntityManager.GetBuffer<Child>(entity);
+        for (int i = 0; i < children.Length; i++)
+        {
+            var child = children[i];
+            if (EntityManager.HasComponent<Animator>(child.Value))
+            {
+                var animator = EntityManager.GetComponentData<Animator>(child.Value);
+                if (animator.speed < speed)
+                    animator.currentTime = UnityEngine.Random.value;
+                animator.speed = speed;
+                EntityManager.SetComponentData(child.Value, animator);
+            }
+            ForeachChildren(child.Value, speed);
+        }
     }
 }

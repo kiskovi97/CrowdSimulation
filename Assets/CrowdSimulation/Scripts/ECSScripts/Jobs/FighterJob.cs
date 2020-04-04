@@ -7,13 +7,13 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 [BurstCompile]
-public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, CollisionParameters>
+public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, CollisionParameters, Walker>
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
     public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
 
-    public void Execute(ref Fighter fighter, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters)
+    public void Execute(ref Fighter fighter, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters, ref Walker walker)
     {
         if (fighter.state == FightState.Rest)
         {
@@ -42,6 +42,7 @@ public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, Colli
             {
                 decidedForce.force = float3.zero;
                 fighter.state = FightState.Fight;
+                walker.direction = direction;
             }
             else
             {

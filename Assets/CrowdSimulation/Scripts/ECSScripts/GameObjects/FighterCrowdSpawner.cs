@@ -10,7 +10,6 @@ public class FighterCrowdSpawner : MonoBehaviour
     [SerializeField]
     public PathFindingData data;
     public Material color;
-    public float restRadius;
 
     public static int Id = 0;
     
