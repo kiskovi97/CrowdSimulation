@@ -204,7 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSpeed: 2
   attackRadius: 2
-  attackStrength: 2
+  attackStrength: 1
   attackType: 1
 --- !u!114 &7077505924600496519
 MonoBehaviour:
@@ -280,7 +280,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9f7d26166fcd90044a06f72b86bd8c1f, type: 2}
+  - {fileID: 2100000, guid: 58ef8738e1a6276409b043acf9da2aed, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

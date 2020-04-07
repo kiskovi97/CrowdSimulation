@@ -15,14 +15,16 @@ public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
 
     public void Execute(ref Rotation rotation, ref Translation transform, [ReadOnly] ref Walker walker)
     {
-        RotateForward(ref walker, ref rotation);
+        walker.direction.y = 0;
+
+        RotateForward(walker, ref rotation);
 
         Step(ref transform, walker.direction);
 
         EdgeReaction(ref transform);
     }
 
-    private void RotateForward([ReadOnly] ref Walker walker, ref Rotation rotation)
+    private void RotateForward(Walker walker, ref Rotation rotation)
     {
         var speed = math.length(walker.direction);
 

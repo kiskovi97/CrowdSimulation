@@ -2,6 +2,9 @@
 using Unity.Entities;
 using UnityEngine;
 using System.Linq;
+using System;
+using Unity.Transforms;
+using Unity.Mathematics;
 
 public class FighterCrowdSpawner : MonoBehaviour
 {
@@ -9,11 +12,11 @@ public class FighterCrowdSpawner : MonoBehaviour
     public FighterCrowdSpawner targetCrowd;
     [SerializeField]
     public PathFindingData data;
-    public Material color;
+    public Transform cameraGoal;
 
     public static int Id = 0;
     
-    [System.NonSerialized]
+    [NonSerialized]
     public int myId;
 
     public int sizeX = 5;
@@ -58,14 +61,9 @@ public class FighterCrowdSpawner : MonoBehaviour
             for (int j = 0; j < sizeZ; j++)
             {
                 var position = new Vector3((i - sizeX / 2) * distance, 0, (j - sizeZ / 2) * distance);
-                var index = (int)( Random.value * entityObjects.Length);
+                var index = (int)( UnityEngine.Random.value * entityObjects.Length);
                 var obj = Instantiate(entityObjects[index], transform);
                 obj.transform.localPosition = position;
-                var renderer = obj.GetComponent<MeshRenderer>();
-                if (renderer != null && color != null)
-                {
-                    renderer.material = color;
-                }
                 var fighter = obj.GetComponent<FighterObject>();
                 if (fighter != null)
                 {
@@ -80,16 +78,61 @@ public class FighterCrowdSpawner : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.F))
         {
-            NewGoal(true);
+            ChangeState(true);
         }
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            NewGoal(false);
+            ChangeState(false);
+        }
+
+        SetCamera();
+    }
+
+    private void SetCamera()
+    {
+        var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        entities = entities.Where((entity) => em.Exists(entity)).ToList();
+        var pos = float3.zero;
+        int db = 0;
+        foreach (var entity in entities)
+        {
+            var data = em.GetComponentData<Translation>(entity);
+            pos += data.Value;
+            db++;
+        }
+        if (db > 0)
+        {
+            pos /= db;
+            targetCrowd.SetTargetPosition(pos);
+            if (cameraGoal != null)
+            {
+                cameraGoal.position = pos;
+            }
+        }
+        else
+        {
+            targetCrowd.SetTargetPosition(transform.position);
         }
     }
 
-    private void NewGoal(bool fight)
+    private void SetTargetPosition(float3 pos)
+    {
+        var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        entities = entities.Where((entity) => em.Exists(entity)).ToList();
+
+        var area = entities.Count * distance * distance;
+        var radius = Mathf.Sqrt(area / Mathf.PI);
+        foreach (var entity in entities)
+        {
+            var data = em.GetComponentData<Fighter>(entity);
+            data.targetGroupPos = pos;
+            data.restRadius = radius;
+            em.SetComponentData(entity, data);
+        }
+    }
+
+    private void ChangeState(bool fight)
     {
         var em = World.DefaultGameObjectInjectionWorld.EntityManager;
         entities = entities.Where((entity) => em.Exists(entity)).ToList();

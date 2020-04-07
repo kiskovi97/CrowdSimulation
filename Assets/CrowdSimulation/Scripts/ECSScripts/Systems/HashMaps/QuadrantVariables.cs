@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class QuadrantVariables
 {
-    private static readonly int quadrandCellSize = 5;
+    private static readonly int quadrandCellSize = 10;
     private static readonly int quadrandMultiplyer = 100000;
 
     public static int GetPositionHashMapKey(float3 position)

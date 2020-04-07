@@ -20,10 +20,6 @@ public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, Co
     {
         if (!(data.pathFindingMethod == PathFindingMethod.DensityGrid))
         {
-            if (data.pathFindingMethod == PathFindingMethod.No)
-            {
-                pathForce.force = decidedForce.force;
-            }
             return;
         }
 

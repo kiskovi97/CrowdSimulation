@@ -13,6 +13,12 @@ public struct Line
 public class DebugProxy : MonoBehaviour
 {
     private readonly static Queue<Line> lines = new Queue<Line>();
+    private readonly static Queue<string> cLines = new Queue<string>();
+
+    public static void Log(string line)
+    {
+        cLines.Enqueue(line);
+    }
 
     public static void DrawLine(Vector3 x, Vector3 y, Color color)
     {
@@ -50,6 +56,10 @@ public class DebugProxy : MonoBehaviour
         {
             var line = lines.Dequeue();
             Debug.DrawLine(line.X0, line.X1, line.Color, Time.deltaTime, true);
+        }
+        while (cLines.Count > 0)
+        {
+            Debug.Log(cLines.Dequeue());
         }
     }
 }

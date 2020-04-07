@@ -7,17 +7,17 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 [BurstCompile]
-public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, Walker>
+public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, Rotation>
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
     public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
 
-    public void Execute(ref Fighter fighter, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, ref Walker walker)
+    public void Execute(ref Fighter fighter, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, ref Rotation walker)
     {
         if (fighter.state == FightState.Rest)
         {
-            Rest(fighter, translation, ref decidedForce);
+            GetNear(fighter.restPos, fighter.restRadius, translation, ref decidedForce);
             return;
         }
         var selected = new FightersHashMap.MyData();
@@ -32,25 +32,37 @@ public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, Walke
             if (math.length(direction) < fighter.attackRadius)
             {
                 decidedForce.force = float3.zero;
+                RotateForward(direction, ref walker);
                 fighter.state = FightState.Fight;
-                walker.direction = direction;
                 return;
             }
+            decidedForce.force = direction * 0.5f;
         }
-        decidedForce.force = fighter.targetGroupPos - translation.Value;
+        GetNear(fighter.targetGroupPos, fighter.restRadius, translation, ref decidedForce);
         fighter.state = FightState.GoToFight;
     }
 
-    private void Rest(Fighter fighter, Translation translation, ref DecidedForce decidedForce)
+    private void RotateForward(float3 direction, ref Rotation rotation)
     {
-        var force = (fighter.restPos - translation.Value);
-        if (math.length(force) > fighter.restRadius)
+        var speed = math.length(direction);
+
+        if (speed > 0.1f)
+        {
+            var toward = quaternion.LookRotationSafe(direction, new float3(0, 1, 0));
+            rotation.Value = toward;
+        }
+    }
+
+    private void GetNear(float3 goal, float radius, Translation translation, ref DecidedForce decidedForce)
+    {
+        var force = (goal - translation.Value);
+        if (math.length(force) > radius)
         {
             if (math.length(force) > 1f)
             {
-                force = math.normalize(force);
+                force = math.normalizesafe(force);
             }
-            decidedForce.force = force;
+            decidedForce.force = force * 0.5f;
         }
         else
         {

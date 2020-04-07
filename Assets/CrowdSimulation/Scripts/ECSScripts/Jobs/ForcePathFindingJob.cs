@@ -5,7 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 
 [BurstCompile]
-public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation, PathForce>
+public struct ForcePathFindingJob : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation, PathForce>
 {
     [NativeDisableParallelForRestriction]
     [ReadOnly]
@@ -17,10 +17,6 @@ public struct PathFindingJob : IJobForEach<PathFindingData, DecidedForce, Collis
     {
         if (!(data.pathFindingMethod == PathFindingMethod.Forces))
         {
-            if (data.pathFindingMethod == PathFindingMethod.No)
-            {
-                pathForce.force = decidedForce.force;
-            }
             return;
         }
         var avoidanceForce = float3.zero;

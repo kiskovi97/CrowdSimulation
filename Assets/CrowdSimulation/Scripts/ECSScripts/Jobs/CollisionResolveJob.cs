@@ -27,12 +27,17 @@ public struct CollisionResolveJob : IJobForEach<Translation, Walker, CollisionPa
 
         ForeachAround2(collision, translation, ref correction);
 
+        if (correction.x == float.NaN || correction.y == float.NaN || correction.y == float.NaN) {
+            return;
+        }
 
-        translation.Value += correction * 0.1f;
+        correction.y = 0;
+
+        translation.Value += correction * 0.2f;
 
         if (math.length(correction) > 0.1f)
         {
-            walker.direction += correction;
+            walker.direction += correction * 0.1f;
         }
     }
 

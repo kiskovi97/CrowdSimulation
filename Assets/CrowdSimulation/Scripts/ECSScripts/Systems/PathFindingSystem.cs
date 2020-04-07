@@ -7,14 +7,19 @@ using Unity.Collections;
 [UpdateAfter(typeof(GoalSystem))]
 [UpdateAfter(typeof(EntitiesHashMap))]
 [UpdateAfter(typeof(FighterSystem))]
-public class PathFindingSystem : JobComponentSystem
+public class PathFindingSystem : ComponentSystem
 {
-     protected override JobHandle OnUpdate(JobHandle inputDeps)
+     protected override void OnUpdate()
     {
-        var pathFindingJob = new PathFindingJob() {
+        var avoidJob = new AvoidEverybody()
+        {
             targetMap = EntitiesHashMap.quadrantHashMap,
         };
-        var pathFindingHandle = pathFindingJob.Schedule(this, inputDeps);
+        var avoidHandle = avoidJob.Schedule(this);
+        var pathFindingJob = new ForcePathFindingJob() {
+            targetMap = EntitiesHashMap.quadrantHashMap,
+        };
+        var pathFindingHandle = pathFindingJob.Schedule(this, avoidHandle);
         var denistyAvoidanceJob = new DensityAvoidanceJob()
         {
             densityMap = DensitySystem.densityMatrix,
@@ -22,7 +27,6 @@ public class PathFindingSystem : JobComponentSystem
             max = Map.Values
         };
         var handle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
-
-        return handle;
+        handle.Complete();
     }
 }

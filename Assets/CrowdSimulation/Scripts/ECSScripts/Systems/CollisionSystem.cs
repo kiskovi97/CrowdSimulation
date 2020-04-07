@@ -9,16 +9,15 @@ using UnityEngine;
 [AlwaysSynchronizeSystem]
 [UpdateAfter(typeof(EntitiesHashMap))]
 [UpdateAfter(typeof(CollidersHashMap))]
-public class CollisionSystem : JobComponentSystem
+public class CollisionSystem : ComponentSystem
 {
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
+    protected override void OnUpdate()
     {
         var collisionForce = new CollisionResolveJob() {
             targetMap = EntitiesHashMap.quadrantHashMap,
             colliders = CollidersHashMap.quadrantHashMap,
         };
-        var collisionHandle = collisionForce.Schedule(this, inputDeps);
-
-        return collisionHandle;
+        var collisionHandle = collisionForce.Schedule(this);
+        collisionHandle.Complete();
     }
 }
