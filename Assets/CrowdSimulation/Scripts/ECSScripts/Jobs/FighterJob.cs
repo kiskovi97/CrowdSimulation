@@ -31,7 +31,7 @@ public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, Rotat
 
             if (math.length(direction) < fighter.attackRadius)
             {
-                decidedForce.force = float3.zero;
+                decidedForce.force = direction * 0.1f;
                 RotateForward(direction, ref walker);
                 fighter.state = FightState.Fight;
                 return;
