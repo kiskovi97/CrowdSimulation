@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
+using System;
 
 public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
 {
@@ -57,5 +59,42 @@ public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
 
         if (parent != null)
             parent.AddEntity(entity);
+
+        ForeachChildren(entity, entity.Index, dstManager);
+        ForeachRealChildren(transform, entity.Index);
+    }
+
+    private void ForeachRealChildren(Transform transform, int kod)
+    {
+        foreach (Transform child in transform)
+        {
+            var animator = child.gameObject.GetComponent<BaseAnimationbject>();
+            if (animator != null)
+            {
+                animator.entityReference = kod;
+            }
+            ForeachRealChildren(child, kod);
+        }
+    }
+
+    private void ForeachChildren(Entity entity, int kod, EntityManager manager)
+    {
+        if (manager.HasComponent<Animator>(entity))
+        {
+            var animator = manager.GetComponentData<Animator>(entity);
+            animator.entityReference = kod;
+            manager.SetComponentData(entity, animator);
+        }
+
+        if (!manager.HasComponent<Child>(entity))
+        {
+            return;
+        }
+        var children = manager.GetBuffer<Child>(entity);
+        for (int i = 0; i < children.Length; i++)
+        {
+            var child = children[i];
+            ForeachChildren(child.Value, kod, manager);
+        }
     }
 }

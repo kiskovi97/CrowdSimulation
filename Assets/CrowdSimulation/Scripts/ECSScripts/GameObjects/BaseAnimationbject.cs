@@ -6,6 +6,7 @@ public class BaseAnimationbject : MonoBehaviour, IConvertGameObjectToEntity
 {
     public int AnimationIndex = 1;
     public bool reverseY = false;
+    public int entityReference;
 
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
@@ -17,6 +18,7 @@ public class BaseAnimationbject : MonoBehaviour, IConvertGameObjectToEntity
             localPos = transform.localPosition,
             localRotation = transform.rotation,
             reverseY = reverseY,
+            entityReference = entityReference,
         });
     }
 }

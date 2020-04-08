@@ -4,6 +4,8 @@ using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+
+[UpdateAfter(typeof(FighterSystem))]
 public class AnimatorSystem : ComponentSystem
 {
     public struct AnimationStep
@@ -148,80 +150,13 @@ public class AnimatorSystem : ComponentSystem
         });
 
         var deltaTime = Time.DeltaTime;
-        var job = new AnimatorJob() { deltaTime = deltaTime, animations = animations, steps = animationSteps };
+        var job = new AnimatorJob() {
+            deltaTime = deltaTime,
+            animations = animations,
+            steps = animationSteps,
+            hashMap = FighterSystem.hashMap
+        };
         var handle = job.Schedule(this);
         handle.Complete();
-
-        var eqd = new EntityQueryDesc
-        {
-            All = new ComponentType[] { typeof(Fighter) }
-        };
-        var query = GetEntityQuery(eqd);
-        var entities = query.ToEntityArray(Allocator.TempJob);
-        var fighters = query.ToComponentDataArray<Fighter>(Allocator.TempJob);
-
-        for (int i = 0; i < entities.Length; i++)
-        {
-            ForeachChildren(entities[i], fighters[i].state, fighters[i].attack);
-        }
-        entities.Dispose();
-        fighters.Dispose();
-    }
-
-    private void ForeachChildren(Entity entity, FightState state, AttackType attack)
-    {
-        if (!EntityManager.HasComponent<Child>(entity)) return;
-        var children = EntityManager.GetBuffer<Child>(entity);
-        for (int i = 0; i < children.Length; i++)
-        {
-            var child = children[i];
-            if (EntityManager.HasComponent<Animator>(child.Value))
-            {
-                var animator = EntityManager.GetComponentData<Animator>(child.Value);
-
-                if (animator.animationIndex == 1 || animator.animationIndex == 3)
-                {
-                    if (attack == AttackType.All)
-                    {
-                        animator.animationIndex = 3;
-                    } else
-                    {
-                        animator.animationIndex = 1;
-                    }
-                    if (state == FightState.Fight)
-                    {
-                        if (animator.speed < 1f)
-                            animator.currentTime = UnityEngine.Random.value;
-                        animator.speed = 1f;
-                    }
-                    else
-                    {
-                        animator.animationIndex = 1;
-                        animator.speed = 0;
-                        animator.currentTime = 0;
-                    }
-                }
-
-                if (animator.animationIndex == 2)
-                {
-                    if (state == FightState.Fight && attack == AttackType.All)
-                    {
-                        if (animator.speed < 1f)
-                        {
-                            animator.currentTime = UnityEngine.Random.value;
-                        }
-                        animator.speed = 1f;
-                    }
-                    else
-                    {
-                        animator.speed = 0;
-                        animator.currentTime = 0;
-                    }
-                }
-
-                EntityManager.SetComponentData(child.Value, animator);
-            }
-            ForeachChildren(child.Value, state, attack);
-        }
     }
 }

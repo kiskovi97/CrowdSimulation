@@ -28,9 +28,12 @@ public class SelectionSystem : ComponentSystem
         {
             var entity = entities[i];
             var selection = selections[i];
-            var mesh = EntityManager.GetSharedComponentData<RenderMesh>(entity);
-            mesh.material = selection.Selected ? Materails.Instance.selected : Materails.Instance.notSelected;
-            EntityManager.SetSharedComponentData(entity, mesh);
+            if (EntityManager.HasComponent<RenderMesh>(entity))
+            {
+                var mesh = EntityManager.GetSharedComponentData<RenderMesh>(entity);
+                mesh.material = selection.Selected ? Materails.Instance.selected : Materails.Instance.notSelected;
+                EntityManager.SetSharedComponentData(entity, mesh);
+            }
         }
         entities.Dispose();
         selections.Dispose();

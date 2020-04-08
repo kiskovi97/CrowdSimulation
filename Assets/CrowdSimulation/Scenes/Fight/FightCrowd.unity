@@ -444,8 +444,8 @@ MonoBehaviour:
     pathFindingMethod: 2
     decisionMethod: 1
   cameraGoal: {fileID: 23959574}
-  sizeX: 20
-  sizeZ: 20
+  sizeX: 1
+  sizeZ: 1
   distance: 1
 --- !u!1 &1070703966
 GameObject:
@@ -806,14 +806,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityObjects:
-  - {fileID: 6014953267392912931, guid: d6d20079ee99d334f944448b1586bca6, type: 3}
+  - {fileID: 6014953267392912931, guid: 404955d95ff095048acf46b984fdc44a, type: 3}
   targetCrowd: {fileID: 959943454}
   data:
     pathFindingMethod: 2
     decisionMethod: 1
   cameraGoal: {fileID: 0}
-  sizeX: 20
-  sizeZ: 20
+  sizeX: 2
+  sizeZ: 2
   distance: 1
 --- !u!4 &1745306129
 Transform:

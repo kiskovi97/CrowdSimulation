@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Unity.Entities;
-using Unity.Collections;
-using Unity.Transforms;
-using System;
+﻿using Unity.Entities;
 using Unity.Mathematics;
+using UnityEngine;
 
 [GenerateAuthoringComponent]
 public struct Animator : IComponentData
@@ -16,4 +12,5 @@ public struct Animator : IComponentData
     public quaternion localRotation;
 
     public bool reverseY;
+    public int entityReference;
 }
