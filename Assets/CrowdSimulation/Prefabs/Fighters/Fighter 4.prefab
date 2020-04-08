@@ -204,7 +204,7 @@ GameObject:
   - component: {fileID: 2623012569886797899}
   - component: {fileID: 8847824335073405561}
   m_Layer: 0
-  m_Name: Fighter 1
+  m_Name: Fighter 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -376,7 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34e235a7e7b130f4eaf978e62035d828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Selected: 0
+  Selected: 1
 --- !u!1001 &8389834025345406882
 PrefabInstance:
   m_ObjectHideFlags: 0

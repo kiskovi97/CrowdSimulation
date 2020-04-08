@@ -7,6 +7,11 @@ public class Materails : MonoBehaviour
     public Material infected;
     public Material notInfected;
     public Material immune;
+
+    public Material selected;
+    public Material notSelected;
+
+
     public static Materails Instance;
     // Start is called before the first frame update
     void Awake()

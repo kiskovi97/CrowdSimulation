@@ -438,6 +438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityObjects:
   - {fileID: 6014953267392912931, guid: 0f60b4319b792b943b26eec6c968fb88, type: 3}
+  - {fileID: 6014953267392912931, guid: 32f3c5a4e9c3fff46923ca96db71e20f, type: 3}
   targetCrowd: {fileID: 1745306128}
   data:
     pathFindingMethod: 2
@@ -552,6 +553,7 @@ GameObject:
   - component: {fileID: 1134148547}
   - component: {fileID: 1134148546}
   - component: {fileID: 1134148545}
+  - component: {fileID: 1134148549}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -639,6 +641,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: 0}
+--- !u!114 &1134148549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134148544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f69149fc82aab59489e2830c3da670ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  infected: {fileID: 0}
+  notInfected: {fileID: 0}
+  immune: {fileID: 0}
+  selected: {fileID: 2100000, guid: 67cd64bf613f4b44b8d23d3e8ee090c5, type: 2}
+  notSelected: {fileID: 2100000, guid: 8f38778cfb65ccd4c970cd183058eef2, type: 2}
 --- !u!1 &1590989504
 GameObject:
   m_ObjectHideFlags: 0
