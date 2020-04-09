@@ -43,6 +43,10 @@ public struct CollisionResolveJob : IJobForEach<Translation, Walker, CollisionPa
 
     private void ColliderResolve(CollidersHashMap.MyData collider, CollisionParameters collision, Translation translation, ref float3 correction)
     {
+        if (collider.data.Value.Value.Filter.CollidesWith == 4)
+        {
+            return;
+        }
         var localPos = translation.Value - collider.data2.Position;
         localPos = math.mul(math.inverse(collider.data2.Rotation), localPos);
 

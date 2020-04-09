@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 7471394616226922654}
   - component: {fileID: 8082158232504292844}
   - component: {fileID: 5608609009293225157}
+  - component: {fileID: 1189648439379238366}
   m_Layer: 0
   m_Name: Fighter 2
   m_TagString: Untagged
@@ -284,6 +285,79 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6014953267392912931}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1189648439379238366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6014953267392912931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b275e5f92732148048d7b77e264ac30e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShapeType: 3
+  m_PrimitiveCenter:
+    x: 0
+    y: 0
+    z: 0
+  m_PrimitiveSize:
+    x: 1.0000002
+    y: 1.0000002
+    z: 2.28
+  m_PrimitiveOrientation:
+    Value:
+      x: 270
+      y: 270
+      z: 0
+    RotationOrder: 4
+  m_Capsule:
+    Height: 2.28
+    Radius: 0.5000001
+    Axis: 2
+  m_Cylinder:
+    Height: 2.28
+    Radius: 0.5000001
+    Axis: 2
+  m_CylinderSideCount: 20
+  m_SphereRadius: 1.14
+  m_MinimumSkinnedVertexWeight: 0.1
+  m_ConvexHullGenerationParameters:
+    m_SimplificationTolerance: 0.034199998
+    m_BevelRadius: 0.05
+    m_MinimumAngle: 2.5000002
+  m_CustomMesh: {fileID: 0}
+  m_ForceUnique: 0
+  m_Material:
+    m_SupportsTemplate: 1
+    m_Template: {fileID: 0}
+    m_IsTrigger:
+      m_Override: 0
+      m_Value: 1
+    m_Friction:
+      m_Override: 0
+      m_Value:
+        Value: 0.5
+        CombineMode: 0
+    m_Restitution:
+      m_Override: 0
+      m_Value:
+        Value: 0
+        CombineMode: 2
+    m_BelongsTo:
+      m_Override: 0
+      m_Value: 0001000000000000000000000000000000000000000000000000000000000000
+    m_CollidesWith:
+      m_Override: 0
+      m_Value: 0000010000000000000000000000000000000000000000000000000000000000
+    m_RaisesCollisionEvents:
+      m_Override: 0
+      m_Value: 0
+    m_CustomTags:
+      m_Override: 0
+      m_Value: 0000000000000000
+  m_ConvexRadius_Deprecated: -1
 --- !u!1 &7020313252070831793
 GameObject:
   m_ObjectHideFlags: 0

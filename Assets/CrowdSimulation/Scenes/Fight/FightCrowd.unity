@@ -211,7 +211,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 594854618}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 39.6, z: -0.099999994}
+  m_LocalPosition: {x: 0, y: 15.9, z: -0.099999994}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1070703967}
@@ -406,7 +406,7 @@ GameObject:
   m_Layer: 0
   m_Name: FightGroup
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -418,7 +418,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 959943451}
   m_LocalRotation: {x: 0, y: -0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 14.85}
+  m_LocalPosition: {x: 0, y: 2, z: 23.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -444,8 +444,8 @@ MonoBehaviour:
     pathFindingMethod: 2
     decisionMethod: 1
   cameraGoal: {fileID: 23959574}
-  sizeX: 1
-  sizeZ: 1
+  sizeX: 20
+  sizeZ: 20
   distance: 1
 --- !u!1 &1070703966
 GameObject:
@@ -493,7 +493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 1
-  m_FollowOffset: {x: 0, y: 37.6, z: -0.099999994}
+  m_FollowOffset: {x: 0, y: 13.9, z: -0.099999994}
   m_XDamping: 4.81
   m_YDamping: 5.01
   m_ZDamping: 4.73
@@ -554,6 +554,7 @@ GameObject:
   - component: {fileID: 1134148546}
   - component: {fileID: 1134148545}
   - component: {fileID: 1134148549}
+  - component: {fileID: 1134148550}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -587,7 +588,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1134148544}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -658,6 +659,18 @@ MonoBehaviour:
   immune: {fileID: 0}
   selected: {fileID: 2100000, guid: 67cd64bf613f4b44b8d23d3e8ee090c5, type: 2}
   notSelected: {fileID: 2100000, guid: 8f38778cfb65ccd4c970cd183058eef2, type: 2}
+--- !u!114 &1134148550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134148544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05e8fab5c9fd15c4199e839cab6d2676, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1590989504
 GameObject:
   m_ObjectHideFlags: 0
@@ -711,8 +724,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 262.4
   field of view: 60
-  orthographic: 1
-  orthographic size: 12.27
+  orthographic: 0
+  orthographic size: 10
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -735,13 +748,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1590989504}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 39.6, z: -0.099999994}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.70710677}
+  m_LocalPosition: {x: 0, y: 24.39, z: -2.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90.00001, y: 0, z: 0}
 --- !u!114 &1590989508
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -749,7 +762,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1590989504}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 72ece51f2901e7445ab60da3685d6b5f, type: 3}
   m_Name: 
@@ -789,7 +802,7 @@ GameObject:
   m_Layer: 0
   m_Name: FightGroup (1)
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -812,8 +825,8 @@ MonoBehaviour:
     pathFindingMethod: 2
     decisionMethod: 1
   cameraGoal: {fileID: 0}
-  sizeX: 2
-  sizeZ: 2
+  sizeX: 20
+  sizeZ: 20
   distance: 1
 --- !u!4 &1745306129
 Transform:
@@ -823,7 +836,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1745306127}
   m_LocalRotation: {x: 0, y: -0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: -17.4}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
