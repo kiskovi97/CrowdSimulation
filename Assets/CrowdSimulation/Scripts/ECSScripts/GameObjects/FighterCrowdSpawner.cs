@@ -25,10 +25,68 @@ public class FighterCrowdSpawner : MonoBehaviour
     public float distance = 1f;
 
     private List<Entity> entities = new List<Entity>();
+    private List<Entity> typeMaster = new List<Entity>();
+    private List<Entity> typeSimple = new List<Entity>();
 
-    public void AddEntity(Entity entity)
+    public void SelectAllMaster()
+    {
+        var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        bool allSelected = true;
+        foreach(var entity in typeMaster)
+        {
+            if (!em.Exists(entity)) continue;
+            var selection = em.GetComponentData<Selection>(entity);
+            allSelected &= selection.Selected;
+            selection.Selected = true;
+            em.SetComponentData(entity, selection);
+        }
+        if (allSelected)
+        {
+            foreach (var entity in typeMaster)
+            {
+                if (!em.Exists(entity)) continue;
+                var selection = em.GetComponentData<Selection>(entity);
+                selection.Selected = false;
+                em.SetComponentData(entity, selection);
+            }
+        }
+    }
+
+    public void SelectAllSimple()
+    {
+        var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        bool allSelected = true;
+        foreach (var entity in typeSimple)
+        {
+            if (!em.Exists(entity)) continue;
+            var selection = em.GetComponentData<Selection>(entity);
+            allSelected &= selection.Selected;
+            selection.Selected = true;
+            em.SetComponentData(entity, selection);
+        }
+        if (allSelected)
+        {
+            foreach (var entity in typeSimple)
+            {
+                if (!em.Exists(entity)) continue;
+                var selection = em.GetComponentData<Selection>(entity);
+                selection.Selected = false;
+                em.SetComponentData(entity, selection);
+            }
+        }
+    }
+
+    public void AddEntity(Entity entity, AttackType type)
     {
         entities.Add(entity);
+        if (type == AttackType.All)
+        {
+            typeMaster.Add(entity);
+        }
+        if (type == AttackType.One)
+        {
+            typeSimple.Add(entity);
+        }
     }
 
     private void Awake()
@@ -85,6 +143,10 @@ public class FighterCrowdSpawner : MonoBehaviour
         {
             ChangeState(false);
         }
+        var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        entities = entities.Where((entity) => em.Exists(entity)).ToList();
+        typeMaster = typeMaster.Where((entity) => em.Exists(entity)).ToList();
+        typeSimple = typeSimple.Where((entity) => em.Exists(entity)).ToList();
 
         SetCamera();
     }
@@ -92,11 +154,11 @@ public class FighterCrowdSpawner : MonoBehaviour
     private void SetCamera()
     {
         var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-        entities = entities.Where((entity) => em.Exists(entity)).ToList();
         var pos = float3.zero;
         int db = 0;
         foreach (var entity in entities)
         {
+            if (!em.Exists(entity)) continue;
             var data = em.GetComponentData<Translation>(entity);
             pos += data.Value;
             db++;
@@ -119,12 +181,11 @@ public class FighterCrowdSpawner : MonoBehaviour
     private void SetTargetPosition(float3 pos)
     {
         var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-        entities = entities.Where((entity) => em.Exists(entity)).ToList();
-
         var area = entities.Count * distance * distance;
         var radius = Mathf.Sqrt(area / Mathf.PI);
         foreach (var entity in entities)
         {
+            if (!em.Exists(entity)) continue;
             var data = em.GetComponentData<Fighter>(entity);
             data.targetGroupPos = pos;
             data.restRadius = radius;
@@ -135,9 +196,9 @@ public class FighterCrowdSpawner : MonoBehaviour
     private void ChangeState(bool fight)
     {
         var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-        entities = entities.Where((entity) => em.Exists(entity)).ToList();
         foreach (var entity in entities)
         {
+            if (!em.Exists(entity)) continue;
             var data = em.GetComponentData<Fighter>(entity);
             data.state = fight ? FightState.GoToFight : FightState.Rest;
             em.SetComponentData(entity, data);

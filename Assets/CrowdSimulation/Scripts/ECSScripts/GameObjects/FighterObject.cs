@@ -58,7 +58,7 @@ public class FighterObject : MonoBehaviour, IConvertGameObjectToEntity
         });
 
         if (parent != null)
-            parent.AddEntity(entity);
+            parent.AddEntity(entity, fighter.attack);
 
         ForeachChildren(entity, entity.Index, dstManager);
         ForeachRealChildren(transform, entity.Index);
