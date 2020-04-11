@@ -93,11 +93,6 @@ public class CrowdSpawner : MonoBehaviour
                 {
                     renderer.material = color;
                 }
-                var people = obj.GetComponent<PeopleAuth>();
-                if (people != null)
-                {
-                    people.crowdId = Id;
-                }
                 var person = obj.GetComponent<PersonObject>();
                 if (person != null)
                 {
