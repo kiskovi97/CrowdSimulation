@@ -1,51 +1,55 @@
-﻿using Unity.Entities;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
-    public float3 direction;
-    public float maxSpeed;
-    private int broId;
-    private PathFindingData pathFindingData = new PathFindingData()
+    public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
     {
-        decisionMethod = DecisionMethod.Max,
-        pathFindingMethod = PathFindingMethod.No
-    };
-
-
-    CrowdSpawner parent;
-    public void ConnectParent(CrowdSpawner parent)
-    {
-        this.parent = parent;
-    }
-
-    private GroupCondition condition = new GroupCondition{};
-    private bool conditionAdded = false;
-
-    public void ChangeGroup(GroupCondition condition, int broId, PathFindingData pathFindingData)
-    {
-        this.condition = condition;
-        this.broId = broId;
-        this.pathFindingData = pathFindingData;
-        conditionAdded = true;
-    }
-
-    public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
-    {
-        if (conditionAdded)
+        public float3 direction;
+        public float maxSpeed;
+        private int broId;
+        private PathFindingData pathFindingData = new PathFindingData()
         {
-            dstManager.AddComponentData(entity, condition);
+            decisionMethod = DecisionMethod.Max,
+            pathFindingMethod = PathFindingMethod.No
+        };
+
+
+        CrowdSpawner parent;
+        public void ConnectParent(CrowdSpawner parent)
+        {
+            this.parent = parent;
         }
-        dstManager.AddComponentData(entity, new Walker
+
+        private GroupCondition condition = new GroupCondition { };
+        private bool conditionAdded = false;
+
+        public void ChangeGroup(GroupCondition condition, int broId, PathFindingData pathFindingData)
         {
+            this.condition = condition;
+            this.broId = broId;
+            this.pathFindingData = pathFindingData;
+            conditionAdded = true;
+        }
+
+        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+        {
+            if (conditionAdded)
+            {
+                dstManager.AddComponentData(entity, condition);
+            }
+            dstManager.AddComponentData(entity, new Walker
+            {
                 direction = direction,
                 maxSpeed = maxSpeed,
                 broId = broId,
-        });
-        dstManager.AddComponentData(entity, pathFindingData);
+            });
+            dstManager.AddComponentData(entity, pathFindingData);
 
-        if (parent != null)
-            parent.AddEntity(entity);
+            if (parent != null)
+                parent.AddEntity(entity);
+        }
     }
 }

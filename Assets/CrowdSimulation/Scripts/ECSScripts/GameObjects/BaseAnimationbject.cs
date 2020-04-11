@@ -1,24 +1,28 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Unity.Entities;
+using UnityEngine;
 
-public class BaseAnimationbject : MonoBehaviour, IConvertGameObjectToEntity
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
-    public int AnimationIndex = 1;
-    public bool reverseY = false;
-    public int entityReference;
-
-    public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+    public class BaseAnimationbject : MonoBehaviour, IConvertGameObjectToEntity
     {
-        dstManager.AddComponentData(entity, new Animator()
+        public int AnimationIndex = 1;
+        public bool reverseY = false;
+        public int entityReference;
+
+        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
-            animationIndex = AnimationIndex,
-            speed = 1f,
-            currentTime = UnityEngine.Random.value,
-            localPos = transform.localPosition,
-            localRotation = transform.rotation,
-            reverseY = reverseY,
-            entityReference = entityReference,
-        });
+            dstManager.AddComponentData(entity, new AnimatorData()
+            {
+                animationIndex = AnimationIndex,
+                speed = 1f,
+                currentTime = Random.value,
+                localPos = transform.localPosition,
+                localRotation = transform.rotation,
+                reverseY = reverseY,
+                entityReference = entityReference,
+            });
+        }
     }
 }

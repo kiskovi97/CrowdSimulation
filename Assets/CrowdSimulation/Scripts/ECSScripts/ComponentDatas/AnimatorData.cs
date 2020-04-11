@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
     [GenerateAuthoringComponent]
-    public struct Animator : IComponentData
+    public struct AnimatorData : IComponentData
     {
         public int animationIndex;
         public float speed;

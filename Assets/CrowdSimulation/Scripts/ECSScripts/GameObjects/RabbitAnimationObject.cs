@@ -1,18 +1,21 @@
-﻿using Unity.Entities;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Unity.Entities;
 using UnityEngine;
 
-public class RabbitAnimationObject : MonoBehaviour, IConvertGameObjectToEntity
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
-   
-    public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
+    public class RabbitAnimationObject : MonoBehaviour, IConvertGameObjectToEntity
     {
-        dstManager.AddComponentData(entity, new Animator()
+        public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
         {
-            animationIndex = 0,
-            speed = 1f,
-            currentTime = UnityEngine.Random.value,
-            localPos = transform.localPosition,
-            localRotation = transform.rotation,
-        });
+            dstManager.AddComponentData(entity, new AnimatorData()
+            {
+                animationIndex = 0,
+                speed = 1f,
+                currentTime = Random.value,
+                localPos = transform.localPosition,
+                localRotation = transform.rotation,
+            });
+        }
     }
 }
