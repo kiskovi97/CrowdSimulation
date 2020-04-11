@@ -4,6 +4,7 @@ using Unity.Physics;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Burst;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects;
+using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {

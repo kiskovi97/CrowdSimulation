@@ -1,4 +1,5 @@
-﻿using Unity.Entities;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects;
+using Unity.Entities;
 using UnityEngine;
 
 public class InfectionCounter : MonoBehaviour

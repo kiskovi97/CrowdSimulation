@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
