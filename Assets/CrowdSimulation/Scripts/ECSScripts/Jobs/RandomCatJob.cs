@@ -2,36 +2,44 @@
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces;
+using Unity.Burst;
 
-public struct RandomCatJob : IJobForEach<RandomCat, PathForce, Translation>
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
-    public Random random;
-    public float deltaTime;
-    public void Execute([ReadOnly] ref RandomCat randomCat, ref PathForce pathForce, ref Translation translation)
+    [BurstCompile]
+    public struct RandomCatJob : IJobForEach<RandomCat, PathForce, Translation>
     {
-        if (random.NextFloat()  < deltaTime * randomCat.random)
+        public Random random;
+        public float deltaTime;
+        public void Execute([ReadOnly] ref RandomCat randomCat, ref PathForce pathForce, ref Translation translation)
         {
-            var dir = random.NextFloat2Direction();
-            pathForce.force = new float3(dir.x, 0, dir.y);
+            if (random.NextFloat() < deltaTime * randomCat.random)
+            {
+                var dir = random.NextFloat2Direction();
+                pathForce.force = new float3(dir.x, 0, dir.y);
+            }
         }
     }
-}
 
-public struct RandomCatGroupJob : IJobForEach<RandomCat, PathForce, Translation, GroupCondition>
-{
-    public Random random;
-    public float deltaTime;
-    public void Execute([ReadOnly] ref RandomCat randomCat, ref PathForce pathForce, ref Translation translation, ref GroupCondition groupCondition)
+    [BurstCompile]
+    public struct RandomCatGroupJob : IJobForEach<RandomCat, PathForce, Translation, GroupCondition>
     {
-        if (random.NextFloat() < deltaTime * randomCat.random)
+        public Random random;
+        public float deltaTime;
+        public void Execute([ReadOnly] ref RandomCat randomCat, ref PathForce pathForce, ref Translation translation, ref GroupCondition groupCondition)
         {
+            if (random.NextFloat() < deltaTime * randomCat.random)
+            {
 
-            var pos = groupCondition.goalPoint - translation.Value;
+                var pos = groupCondition.goalPoint - translation.Value;
 
-            var distance = math.length(pos);
-            pathForce.force += deltaTime * distance * pos * 0.03f;
-            //pathForce.force = pos;
+                var distance = math.length(pos);
+                pathForce.force += deltaTime * distance * pos * 0.03f;
+                //pathForce.force = pos;
 
+            }
         }
     }
 }

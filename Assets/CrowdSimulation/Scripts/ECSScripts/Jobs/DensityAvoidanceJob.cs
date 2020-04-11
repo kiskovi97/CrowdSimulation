@@ -3,49 +3,53 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Burst;
 using Unity.Collections;
-using static Map;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces;
 
-[BurstCompile]
-public struct DensityAvoidanceJob : IJobForEach<PathFindingData,DecidedForce, CollisionParameters, Walker, Translation, PathForce>
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
-    [NativeDisableParallelForRestriction]
-    [ReadOnly]
-    public NativeArray<float> densityMap;
-
-    public int oneLayer;
-    public MapValues max;
-
-    public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision, 
-        [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation, ref PathForce pathForce)
+    [BurstCompile]
+    public struct DensityAvoidanceJob : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation, PathForce>
     {
-        if (!(data.pathFindingMethod == PathFindingMethod.DensityGrid))
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeArray<float> densityMap;
+
+        public int oneLayer;
+        public MapValues max;
+
+        public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision,
+            [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation, ref PathForce pathForce)
         {
-            return;
-        }
-
-        var group = oneLayer * walker.broId;
-
-        var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * math.length(decidedForce.force), max);
-
-        var force = float3.zero;
-        var multiMin = float.MaxValue;
-
-        for (int i = 0; i < indexes.Length; i++)
-        {
-            var index = indexes[i].index;
-            if (index < 0) continue;
-
-            var density = densityMap[group + index];
-            var currentForce = indexes[i].position - translation.Value;
-            density -= (math.dot(math.normalize(decidedForce.force), math.normalize(currentForce)) + 1f) * 0.1f;
-
-            if (multiMin > density)
+            if (!(data.pathFindingMethod == PathFindingMethod.DensityGrid))
             {
-                multiMin = density;
-                force = indexes[i].position - translation.Value;
+                return;
             }
-        }
 
-        pathForce.force = force; // decidedForce.force +
+            var group = oneLayer * walker.broId;
+
+            var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * math.length(decidedForce.force), max);
+
+            var force = float3.zero;
+            var multiMin = float.MaxValue;
+
+            for (int i = 0; i < indexes.Length; i++)
+            {
+                var index = indexes[i].index;
+                if (index < 0) continue;
+
+                var density = densityMap[group + index];
+                var currentForce = indexes[i].position - translation.Value;
+                density -= (math.dot(math.normalize(decidedForce.force), math.normalize(currentForce)) + 1f) * 0.1f;
+
+                if (multiMin > density)
+                {
+                    multiMin = density;
+                    force = indexes[i].position - translation.Value;
+                }
+            }
+
+            pathForce.force = force; // decidedForce.force +
+        }
     }
 }

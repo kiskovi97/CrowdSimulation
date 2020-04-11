@@ -3,31 +3,37 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces;
 
-[BurstCompile]
-public struct ForceJob : IJobForEach<PathForce, Walker>
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
-    public float deltaTime;
-
-    public void Execute([ReadOnly] ref PathForce pathForce, ref Walker walker)
+    [BurstCompile]
+    public struct ForceJob : IJobForEach<PathForce, Walker>
     {
-        var b3 = math.isnan(pathForce.force);
-        if (!b3.x && !b3.y && !b3.z)
+        public float deltaTime;
+
+        public void Execute([ReadOnly] ref PathForce pathForce, ref Walker walker)
         {
-            if (math.length(pathForce.force) == 0f)
+            var b3 = math.isnan(pathForce.force);
+            if (!b3.x && !b3.y && !b3.z)
             {
-                walker.direction -= walker.direction * deltaTime * 4f;
-            } else
-            {
-                walker.direction += pathForce.force * deltaTime * 4f;
+                if (math.length(pathForce.force) == 0f)
+                {
+                    walker.direction -= walker.direction * deltaTime * 4f;
+                }
+                else
+                {
+                    walker.direction += pathForce.force * deltaTime * 4f;
+                }
             }
-        }
 
-        var speed = math.length(walker.direction);
+            var speed = math.length(walker.direction);
 
-        if (speed > walker.maxSpeed)
-        {
-            walker.direction = math.normalizesafe(walker.direction) * walker.maxSpeed;
+            if (speed > walker.maxSpeed)
+            {
+                walker.direction = math.normalizesafe(walker.direction) * walker.maxSpeed;
+            }
         }
     }
 }

@@ -3,68 +3,72 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 
-[BurstCompile]
-public struct HurtingJob : IJobForEach<Fighter, Condition, Translation, CollisionParameters>
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
-    [NativeDisableParallelForRestriction]
-    [ReadOnly]
-    public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
-
-    public float deltaTime;
-
-    public void Execute(ref Fighter fighter, ref Condition condition, [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters)
+    [BurstCompile]
+    public struct HurtingJob : IJobForEach<Fighter, Condition, Translation, CollisionParameters>
     {
-        ForeachAround(translation.Value, fighter, ref condition);
-    }
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
 
-    private void ForeachAround(float3 position, Fighter me, ref Condition condition)
-    {
-        var key = QuadrantVariables.GetPositionHashMapKey(position);
-        Foreach(key, position, me, ref condition);
-        QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
-        Foreach(key, position, me, ref condition);
-        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
-        Foreach(key, position, me, ref condition);
-        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
-        Foreach(key, position, me, ref condition);
-        key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
-        Foreach(key, position, me, ref condition);
-    }
+        public float deltaTime;
 
-    private void Foreach(int key, float3 position, Fighter me, ref Condition condition)
-    {
-        if (targetMap.TryGetFirstValue(key, out FightersHashMap.MyData other, out NativeMultiHashMapIterator<int> iterator))
+        public void Execute(ref Fighter fighter, ref Condition condition, [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters)
         {
-            do
-            {
-                if (other.data.state == FightState.Rest) return;
-                if (other.data.attack == AttackType.Mix)
-                {
-                    var distance = math.length(other.position - position);
-                    if (distance < other.data.attackRadius)
-                    {
-                        condition.lifeLine -= (other.data.targetId != me.Id ? deltaTime : deltaTime * 0.3f) * other.data.attackStrength;
-                    }
-                }
-                else
-                {
-                    if (other.data.attack == AttackType.One)
-                    {
-                        if (other.data.targetId != me.Id) continue;
-                    }
-                    if (other.data.attack == AttackType.All)
-                    {
-                        if (other.data.targerGroupId != me.groupId) continue;
-                    }
-                    var distance = math.length(other.position - position);
-                    if (distance < other.data.attackRadius)
-                    {
-                        condition.lifeLine -= deltaTime * other.data.attackStrength;
-                    }
-                }
+            ForeachAround(translation.Value, fighter, ref condition);
+        }
 
-            } while (targetMap.TryGetNextValue(out other, ref iterator));
+        private void ForeachAround(float3 position, Fighter me, ref Condition condition)
+        {
+            var key = QuadrantVariables.GetPositionHashMapKey(position);
+            Foreach(key, position, me, ref condition);
+            QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
+            Foreach(key, position, me, ref condition);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
+            Foreach(key, position, me, ref condition);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
+            Foreach(key, position, me, ref condition);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
+            Foreach(key, position, me, ref condition);
+        }
+
+        private void Foreach(int key, float3 position, Fighter me, ref Condition condition)
+        {
+            if (targetMap.TryGetFirstValue(key, out FightersHashMap.MyData other, out NativeMultiHashMapIterator<int> iterator))
+            {
+                do
+                {
+                    if (other.data.state == FightState.Rest) return;
+                    if (other.data.attack == AttackType.Mix)
+                    {
+                        var distance = math.length(other.position - position);
+                        if (distance < other.data.attackRadius)
+                        {
+                            condition.lifeLine -= (other.data.targetId != me.Id ? deltaTime : deltaTime * 0.3f) * other.data.attackStrength;
+                        }
+                    }
+                    else
+                    {
+                        if (other.data.attack == AttackType.One)
+                        {
+                            if (other.data.targetId != me.Id) continue;
+                        }
+                        if (other.data.attack == AttackType.All)
+                        {
+                            if (other.data.targerGroupId != me.groupId) continue;
+                        }
+                        var distance = math.length(other.position - position);
+                        if (distance < other.data.attackRadius)
+                        {
+                            condition.lifeLine -= deltaTime * other.data.attackStrength;
+                        }
+                    }
+
+                } while (targetMap.TryGetNextValue(out other, ref iterator));
+            }
         }
     }
 }

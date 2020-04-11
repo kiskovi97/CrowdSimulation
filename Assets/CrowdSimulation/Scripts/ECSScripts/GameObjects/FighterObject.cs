@@ -2,7 +2,6 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using System;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
