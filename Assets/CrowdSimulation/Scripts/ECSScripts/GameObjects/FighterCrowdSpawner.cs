@@ -28,6 +28,19 @@ public class FighterCrowdSpawner : MonoBehaviour
     private List<Entity> typeMaster = new List<Entity>();
     private List<Entity> typeSimple = new List<Entity>();
 
+
+    public void ClearAll()
+    {
+        var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+        foreach (var entity in entities)
+        {
+            if (!em.Exists(entity)) continue;
+            var selection = em.GetComponentData<Selection>(entity);
+            selection.Selected = false;
+            em.SetComponentData(entity, selection);
+        }
+    }
+
     public void SelectAllMaster()
     {
         var em = World.DefaultGameObjectInjectionWorld.EntityManager;

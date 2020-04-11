@@ -38,6 +38,7 @@ public struct HurtingJob : IJobForEach<Fighter, Condition, Translation, Collisio
         {
             do
             {
+                if (other.data.state == FightState.Rest) return;
                 if (other.data.attack == AttackType.Mix)
                 {
                     var distance = math.length(other.position - position);
