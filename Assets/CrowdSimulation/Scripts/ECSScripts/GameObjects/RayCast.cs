@@ -68,7 +68,7 @@ public class RayCast : MonoBehaviour
             }
         }
     }
-    private bool IsPointerOverUIObject()
+    public static bool IsPointerOverUIObject()
     {
         PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
         eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
