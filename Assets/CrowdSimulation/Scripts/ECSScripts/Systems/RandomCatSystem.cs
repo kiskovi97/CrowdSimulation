@@ -1,32 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 
-public class RandomCatSystem : JobComponentSystem
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
+    public class RandomCatSystem : JobComponentSystem
     {
-        var deltaTime = Time.DeltaTime;
-
-        var random = new Random((uint)UnityEngine.Random.Range(1, 100000));
-
-        var forceJob = new RandomCatJob() {
-            deltaTime = deltaTime,
-            random = random
-        };
-
-        var forceHandle = forceJob.Schedule(this, inputDeps);
-
-        var forceJob2 = new RandomCatGroupJob()
+        protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
-            deltaTime = deltaTime,
-            random = random
-        };
+            var deltaTime = Time.DeltaTime;
 
-        var forceHandle2 = forceJob2.Schedule(this, forceHandle);
+            var random = new Random((uint)UnityEngine.Random.Range(1, 100000));
 
-        return forceHandle2;
+            var forceJob = new RandomCatJob()
+            {
+                deltaTime = deltaTime,
+                random = random
+            };
+
+            var forceHandle = forceJob.Schedule(this, inputDeps);
+
+            var forceJob2 = new RandomCatGroupJob()
+            {
+                deltaTime = deltaTime,
+                random = random
+            };
+
+            var forceHandle2 = forceJob2.Schedule(this, forceHandle);
+
+            return forceHandle2;
+        }
     }
 }

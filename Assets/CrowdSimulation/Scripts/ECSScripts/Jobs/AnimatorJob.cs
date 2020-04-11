@@ -4,7 +4,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
-using static AnimatorSystem;
+using static Assets.CrowdSimulation.Scripts.ECSScripts.Systems.AnimatorSystem;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {

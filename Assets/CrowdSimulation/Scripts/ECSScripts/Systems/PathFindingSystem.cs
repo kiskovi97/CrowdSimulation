@@ -1,32 +1,37 @@
 ﻿using Unity.Entities;
 using Unity.Jobs;
 using Unity.Collections;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 
-[AlwaysSynchronizeSystem]
-[UpdateAfter(typeof(DensitySystem))]
-[UpdateAfter(typeof(GoalSystem))]
-[UpdateAfter(typeof(EntitiesHashMap))]
-[UpdateAfter(typeof(FighterSystem))]
-public class PathFindingSystem : ComponentSystem
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
-     protected override void OnUpdate()
+    [AlwaysSynchronizeSystem]
+    [UpdateAfter(typeof(DensitySystem))]
+    [UpdateAfter(typeof(GoalSystem))]
+    [UpdateAfter(typeof(EntitiesHashMap))]
+    [UpdateAfter(typeof(FighterSystem))]
+    public class PathFindingSystem : ComponentSystem
     {
-        var avoidJob = new AvoidEverybody()
+        protected override void OnUpdate()
         {
-            targetMap = EntitiesHashMap.quadrantHashMap,
-        };
-        var avoidHandle = avoidJob.Schedule(this);
-        var pathFindingJob = new ForcePathFindingJob() {
-            targetMap = EntitiesHashMap.quadrantHashMap,
-        };
-        var pathFindingHandle = pathFindingJob.Schedule(this, avoidHandle);
-        var denistyAvoidanceJob = new DensityAvoidanceJob()
-        {
-            densityMap = DensitySystem.densityMatrix,
-            oneLayer = Map.OneLayer,
-            max = Map.Values
-        };
-        var handle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
-        handle.Complete();
+            var avoidJob = new AvoidEverybody()
+            {
+                targetMap = EntitiesHashMap.quadrantHashMap,
+            };
+            var avoidHandle = avoidJob.Schedule(this);
+            var pathFindingJob = new ForcePathFindingJob()
+            {
+                targetMap = EntitiesHashMap.quadrantHashMap,
+            };
+            var pathFindingHandle = pathFindingJob.Schedule(this, avoidHandle);
+            var denistyAvoidanceJob = new DensityAvoidanceJob()
+            {
+                densityMap = DensitySystem.densityMatrix,
+                oneLayer = Map.OneLayer,
+                max = Map.Values
+            };
+            var handle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
+            handle.Complete();
+        }
     }
 }

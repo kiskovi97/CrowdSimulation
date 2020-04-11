@@ -1,23 +1,25 @@
-﻿using Unity.Burst;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Physics;
-using Unity.Transforms;
-using UnityEngine;
 
-[AlwaysSynchronizeSystem]
-[UpdateAfter(typeof(EntitiesHashMap))]
-[UpdateAfter(typeof(CollidersHashMap))]
-public class CollisionSystem : ComponentSystem
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
-    protected override void OnUpdate()
+    [AlwaysSynchronizeSystem]
+    [UpdateAfter(typeof(EntitiesHashMap))]
+    [UpdateAfter(typeof(CollidersHashMap))]
+    public class CollisionSystem : ComponentSystem
     {
-        var collisionForce = new CollisionResolveJob() {
-            targetMap = EntitiesHashMap.quadrantHashMap,
-            colliders = CollidersHashMap.quadrantHashMap,
-        };
-        var collisionHandle = collisionForce.Schedule(this);
-        collisionHandle.Complete();
+        protected override void OnUpdate()
+        {
+            var collisionForce = new CollisionResolveJob()
+            {
+                targetMap = EntitiesHashMap.quadrantHashMap,
+                colliders = CollidersHashMap.quadrantHashMap,
+            };
+            var collisionHandle = collisionForce.Schedule(this);
+            collisionHandle.Complete();
+        }
     }
 }

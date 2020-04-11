@@ -1,45 +1,49 @@
 ﻿using Unity.Entities;
 using Unity.Jobs;
 using Unity.Collections;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 
-[AlwaysSynchronizeSystem]
-[UpdateAfter(typeof(EdibleHashMap))]
-public class GoalSystem : JobComponentSystem
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
-    private EndSimulationEntityCommandBufferSystem endSimulation;
+    [AlwaysSynchronizeSystem]
+    [UpdateAfter(typeof(EdibleHashMap))]
+    public class GoalSystem : JobComponentSystem
+    {
+        private EndSimulationEntityCommandBufferSystem endSimulation;
 
-    protected override void OnCreate()
-    {
-        endSimulation = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
-        base.OnCreate();
-    }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-    }
-    
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
-    {
-        var desireJob = new DesireJob()
+        protected override void OnCreate()
         {
-            targetMap = EdibleHashMap.quadrantHashMap,
-            commandBuffer = endSimulation.CreateCommandBuffer().ToConcurrent(),
-            deltaTime = Time.DeltaTime
-        };
-        var desireHandle = desireJob.Schedule(this, inputDeps);
-        
+            endSimulation = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            base.OnCreate();
+        }
 
-        var groupGoalJob = new GroupGoalJob();
-        var groupHandle = groupGoalJob.Schedule(this, desireHandle);
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+        }
 
-        var gfJob = new SetGroupForceJob();
-        var gfHandle = gfJob.Schedule(this, groupHandle);
-        var dfJob = new SetDesireForceJob();
-        var dfHandle = dfJob.Schedule(this, gfHandle);
-        var decisionJob = new DecisionJob();
-        var decisionHandle = decisionJob.Schedule(this, dfHandle);
+        protected override JobHandle OnUpdate(JobHandle inputDeps)
+        {
+            var desireJob = new DesireJob()
+            {
+                targetMap = EdibleHashMap.quadrantHashMap,
+                commandBuffer = endSimulation.CreateCommandBuffer().ToConcurrent(),
+                deltaTime = Time.DeltaTime
+            };
+            var desireHandle = desireJob.Schedule(this, inputDeps);
 
-        return decisionHandle;
+
+            var groupGoalJob = new GroupGoalJob();
+            var groupHandle = groupGoalJob.Schedule(this, desireHandle);
+
+            var gfJob = new SetGroupForceJob();
+            var gfHandle = gfJob.Schedule(this, groupHandle);
+            var dfJob = new SetDesireForceJob();
+            var dfHandle = dfJob.Schedule(this, gfHandle);
+            var decisionJob = new DecisionJob();
+            var decisionHandle = decisionJob.Schedule(this, dfHandle);
+
+            return decisionHandle;
+        }
     }
 }

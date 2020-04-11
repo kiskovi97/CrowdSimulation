@@ -1,62 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Transforms;
 
-[UpdateAfter(typeof(EndFrameLocalToParentSystem))]
-class ConditionDebuggerSystem : ComponentSystem
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
-    protected override void OnUpdate()
+    [UpdateAfter(typeof(EndFrameLocalToParentSystem))]
+    class ConditionDebuggerSystem : ComponentSystem
     {
-        Entities.ForEach((ref ConditionDebugger debugger, ref Parent parent, ref NonUniformScale compositeScale) =>
+        protected override void OnUpdate()
         {
-            if (EntityManager.HasComponent<Condition>(parent.Value))
+            Entities.ForEach((ref ConditionDebugger debugger, ref Parent parent, ref NonUniformScale compositeScale) =>
             {
-                var condition = EntityManager.GetComponentData<Condition>(parent.Value);
-                if (debugger.type == ConditionType.Hunger)
+                if (EntityManager.HasComponent<Condition>(parent.Value))
                 {
-                    if (condition.hunger > 1f)
-                        compositeScale.Value.y = condition.hunger * 0.01f;
-                    else
-                        compositeScale.Value.y = 0f;
-                }
-                if (debugger.type == ConditionType.LifeLine)
-                {
-                    if (condition.lifeLine > 0f)
-                    compositeScale.Value.y = condition.lifeLine * 0.01f;
-                    else
-                        compositeScale.Value.y = 0f;
-                }
+                    var condition = EntityManager.GetComponentData<Condition>(parent.Value);
+                    if (debugger.type == ConditionType.Hunger)
+                    {
+                        if (condition.hunger > 1f)
+                            compositeScale.Value.y = condition.hunger * 0.01f;
+                        else
+                            compositeScale.Value.y = 0f;
+                    }
+                    if (debugger.type == ConditionType.LifeLine)
+                    {
+                        if (condition.lifeLine > 0f)
+                            compositeScale.Value.y = condition.lifeLine * 0.01f;
+                        else
+                            compositeScale.Value.y = 0f;
+                    }
 
-            }
-        });
+                }
+            });
 
-        var eqd = new EntityQueryDesc
-        {
-            All = new ComponentType[] { typeof(Condition) }
-        };
-        var query = GetEntityQuery(eqd);
-        var entities = query.ToEntityArray(Allocator.TempJob);
-        var conditions = query.ToComponentDataArray<Condition>(Allocator.TempJob);
-        var destroyable = new NativeList<Entity>(Allocator.TempJob);
-        for (int i = 0; i < entities.Length; i++)
-        {
-            var entity = entities[i];
-            var condition = conditions[i];
-            if (condition.lifeLine < 0f)
+            var eqd = new EntityQueryDesc
             {
-                destroyable.Add(entity);
+                All = new ComponentType[] { typeof(Condition) }
+            };
+            var query = GetEntityQuery(eqd);
+            var entities = query.ToEntityArray(Allocator.TempJob);
+            var conditions = query.ToComponentDataArray<Condition>(Allocator.TempJob);
+            var destroyable = new NativeList<Entity>(Allocator.TempJob);
+            for (int i = 0; i < entities.Length; i++)
+            {
+                var entity = entities[i];
+                var condition = conditions[i];
+                if (condition.lifeLine < 0f)
+                {
+                    destroyable.Add(entity);
+                }
             }
+            EntityManager.DestroyEntity(destroyable);
+            entities.Dispose();
+            conditions.Dispose();
+            destroyable.Dispose();
         }
-        EntityManager.DestroyEntity(destroyable);
-        entities.Dispose();
-        conditions.Dispose();
-        destroyable.Dispose();
     }
 }
 

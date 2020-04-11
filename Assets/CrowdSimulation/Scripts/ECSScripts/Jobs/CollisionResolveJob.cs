@@ -5,6 +5,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Physics;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {

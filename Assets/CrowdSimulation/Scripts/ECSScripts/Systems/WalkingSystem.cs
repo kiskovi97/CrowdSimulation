@@ -2,22 +2,26 @@
 using Unity.Jobs;
 using Unity.Collections;
 using Unity.Rendering;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 
-[AlwaysSynchronizeSystem]
-[UpdateAfter(typeof(PathFindingSystem))]
-[UpdateAfter(typeof(CollisionSystem))]
-public class WalkingSystem : JobComponentSystem
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
+    [AlwaysSynchronizeSystem]
+    [UpdateAfter(typeof(PathFindingSystem))]
+    [UpdateAfter(typeof(CollisionSystem))]
+    public class WalkingSystem : JobComponentSystem
     {
-        var deltaTime = Time.DeltaTime;
+        protected override JobHandle OnUpdate(JobHandle inputDeps)
+        {
+            var deltaTime = Time.DeltaTime;
 
-        var forceJob = new ForceJob() { deltaTime = deltaTime };
-        var forceHandle = forceJob.Schedule(this, inputDeps);
+            var forceJob = new ForceJob() { deltaTime = deltaTime };
+            var forceHandle = forceJob.Schedule(this, inputDeps);
 
-        var walker = new WalkerJob() { deltaTime = deltaTime, maxWidth = Map.MaxWidth, maxHeight = Map.MaxHeight };
-        var walkerHandle = walker.Schedule(this, forceHandle);
+            var walker = new WalkerJob() { deltaTime = deltaTime, maxWidth = Map.MaxWidth, maxHeight = Map.MaxHeight };
+            var walkerHandle = walker.Schedule(this, forceHandle);
 
-        return walkerHandle;
+            return walkerHandle;
+        }
     }
 }
