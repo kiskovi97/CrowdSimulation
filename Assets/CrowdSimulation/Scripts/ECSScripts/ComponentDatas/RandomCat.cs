@@ -1,8 +1,11 @@
 ﻿using Unity.Entities;
 using UnityEngine;
 
-[GenerateAuthoringComponent]
-public struct RandomCat : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public float random;
+    [GenerateAuthoringComponent]
+    public struct RandomCat : IComponentData
+    {
+        public float random;
+    }
 }

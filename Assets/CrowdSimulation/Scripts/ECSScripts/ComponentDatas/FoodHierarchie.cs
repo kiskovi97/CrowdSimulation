@@ -1,7 +1,10 @@
 ﻿using Unity.Entities;
 
-[GenerateAuthoringComponent]
-public struct FoodHierarchie : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public int hierarchieNumber;
+    [GenerateAuthoringComponent]
+    public struct FoodHierarchie : IComponentData
+    {
+        public int hierarchieNumber;
+    }
 }

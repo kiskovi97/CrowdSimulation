@@ -1,8 +1,11 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-[GenerateAuthoringComponent]
-public struct PathForce : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces
 {
-    public float3 force;
+    [GenerateAuthoringComponent]
+    public struct PathForce : IComponentData
+    {
+        public float3 force;
+    }
 }

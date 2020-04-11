@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-[GenerateAuthoringComponent]
-public struct Selection : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public bool Selected;    
+    [GenerateAuthoringComponent]
+    public struct Selection : IComponentData
+    {
+        public bool Selected;
+    }
 }

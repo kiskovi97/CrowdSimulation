@@ -1,9 +1,12 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-[GenerateAuthoringComponent]
-public struct GroupCondition : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public float3 goalPoint;
-    public float goalRadius;
+    [GenerateAuthoringComponent]
+    public struct GroupCondition : IComponentData
+    {
+        public float3 goalPoint;
+        public float goalRadius;
+    }
 }

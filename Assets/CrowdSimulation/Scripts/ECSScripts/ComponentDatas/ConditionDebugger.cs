@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-[GenerateAuthoringComponent]
-public struct ConditionDebugger : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public ConditionType type;
-}
+    [GenerateAuthoringComponent]
+    public struct ConditionDebugger : IComponentData
+    {
+        public ConditionType type;
+    }
 
-public enum ConditionType
-{
-    Hunger,
-    LifeLine
+    public enum ConditionType
+    {
+        Hunger,
+        LifeLine
+    }
 }

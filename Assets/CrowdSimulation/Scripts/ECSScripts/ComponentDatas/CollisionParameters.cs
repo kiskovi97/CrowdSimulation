@@ -1,9 +1,12 @@
 ﻿
 using Unity.Entities;
 
-[GenerateAuthoringComponent]
-public struct CollisionParameters : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public float innerRadius;
-    public float outerRadius;
+    [GenerateAuthoringComponent]
+    public struct CollisionParameters : IComponentData
+    {
+        public float innerRadius;
+        public float outerRadius;
+    }
 }

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-[GenerateAuthoringComponent]
-public struct Edible : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public float nutrition;
+    [GenerateAuthoringComponent]
+    public struct Edible : IComponentData
+    {
+        public float nutrition;
+    }
 }

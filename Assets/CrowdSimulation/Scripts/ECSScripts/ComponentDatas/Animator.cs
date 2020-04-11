@@ -2,15 +2,18 @@
 using Unity.Mathematics;
 using UnityEngine;
 
-[GenerateAuthoringComponent]
-public struct Animator : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public int animationIndex;
-    public float speed;
-    public float currentTime;
-    public float3 localPos;
-    public quaternion localRotation;
+    [GenerateAuthoringComponent]
+    public struct Animator : IComponentData
+    {
+        public int animationIndex;
+        public float speed;
+        public float currentTime;
+        public float3 localPos;
+        public quaternion localRotation;
 
-    public bool reverseY;
-    public int entityReference;
+        public bool reverseY;
+        public int entityReference;
+    }
 }

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-[GenerateAuthoringComponent]
-public struct NoParentDestroy : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
+    [GenerateAuthoringComponent]
+    public struct NoParentDestroy : IComponentData
+    {
 
+    }
 }

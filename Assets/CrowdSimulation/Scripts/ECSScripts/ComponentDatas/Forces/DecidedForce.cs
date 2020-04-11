@@ -1,8 +1,12 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-[GenerateAuthoringComponent]
-public struct DecidedForce : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces
 {
-    public float3 force;
+    [GenerateAuthoringComponent]
+    public struct DecidedForce : IComponentData
+    {
+        public float3 force;
+    }
 }
+

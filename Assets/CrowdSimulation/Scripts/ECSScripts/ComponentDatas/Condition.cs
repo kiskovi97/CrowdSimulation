@@ -1,9 +1,12 @@
 ﻿using Unity.Entities;
 
-[GenerateAuthoringComponent]
-public struct Condition : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public float lifeLine;
-    public float hunger;
-    public float thirst;
+    [GenerateAuthoringComponent]
+    public struct Condition : IComponentData
+    {
+        public float lifeLine;
+        public float hunger;
+        public float thirst;
+    }
 }

@@ -1,9 +1,12 @@
 ﻿using Unity.Entities;
 using Unity.Mathematics;
 
-public struct Walker : IComponentData
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    public int broId;
-    public float3 direction;
-    public float maxSpeed;
+    public struct Walker : IComponentData
+    {
+        public int broId;
+        public float3 direction;
+        public float maxSpeed;
+    }
 }
