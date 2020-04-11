@@ -12,7 +12,7 @@ public class FighterCrowdSpawner : MonoBehaviour
     public FighterCrowdSpawner targetCrowd;
     [SerializeField]
     public PathFindingData data;
-    public Transform cameraGoal;
+    public Transform offsetPoint;
 
     public static int Id = 0;
     
@@ -116,9 +116,10 @@ public class FighterCrowdSpawner : MonoBehaviour
     void Start()
     {
         var area = sizeX * sizeZ * distance * distance;
+        var offset = offsetPoint == null ? Vector3.zero : offsetPoint.position - transform.position;
         var radius = Mathf.Sqrt(area / Mathf.PI);
         var fighterComp = new Fighter() {
-            restPos = transform.position,
+            restPos = transform.position + offset,
             restRadius = radius,
             groupId = myId,
 
@@ -131,7 +132,7 @@ public class FighterCrowdSpawner : MonoBehaviour
         {
             for (int j = 0; j < sizeZ; j++)
             {
-                var position = new Vector3((i - sizeX / 2) * distance, 0, (j - sizeZ / 2) * distance);
+                var position = new Vector3((i - sizeX / 2) * distance, 0, (j - sizeZ / 2) * distance) + offset;
                 var index = (int)( UnityEngine.Random.value * entityObjects.Length);
                 var obj = Instantiate(entityObjects[index], transform);
                 obj.transform.localPosition = position;
@@ -156,6 +157,12 @@ public class FighterCrowdSpawner : MonoBehaviour
         {
             ChangeState(false);
         }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            ClearAll();
+        }
+
         var em = World.DefaultGameObjectInjectionWorld.EntityManager;
         entities = entities.Where((entity) => em.Exists(entity)).ToList();
         typeMaster = typeMaster.Where((entity) => em.Exists(entity)).ToList();
@@ -180,14 +187,6 @@ public class FighterCrowdSpawner : MonoBehaviour
         {
             pos /= db;
             targetCrowd.SetTargetPosition(pos);
-            if (cameraGoal != null)
-            {
-                cameraGoal.position = pos;
-            }
-        }
-        else
-        {
-            targetCrowd.SetTargetPosition(transform.position);
         }
     }
 
