@@ -13,7 +13,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var random = new Random((uint)UnityEngine.Random.Range(1, 100000));
            
                 // SPawn!
-                Entities.ForEach((ref SpawnerParameters parameters, ref Translation translation) =>
+                Entities.ForEach((ref SpawnerParameters parameters, ref Translation translation, ref Rotation rotation) =>
                 {
                     parameters.spawnTimer -= Time.DeltaTime;
                     if (parameters.spawnTimer > 0f)
@@ -32,8 +32,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     var fighter = new Fighter
                     {
                         groupId = parameters.groupId,
-                        restPos = translation.Value + new float3(0,0,-4f),
+                        restPos = translation.Value + math.mul(rotation.Value, new float3(0,0,-4f)),
                         state = FightState.Rest,
+                        attackStrength = 2f,
+                        attackRadius = 2f,
                         Id = entity.Index,
                     };
                     var pathData = new PathFindingData()
