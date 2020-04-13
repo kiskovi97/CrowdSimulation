@@ -3,6 +3,7 @@ using Unity.Mathematics;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
+    [GenerateAuthoringComponent]
     public struct Walker : IComponentData
     {
         public int broId;
