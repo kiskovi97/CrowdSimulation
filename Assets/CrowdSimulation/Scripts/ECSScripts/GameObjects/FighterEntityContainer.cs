@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
+    [RequireComponent(typeof(PlayerInput))]
     public class FighterEntityContainer : MonoBehaviour
     {
         public static FighterEntityContainer instance;
@@ -22,12 +23,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             instance = this;
         }
 
-        public void OnFight(InputAction.CallbackContext _)
+        public void OnAttack()
         {
             ChangeState(true);
         }
 
-        public void OnRest(InputAction.CallbackContext _)
+        public void OnRest()
         {
             ChangeState(false);
         }

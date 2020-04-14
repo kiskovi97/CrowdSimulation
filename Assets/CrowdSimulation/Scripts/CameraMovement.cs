@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
 public class CameraMovement : MonoBehaviour
 {
     public float edge = 10f;
@@ -13,9 +14,9 @@ public class CameraMovement : MonoBehaviour
     private Vector3 speedDirection;
     private float scroll;
 
-    public void OnMovement(InputAction.CallbackContext context)
+    public void OnMovement(InputValue value)
     {
-        var v = context.ReadValue<Vector2>();
+        var v = value.Get<Vector2>();
         right = transform.right;
         forward = transform.forward;
         right.y = 0;
@@ -24,9 +25,9 @@ public class CameraMovement : MonoBehaviour
         forward.Normalize();
         speedDirection = forward * v.y + right * v.x;
     }
-    public void OnZoom(InputAction.CallbackContext context)
+    public void OnZoom(InputValue value)
     {
-        scroll = context.ReadValue<float>();
+        scroll = value.Get<float>();
     }
 
     // Update is called once per frame
