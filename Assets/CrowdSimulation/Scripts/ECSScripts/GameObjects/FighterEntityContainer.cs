@@ -12,9 +12,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
     {
         public static FighterEntityContainer instance;
 
-        private Dictionary<int, List<Entity>> entities = new Dictionary<int, List<Entity>>();
-        private Queue<Entity> foreachHelp = new Queue<Entity>();
-        private List<int> groupIds = new List<int>();
+        private readonly Dictionary<int, List<Entity>> entities = new Dictionary<int, List<Entity>>();
+        private readonly Queue<Entity> foreachHelp = new Queue<Entity>();
+        private readonly List<int> groupIds = new List<int>();
 
         private static bool updated = false;
 
@@ -101,11 +101,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             updated = true;
         }
 
-
         private void Update()
         {
-            
-
             if (updated)
             {
                 var em = World.DefaultGameObjectInjectionWorld.EntityManager;

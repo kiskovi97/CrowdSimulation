@@ -8,13 +8,76 @@ using Unity.Physics.Systems;
 using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
+    [RequireComponent(typeof(PlayerInput))]
     public class RayCast : MonoBehaviour
     {
         public RectTransform selectionBox;
         private Vector2 startPos;
+        private bool selection = false;
+
+        public void OnSquereSelect(InputValue value)
+        {
+            var v = value.Get<float>();
+            if (v == 1)
+            {
+                selection = true;
+                startPos = Input.mousePosition;
+                selectionBox.gameObject.SetActive(true);
+            } else
+            {
+                if (selection)
+                {
+                    selectionBox.gameObject.SetActive(false);
+                    SelectSquere();
+                }
+                selection = false;
+            }
+        }
+
+        public void OnSelect(InputValue value)
+        {
+            if (selection) return;
+
+            if (IsPointerOverUIObject())
+            {
+                return;
+            }
+
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            float distance = 50f;
+            var entity = Raycast(ray.origin, ray.origin + ray.direction * distance);
+            if (entity == Entity.Null)
+            {
+                MonoBehaviourRayCast(ray);
+                return;
+            }
+            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+            if (em.HasComponent<Selection>(entity))
+            {
+                var selection = em.GetComponentData<Selection>(entity);
+                selection.Selected = !selection.Selected;
+                em.SetComponentData(entity, selection);
+            }
+        }
+
+        public void OnCursorMove(InputValue value)
+        {
+            if (selection)
+            {
+                SetBoxFromMouse(value.Get<Vector2>());
+            }
+        }
+
+        public void SetBoxFromMouse(Vector2 endPos)
+        {
+            var dir = endPos - startPos;
+            selectionBox.sizeDelta = math.abs(dir);
+            selectionBox.anchoredPosition = (startPos + endPos) / 2f;
+        }
 
         private Entity Raycast(float3 from, float3 to)
         {
@@ -48,65 +111,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         private void Start()
         {
             Cursor.lockState = CursorLockMode.None;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            if (IsPointerOverUIObject())
-            {
-                selectionBox.gameObject.SetActive(false);
-                return;
-            }
-
-            if (Input.GetKey(KeyCode.E))
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    startPos = Input.mousePosition;
-                    selectionBox.gameObject.SetActive(true);
-                }
-
-                if (Input.GetMouseButton(0))
-                {
-                    Vector2 endPos = Input.mousePosition;
-
-                    var dir = endPos - startPos;
-
-                    selectionBox.sizeDelta = math.abs(dir);
-                    selectionBox.anchoredPosition = (startPos + endPos) / 2f;
-                }
-
-                if (Input.GetMouseButtonUp(0))
-                {
-                    Vector2 endPos = Input.mousePosition;
-                    selectionBox.gameObject.SetActive(false);
-                    SelectSquere();
-                }
-
-                return;
-            }
-
-            selectionBox.gameObject.SetActive(false);
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                float distance = 50f;
-                var entity = Raycast(ray.origin, ray.origin + ray.direction * distance);
-                if (entity == Entity.Null)
-                {
-                    MonoBehaviourRayCast(ray);
-                    return;
-                }
-                var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-                if (em.HasComponent<Selection>(entity))
-                {
-                    var selection = em.GetComponentData<Selection>(entity);
-                    selection.Selected = !selection.Selected;
-                    em.SetComponentData(entity, selection);
-                }
-            }
         }
 
         private void SelectSquere()
