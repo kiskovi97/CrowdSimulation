@@ -95,7 +95,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             {
                 do
                 {
-                    if (other.data2.broId == myBroId) continue;
+                    if (other.data.groupId == myBroId) continue;
                     if (!found)
                     {
                         output = other;

@@ -43,6 +43,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 do
                 {
                     if (other.data.state == FightState.Rest) return;
+                    if (other.data.groupId == me.groupId) continue;
                     if (other.data.attack == AttackType.Mix)
                     {
                         var distance = math.length(other.position - position);
@@ -56,10 +57,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                         if (other.data.attack == AttackType.One)
                         {
                             if (other.data.targetId != me.Id) continue;
-                        }
-                        if (other.data.attack == AttackType.All)
-                        {
-                            if (other.data.groupId == me.groupId) continue;
                         }
                         var distance = math.length(other.position - position);
                         if (distance < other.data.attackRadius)

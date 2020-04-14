@@ -204,6 +204,7 @@ GameObject:
   - component: {fileID: 2623012569886797899}
   - component: {fileID: 8847824335073405561}
   - component: {fileID: 3422382370778331992}
+  - component: {fileID: -3745427346064439621}
   m_Layer: 0
   m_Name: Fighter_Prefab 1
   m_TagString: Untagged
@@ -240,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd97ab42745a1454fb454ee16ce2685e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  broId: 1
+  broId: 0
   direction:
     x: 0
     y: 0
@@ -453,6 +454,20 @@ MonoBehaviour:
       m_Override: 0
       m_Value: 0000000000000000
   m_ConvexRadius_Deprecated: -1
+--- !u!114 &-3745427346064439621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6014953267392912931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa7a09776255c3946a08d77a8b4485bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathFindingMethod: 1
+  decisionMethod: 1
 --- !u!1001 &8389834025345406882
 PrefabInstance:
   m_ObjectHideFlags: 0

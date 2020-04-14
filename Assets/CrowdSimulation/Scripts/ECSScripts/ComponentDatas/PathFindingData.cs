@@ -6,8 +6,8 @@ using UnityEngine;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
-    [GenerateAuthoringComponent]
     [Serializable]
+    [GenerateAuthoringComponent]
     public struct PathFindingData : IComponentData
     {
         public PathFindingMethod pathFindingMethod;

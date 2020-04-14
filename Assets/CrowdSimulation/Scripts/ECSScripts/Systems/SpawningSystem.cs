@@ -38,13 +38,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                         attackRadius = 2f,
                         Id = entity.Index,
                     };
-                    var pathData = new PathFindingData()
-                    {
-                        decisionMethod = DecisionMethod.Max,
-                        pathFindingMethod = PathFindingMethod.No
-                    };
                     EntityManager.AddComponentData(entity, fighter);
-                    EntityManager.AddComponentData(entity, pathData);
                     FighterEntityContainer.AddEntity(entity);
                 });
             
