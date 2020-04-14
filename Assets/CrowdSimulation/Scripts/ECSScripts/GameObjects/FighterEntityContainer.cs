@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
+using UnityEngine.InputSystem;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
@@ -19,6 +20,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         private void Awake()
         {
             instance = this;
+        }
+
+        public void OnFight(InputAction.CallbackContext _)
+        {
+            ChangeState(true);
+        }
+
+        public void OnRest(InputAction.CallbackContext _)
+        {
+            ChangeState(false);
         }
 
         public void ClearAll()
@@ -89,17 +100,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             updated = true;
         }
 
+
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                ChangeState(true);
-            }
-
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                ChangeState(false);
-            }
+            
 
             if (updated)
             {
