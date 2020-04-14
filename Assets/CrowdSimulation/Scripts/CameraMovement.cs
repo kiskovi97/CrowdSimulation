@@ -1,5 +1,6 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -9,18 +10,39 @@ public class CameraMovement : MonoBehaviour
     private Vector3 right;
     private Vector3 forward;
 
-    // Update is called once per frame
-    void Update()
+    private Vector3 speedDirection;
+    private float scroll;
+
+    public void OnMovement(InputAction.CallbackContext context)
     {
-        if (RayCast.IsPointerOverUIObject()) return;
-
-
+        var v = context.ReadValue<Vector2>();
         right = transform.right;
         forward = transform.forward;
         right.y = 0;
         forward.y = 0;
         right.Normalize();
         forward.Normalize();
+        speedDirection = forward * v.y + right * v.x;
+    }
+    public void OnZoom(InputAction.CallbackContext context)
+    {
+        scroll = context.ReadValue<float>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        transform.position += speedDirection * Time.deltaTime * speed;
+        if (!Camera.main.orthographic)
+        {
+            transform.position += transform.forward * scroll * speed * Time.deltaTime;
+        }
+        else
+        {
+            Camera.main.orthographicSize -= scroll * speed * Time.deltaTime;
+        }
+
+        if (RayCast.IsPointerOverUIObject()) return;
 
         var mp = Input.mousePosition;
         //if (mp.y > Screen.height || mp.y < 0 || mp.x > Screen.width || mp.x < 0) return;
@@ -41,40 +63,5 @@ public class CameraMovement : MonoBehaviour
         {
             transform.position += (edge - mp.y) / (edge) * -forward * Time.deltaTime * speed;
         }
-
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.position += forward * Time.deltaTime * speed;
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.position -= forward * Time.deltaTime * speed;
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.position -= right * Time.deltaTime * speed;
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.position += right * Time.deltaTime * speed;
-        }
-        var scroll = 0f;
-        if (Input.GetKey(KeyCode.Q))
-        {
-            scroll = -1f;
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            scroll = 1f;
-        }
-        if (!Camera.main.orthographic)
-        {
-            transform.position += transform.forward * scroll * speed * Time.deltaTime;
-        }
-        else
-        {
-            Camera.main.orthographicSize -= scroll * speed * Time.deltaTime;
-        }
-
     }
 }
