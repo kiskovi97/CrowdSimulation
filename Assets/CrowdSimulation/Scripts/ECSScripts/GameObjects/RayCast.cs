@@ -25,9 +25,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             if (v == 1)
             {
                 selection = true;
-                startPos = Input.mousePosition;
+                startPos = Mouse.current.position.ReadValue();
                 selectionBox.gameObject.SetActive(true);
-            } else
+            }
+            else
             {
                 if (selection)
                 {
@@ -38,23 +39,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             }
         }
 
-        public void OnSelect(InputValue value)
+        public void OnSelect()
         {
             if (selection) return;
-
-            if (IsPointerOverUIObject())
-            {
-                return;
-            }
-
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             float distance = 50f;
             var entity = Raycast(ray.origin, ray.origin + ray.direction * distance);
-            if (entity == Entity.Null)
-            {
-                MonoBehaviourRayCast(ray);
-                return;
-            }
+            if (entity == Entity.Null) return;
+
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
             if (em.HasComponent<Selection>(entity))
             {
@@ -62,6 +54,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 selection.Selected = !selection.Selected;
                 em.SetComponentData(entity, selection);
             }
+        }
+
+        public void OnGoTo()
+        {
+            if (IsPointerOverUIObject())
+            {
+                return;
+            }
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            MonoBehaviourRayCast(ray);
         }
 
         public void OnCursorMove(InputValue value)
@@ -118,6 +120,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             Vector2 min = selectionBox.anchoredPosition - (selectionBox.sizeDelta / 2);
             Vector2 max = selectionBox.anchoredPosition + (selectionBox.sizeDelta / 2);
 
+            selectionBox.sizeDelta = Vector2.zero;
+
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
             var all = em.GetAllEntities(Unity.Collections.Allocator.Temp);
             foreach (var entity in all)
@@ -144,7 +148,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         public static bool IsPointerOverUIObject()
         {
             PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-            eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            eventDataCurrentPosition.position = Mouse.current.position.ReadValue();
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             results = results.Where((result) => !result.gameObject.tag.Equals("Ignore")).ToList();
