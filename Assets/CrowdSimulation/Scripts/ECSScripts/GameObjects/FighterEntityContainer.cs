@@ -10,15 +10,58 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
     {
         public static FighterEntityContainer instance;
 
-        public Dictionary<int, List<Entity>> entities = new Dictionary<int, List<Entity>>();
-        public Queue<Entity> foreachHelp = new Queue<Entity>();
-        public List<int> groupIds = new List<int>();
+        private Dictionary<int, List<Entity>> entities = new Dictionary<int, List<Entity>>();
+        private Queue<Entity> foreachHelp = new Queue<Entity>();
+        private List<int> groupIds = new List<int>();
 
         private static bool updated = false;
 
         private void Awake()
         {
             instance = this;
+        }
+
+        public void ClearAll()
+        {
+            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+            foreach (var list in entities.Values)
+            {
+                foreach (var entity in list)
+                {
+                    if (!em.Exists(entity)) continue;
+                    if (!em.HasComponent<Selection>(entity)) continue;
+                    var data = em.GetComponentData<Selection>(entity);
+                    data.Selected = false;
+                    em.SetComponentData(entity, data);
+                }
+            }
+        }
+
+        public void SetAll(int groupId)
+        {
+            if (!entities.ContainsKey(groupId)) return;
+            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+            bool all = true;
+            foreach(var entity in entities[groupId])
+            {
+                if (!em.Exists(entity)) continue;
+                if (!em.HasComponent<Selection>(entity)) continue;
+                var selection = em.GetComponentData<Selection>(entity);
+                all &= selection.Selected;
+                selection.Selected = true;
+                em.SetComponentData(entity, selection);
+            }
+            if (all)
+            {
+                foreach (var entity in entities[groupId])
+                {
+                    if (!em.Exists(entity)) continue;
+                    if (!em.HasComponent<Selection>(entity)) continue;
+                    var selection = em.GetComponentData<Selection>(entity);
+                    selection.Selected = false;
+                    em.SetComponentData(entity, selection);
+                }
+            }
         }
 
         public static void AddEntity(Entity entity)
