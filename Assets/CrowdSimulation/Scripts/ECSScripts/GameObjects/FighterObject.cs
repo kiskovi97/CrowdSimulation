@@ -19,10 +19,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             decisionMethod = DecisionMethod.Max,
             pathFindingMethod = PathFindingMethod.No
         };
-        private Fighter fighter = new Fighter()
-        {
-            targerGroupId = 0
-        };
+        private Fighter fighter = new Fighter();
 
         FighterCrowdSpawner parent;
         public void ConnectParent(FighterCrowdSpawner parent)

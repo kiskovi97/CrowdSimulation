@@ -38,18 +38,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 var radius = Mathf.Sqrt(area / Mathf.PI);
                 fighter.restRadius = radius;
 
-                if (instance.groupIds.Count > 1)
-                {
-                    foreach(var id in instance.groupIds)
-                    {
-                        if (id != fighter.groupId)
-                        {
-                            fighter.targerGroupId = id;
-                            break;
-                        }
-                    }
-                }
-
                 instance.entities[fighter.groupId].Add(entity);
                 em.SetComponentData(entity, fighter);
                 instance.foreachHelp.Enqueue(entity);
@@ -80,6 +68,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                     foreach (var ent in list)
                     {
                         if (!em.Exists(ent)) continue;
+                        if (!em.HasComponent<Fighter>(ent)) continue;
                         var fighter = em.GetComponentData<Fighter>(ent);
                         fighter.restRadius = radius;
                         em.SetComponentData(ent, fighter);

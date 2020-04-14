@@ -24,7 +24,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 return;
             }
             var selected = new FightersHashMap.MyData();
-            var found = ForeachAround(translation.Value, ref selected, fighter.targerGroupId);
+            var found = ForeachAround(translation.Value, ref selected, fighter.groupId);
 
             fighter.targetId = -1;
             if (found)
@@ -73,29 +73,29 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
         }
 
-        private bool ForeachAround(float3 position, ref FightersHashMap.MyData output, int targetId)
+        private bool ForeachAround(float3 position, ref FightersHashMap.MyData output, int myBroId)
         {
             var found = false;
             var key = QuadrantVariables.GetPositionHashMapKey(position);
-            found = found || Foreach(key, position, ref output, found, targetId);
+            found = found || Foreach(key, position, ref output, found, myBroId);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
-            found = found || Foreach(key, position, ref output, found, targetId);
+            found = found || Foreach(key, position, ref output, found, myBroId);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
-            found = found || Foreach(key, position, ref output, found, targetId);
+            found = found || Foreach(key, position, ref output, found, myBroId);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
-            found = found || Foreach(key, position, ref output, found, targetId);
+            found = found || Foreach(key, position, ref output, found, myBroId);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
-            found = found || Foreach(key, position, ref output, found, targetId);
+            found = found || Foreach(key, position, ref output, found, myBroId);
             return found;
         }
 
-        private bool Foreach(int key, float3 position, ref FightersHashMap.MyData output, bool found, int targetId)
+        private bool Foreach(int key, float3 position, ref FightersHashMap.MyData output, bool found, int myBroId)
         {
             if (targetMap.TryGetFirstValue(key, out FightersHashMap.MyData other, out NativeMultiHashMapIterator<int> iterator))
             {
                 do
                 {
-                    if (other.data2.broId != targetId) continue;
+                    if (other.data2.broId == myBroId) continue;
                     if (!found)
                     {
                         output = other;

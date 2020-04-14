@@ -59,7 +59,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                         }
                         if (other.data.attack == AttackType.All)
                         {
-                            if (other.data.targerGroupId != me.groupId) continue;
+                            if (other.data.groupId == me.groupId) continue;
                         }
                         var distance = math.length(other.position - position);
                         if (distance < other.data.attackRadius)

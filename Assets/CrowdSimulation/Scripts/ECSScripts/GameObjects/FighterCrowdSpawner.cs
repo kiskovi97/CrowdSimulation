@@ -127,7 +127,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 restRadius = radius,
                 groupId = myId,
 
-                targerGroupId = targetCrowd.myId,
                 targetId = -1,
                 targetGroupPos = targetCrowd.gameObject.transform.position,
                 state = FightState.Rest,

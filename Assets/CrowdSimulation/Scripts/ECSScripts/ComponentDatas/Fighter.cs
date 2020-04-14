@@ -17,7 +17,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         public float attackStrength;
 
         //State
-        public int targerGroupId;
         public int targetId;
         public float3 targetGroupPos;
         public FightState state;
