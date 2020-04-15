@@ -28,7 +28,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             Entities.ForEach((Entity entity, ref Infection infection) =>
             {
-                var rendererMesh = World.DefaultGameObjectInjectionWorld.EntityManager.GetSharedComponentData<RenderMesh>(entity);
+                var rendererMesh = EntityManager.GetSharedComponentData<RenderMesh>(entity);
                 if (infection.infectionTime > 0.2f)
                 {
                     PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()

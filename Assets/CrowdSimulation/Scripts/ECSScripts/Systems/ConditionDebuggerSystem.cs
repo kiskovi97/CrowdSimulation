@@ -1,6 +1,7 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Rendering;
 using Unity.Transforms;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
@@ -10,7 +11,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     {
         protected override void OnUpdate()
         {
-            Entities.ForEach((ref ConditionDebugger debugger, ref Parent parent, ref NonUniformScale compositeScale) =>
+            Entities.ForEach((Entity entity, ref ConditionDebugger debugger, ref Parent parent, ref NonUniformScale compositeScale) =>
             {
                 if (EntityManager.HasComponent<Condition>(parent.Value))
                 {
@@ -25,7 +26,33 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     if (debugger.type == ConditionType.LifeLine)
                     {
                         if (condition.lifeLine > 0f)
+                        {
+                            var rendererMesh = EntityManager.GetSharedComponentData<RenderMesh>(entity);
                             compositeScale.Value.y = condition.lifeLine * 0.01f;
+                            if (condition.lifeLine < 30f)
+                            {
+                                PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
+                                {
+                                    material = Materails.Instance.toLow,
+                                    mesh = rendererMesh.mesh
+                                });
+                                return;
+                            }
+                            if (condition.hurting > 0f)
+                            {
+                                PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
+                                {
+                                    material = Materails.Instance.hurting,
+                                    mesh = rendererMesh.mesh
+                                });
+                                return;
+                            }
+                            PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
+                            {
+                                material = Materails.Instance.rest,
+                                mesh = rendererMesh.mesh
+                            });
+                        }
                         else
                             compositeScale.Value.y = 0f;
                     }

@@ -19,6 +19,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
         public void Execute(ref Fighter fighter, ref Condition condition, [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters)
         {
+            condition.hurting -= deltaTime;
+            condition.hurting = math.max(condition.hurting, 0f);
             ForeachAround(translation.Value, fighter, ref condition);
         }
 
@@ -62,6 +64,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                         if (distance < other.data.attackRadius)
                         {
                             condition.lifeLine -= deltaTime * other.data.attackStrength;
+                            condition.hurting = 1f;
                         }
                     }
 

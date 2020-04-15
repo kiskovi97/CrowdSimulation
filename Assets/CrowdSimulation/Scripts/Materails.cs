@@ -11,6 +11,10 @@ public class Materails : MonoBehaviour
     public Material selected;
     public Material notSelected;
 
+    public Material hurting;
+    public Material healing;
+    public Material rest;
+    public Material toLow;
 
     public static Materails Instance;
     // Start is called before the first frame update

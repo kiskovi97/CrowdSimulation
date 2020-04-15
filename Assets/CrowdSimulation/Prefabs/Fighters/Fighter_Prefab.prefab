@@ -347,7 +347,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 67cd64bf613f4b44b8d23d3e8ee090c5, type: 2}
+  - {fileID: 2100000, guid: 8f38778cfb65ccd4c970cd183058eef2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -466,7 +466,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7a09776255c3946a08d77a8b4485bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathFindingMethod: 1
+  pathFindingMethod: 0
   decisionMethod: 1
 --- !u!1001 &8389834025345406882
 PrefabInstance:

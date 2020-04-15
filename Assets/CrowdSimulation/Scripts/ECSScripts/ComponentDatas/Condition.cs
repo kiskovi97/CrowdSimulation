@@ -8,5 +8,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         public float lifeLine;
         public float hunger;
         public float thirst;
+        public float hurting;
     }
 }
