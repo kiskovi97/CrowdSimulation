@@ -21,6 +21,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         {
             condition.hurting -= deltaTime;
             condition.hurting = math.max(condition.hurting, 0f);
+
+            if (condition.hurting <= 0f && condition.lifeLine < condition.maxLifeLine)
+            {
+                condition.lifeLine += deltaTime * condition.healingSpeed;
+            }
+
             ForeachAround(translation.Value, fighter, ref condition);
         }
 
@@ -44,7 +50,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             {
                 do
                 {
-                    if (other.data.state == FightState.Rest) return;
                     if (other.data.groupId == me.groupId) continue;
                     if (other.data.attack == AttackType.Mix)
                     {

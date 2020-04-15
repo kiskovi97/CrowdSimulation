@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine.InputSystem;
+using Unity.Mathematics;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
@@ -91,7 +92,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 
                 var area = instance.entities[fighter.groupId].Count;
                 var radius = Mathf.Sqrt(area / Mathf.PI);
-                fighter.restRadius = radius;
+                fighter.goalRadius = radius;
 
                 instance.entities[fighter.groupId].Add(entity);
                 em.SetComponentData(entity, fighter);
@@ -115,7 +116,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                         if (!em.Exists(ent)) continue;
                         if (!em.HasComponent<Fighter>(ent)) continue;
                         var fighter = em.GetComponentData<Fighter>(ent);
-                        fighter.restRadius = radius;
+                        fighter.goalRadius = radius;
                         em.SetComponentData(ent, fighter);
                     }
                 }
@@ -164,7 +165,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 {
                     if (!em.Exists(entity)) continue;
                     var data = em.GetComponentData<Fighter>(entity);
-                    data.state = fight ? FightState.GoToFight : FightState.Rest;
+                    data.goalPos = new float3(0,2,0);
                     em.SetComponentData(entity, data);
                 }
             }

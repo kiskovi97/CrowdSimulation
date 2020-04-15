@@ -12,6 +12,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     public struct AnimatorJob : IJobForEach<Translation, Rotation, AnimatorData>
     {
         public float deltaTime;
+        public Random random;
 
         [ReadOnly]
         public NativeArray<AnimationStep> steps;
@@ -42,8 +43,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 {
                     if (animator.speed < 1f)
                     {
-                        // random ++
-                        //animator.currentTime = UnityEngine.Random.value;
+                        animator.currentTime = random.NextFloat();
                     }
                     animator.speed = 1f;
                 }
@@ -61,8 +61,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 {
                     if (animator.speed < 1f)
                     {
-                        // random ++
-                        //animator.currentTime = UnityEngine.Random.value;
+                        animator.currentTime = random.NextFloat();
                     }
                     animator.speed = 1f;
                 }

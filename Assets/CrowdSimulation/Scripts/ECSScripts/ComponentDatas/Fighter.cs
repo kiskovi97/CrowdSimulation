@@ -8,8 +8,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     public struct Fighter : IComponentData
     {
         // Variables
-        public float3 restPos;
-        public float restRadius;
         public AttackType attack;
         public float attackRadius;
         public int Id;
@@ -18,13 +16,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 
         //State
         public int targetId;
-        public float3 targetGroupPos;
         public FightState state;
+        public float3 goalPos;
+        public float goalRadius;
     }
 
     public enum FightState
     {
-        Rest,
+        Standing,
+        GoToPlace,
         GoToFight,
         Fight
     }

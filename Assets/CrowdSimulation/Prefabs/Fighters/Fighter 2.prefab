@@ -225,6 +225,9 @@ MonoBehaviour:
   lifeLine: 60
   hunger: 0
   thirst: 0
+  hurting: 0
+  maxLifeLine: 60
+  healingSpeed: 0.5
 --- !u!114 &7471394616226922654
 MonoBehaviour:
   m_ObjectHideFlags: 0

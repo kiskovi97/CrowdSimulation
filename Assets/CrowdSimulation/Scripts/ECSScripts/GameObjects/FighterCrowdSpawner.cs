@@ -123,13 +123,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             var radius = Mathf.Sqrt(area / Mathf.PI);
             var fighterComp = new Fighter()
             {
-                restPos = transform.position + offset,
-                restRadius = radius,
+                goalPos = transform.position + offset,
+                goalRadius = radius,
                 groupId = myId,
 
                 targetId = -1,
-                targetGroupPos = targetCrowd.gameObject.transform.position,
-                state = FightState.Rest,
+                state = FightState.Standing,
             };
             for (int i = 0; i < sizeX; i++)
             {
@@ -202,8 +201,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             {
                 if (!em.Exists(entity)) continue;
                 var data = em.GetComponentData<Fighter>(entity);
-                data.targetGroupPos = pos;
-                data.restRadius = radius;
+                data.goalPos = pos;
+                data.goalRadius = radius;
                 em.SetComponentData(entity, data);
             }
         }
@@ -215,7 +214,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             {
                 if (!em.Exists(entity)) continue;
                 var data = em.GetComponentData<Fighter>(entity);
-                data.state = fight ? FightState.GoToFight : FightState.Rest;
+                data.state = fight ? FightState.GoToFight : FightState.Standing;
                 em.SetComponentData(entity, data);
             }
         }

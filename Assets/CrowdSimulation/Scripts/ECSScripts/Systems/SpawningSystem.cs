@@ -32,8 +32,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     var fighter = new Fighter
                     {
                         groupId = parameters.groupId,
-                        restPos = translation.Value + math.mul(rotation.Value, new float3(0,0,-4f)),
-                        state = FightState.Rest,
+                        goalPos = translation.Value + math.mul(rotation.Value, new float3(0,0,-4f)),
+                        state = FightState.Standing,
                         attackStrength = 2f,
                         attackRadius = 2f,
                         Id = entity.Index,

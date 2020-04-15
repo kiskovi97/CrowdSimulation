@@ -202,6 +202,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxSpeed: 2
+  attackRadius: 2
+  attackStrength: 2
+  attackType: 0
 --- !u!114 &7306792675790663045
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,6 +220,9 @@ MonoBehaviour:
   lifeLine: 60
   hunger: 0
   thirst: 0
+  hurting: 0
+  maxLifeLine: 60
+  healingSpeed: 0.5
 --- !u!1001 &8389834025345406882
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -152,13 +152,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 }
             });
 
+            var random = new Random((uint)UnityEngine.Random.Range(1, 100000));
             var deltaTime = Time.DeltaTime;
             var job = new AnimatorJob()
             {
                 deltaTime = deltaTime,
                 animations = animations,
                 steps = animationSteps,
-                hashMap = FighterSystem.hashMap
+                hashMap = FighterSystem.hashMap,
+                random = random,
             };
             var handle = job.Schedule(this);
             handle.Complete();

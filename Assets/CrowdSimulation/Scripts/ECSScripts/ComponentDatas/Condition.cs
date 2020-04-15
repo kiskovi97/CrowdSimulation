@@ -9,5 +9,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         public float hunger;
         public float thirst;
         public float hurting;
+        public float maxLifeLine;
+        public float healingSpeed;
     }
 }

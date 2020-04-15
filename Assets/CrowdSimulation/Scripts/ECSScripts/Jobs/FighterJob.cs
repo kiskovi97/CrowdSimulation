@@ -10,23 +10,16 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct FighterJob : IJobForEach<Fighter, DecidedForce, Translation, Rotation>
+    public struct FighterJob : IJobForEach<Fighter, Condition, DecidedForce, Translation, Rotation>
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
 
-        public void Execute(ref Fighter fighter, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, ref Rotation walker)
+        public void Execute(ref Fighter fighter, ref Condition condition, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, ref Rotation walker)
         {
-            if (fighter.state == FightState.Rest)
-            {
-                GetNear(fighter.restPos, fighter.restRadius, translation, ref decidedForce);
-                return;
-            }
             var selected = new FightersHashMap.MyData();
             var found = ForeachAround(translation.Value, ref selected, fighter.groupId);
-
-            fighter.targetId = -1;
             if (found)
             {
                 var direction = selected.position - translation.Value;
@@ -37,15 +30,18 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     decidedForce.force = direction * 0.1f;
                     RotateForward(direction, ref walker);
                     fighter.state = FightState.Fight;
-                    return;
+                } else
+                {
+                    decidedForce.force = direction * 0.5f;
+                    fighter.state = FightState.GoToFight;
                 }
-                decidedForce.force = direction * 0.5f;
             }
             else
             {
-                GetNear(fighter.targetGroupPos, fighter.restRadius, translation, ref decidedForce);
+                fighter.targetId = -1;
+                var isNear = GetNear(fighter.goalPos, fighter.goalRadius, translation, ref decidedForce);
+                fighter.state = isNear ? FightState.Standing : FightState.GoToPlace;
             }
-            fighter.state = FightState.GoToFight;
         }
 
         private void RotateForward(float3 direction, ref Rotation rotation)
@@ -59,7 +55,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
         }
 
-        private void GetNear(float3 goal, float radius, Translation translation, ref DecidedForce decidedForce)
+        private bool GetNear(float3 goal, float radius, Translation translation, ref DecidedForce decidedForce)
         {
             var force = (goal - translation.Value);
             if (math.length(force) > radius)
@@ -69,10 +65,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     force = math.normalizesafe(force);
                 }
                 decidedForce.force = force * 0.5f;
+                return false;
             }
             else
             {
                 decidedForce.force = float3.zero;
+                return true;
             }
         }
 

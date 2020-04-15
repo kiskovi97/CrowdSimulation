@@ -164,6 +164,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 
                 var em = World.DefaultGameObjectInjectionWorld.EntityManager;
                 var all = em.GetAllEntities(Unity.Collections.Allocator.Temp);
+                var count = 0;
                 foreach (var entity in all)
                 {
                     if (em.HasComponent<Selection>(entity))
@@ -173,8 +174,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                         {
                             if (em.HasComponent<Fighter>(entity))
                             {
+                                count++;
+                                var radius = Mathf.Sqrt(count / Mathf.PI);
                                 var fighter = em.GetComponentData<Fighter>(entity);
-                                fighter.restPos = goalPoint;
+                                fighter.goalPos = goalPoint;
+                                fighter.goalRadius = radius;
                                 em.SetComponentData(entity, fighter);
                             }
                         }
