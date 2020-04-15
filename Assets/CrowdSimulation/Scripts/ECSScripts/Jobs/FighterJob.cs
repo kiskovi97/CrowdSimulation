@@ -41,7 +41,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 }
                 decidedForce.force = direction * 0.5f;
             }
-            GetNear(fighter.targetGroupPos, fighter.restRadius, translation, ref decidedForce);
+            else
+            {
+                GetNear(fighter.targetGroupPos, fighter.restRadius, translation, ref decidedForce);
+            }
             fighter.state = FightState.GoToFight;
         }
 
