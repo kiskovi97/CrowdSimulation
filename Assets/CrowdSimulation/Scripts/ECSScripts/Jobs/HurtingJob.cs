@@ -69,7 +69,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                         if (distance < other.data.attackRadius)
                         {
                             condition.lifeLine -= deltaTime * other.data.attackStrength;
-                            condition.hurting = 1f;
+                            condition.hurting = condition.hurtingTime;
                         }
                     }
 

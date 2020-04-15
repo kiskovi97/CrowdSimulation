@@ -47,6 +47,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                                 });
                                 return;
                             }
+                            if (condition.lifeLine < condition.maxLifeLine)
+                            {
+                                PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
+                                {
+                                    material = Materails.Instance.healing,
+                                    mesh = rendererMesh.mesh
+                                });
+                                return;
+                            }
                             PostUpdateCommands.SetSharedComponent(entity, new RenderMesh()
                             {
                                 material = Materails.Instance.rest,
