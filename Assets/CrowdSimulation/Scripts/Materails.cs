@@ -16,6 +16,9 @@ public class Materails : MonoBehaviour
     public Material rest;
     public Material toLow;
 
+    public Material okayBuilding;
+    public Material wrongBuilding;
+
     public static Materails Instance;
     // Start is called before the first frame update
     void Awake()

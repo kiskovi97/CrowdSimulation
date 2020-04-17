@@ -63,6 +63,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             {
                 return;
             }
+            if (building)
+            {
+                building = false;
+                return;
+            }
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             SelectedSetGoalPoint(ray);
         }
