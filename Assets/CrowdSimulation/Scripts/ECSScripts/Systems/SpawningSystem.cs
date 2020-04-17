@@ -13,7 +13,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var random = new Random((uint)UnityEngine.Random.Range(1, 100000));
            
                 // SPawn!
-                Entities.ForEach((ref SpawnerParameters parameters, ref Translation translation, ref Rotation rotation) =>
+                Entities.ForEach((ref SpawnerParameters parameters, ref SpawnerPrefabContainer prefab, ref Translation translation, ref Rotation rotation) =>
                 {
                     parameters.spawnTimer -= Time.DeltaTime;
                     if (parameters.spawnTimer > 0f)
@@ -27,12 +27,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                         return;
                     }
 
-                    var entity = EntityManager.Instantiate(parameters.prefab);
-                    EntityManager.SetComponentData(entity, new Translation { Value = translation.Value + new float3(random.NextFloat(3f), 0, random.NextFloat(3f)) });
+                    var entity = EntityManager.Instantiate(prefab.prefab);
+                    EntityManager.SetComponentData(entity, new Translation { Value = translation.Value + parameters.offset + new float3(random.NextFloat(3f), 0, random.NextFloat(3f)) });
                     var fighter = new Fighter
                     {
                         groupId = parameters.groupId,
-                        goalPos = translation.Value + math.mul(rotation.Value, new float3(0,0,-4f)),
+                        goalPos = translation.Value + math.mul(rotation.Value, parameters.offset),
                         state = FightState.Standing,
                         attackStrength = 2f,
                         attackRadius = 2f,

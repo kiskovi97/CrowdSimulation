@@ -1709,7 +1709,7 @@ GameObject:
   - component: {fileID: 1243844053}
   - component: {fileID: 1243844052}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: CameraLookAt
   m_TagString: Untagged
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -1722,14 +1722,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1243844050}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalRotation: {x: -0, y: -0.4999996, z: -0, w: 0.8660257}
+  m_LocalPosition: {x: -3.5, y: 2, z: 21.9}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1590989507}
   m_Father: {fileID: 0}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -60.000004, z: 0}
 --- !u!114 &1243844052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2062,7 +2062,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1590989504}
   m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 40, z: -40}
+  m_LocalPosition: {x: 0, y: 47.82, z: -47.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1243844051}
@@ -2462,6 +2462,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawningYellow
       objectReference: {fileID: 0}
+    - target: {fileID: 8361643065793752219, guid: 7eb65d6bf83a2f6429f23ab0925275c3,
+        type: 3}
+      propertyPath: prefab
+      value: 
+      objectReference: {fileID: 6014953267392912931, guid: f2c89d80f029207499549036811e99c5,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7eb65d6bf83a2f6429f23ab0925275c3, type: 3}
 --- !u!1 &1987766509

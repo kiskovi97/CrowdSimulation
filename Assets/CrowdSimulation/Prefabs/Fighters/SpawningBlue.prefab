@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1047423695428135001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1285435029115688381}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: -5397416234189338067, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1285435029115688381
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047423695428135001}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 2, y: 0, z: -7.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8361643065793752212}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8361643065793752213
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,8 +39,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8361643065793752212}
-  - component: {fileID: 8361643065793752219}
   - component: {fileID: 8361643065793752218}
+  - component: {fileID: 7378402660066518335}
+  - component: {fileID: 5932534044113058652}
   m_Layer: 0
   m_Name: SpawningBlue
   m_TagString: Untagged
@@ -30,27 +61,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3960457793085392511}
+  - {fileID: 1285435029115688381}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8361643065793752219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8361643065793752213}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 314aee8783461e341a39080819a391fc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 6014953267392912931, guid: 53865693874f9f9418caf18527ec7f0e, type: 3}
-  groupId: 0
-  spawnTimer: 0
-  spawnTime: 0.2
-  maxEntity: 20
-  currentEntity: 0
 --- !u!114 &8361643065793752218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,6 +78,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
+--- !u!114 &7378402660066518335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8361643065793752213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 261aa0fbad26d6649be6a315cf76668a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groupId: 0
+  spawnTime: 0.2
+  maxEntity: 20
+  offset: {fileID: 1285435029115688381}
+--- !u!114 &5932534044113058652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8361643065793752213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e333e07fe2de9849b81e8f405b80c4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 6014953267392912931, guid: 53865693874f9f9418caf18527ec7f0e, type: 3}
 --- !u!1001 &8361643067033010800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -74,7 +117,7 @@ PrefabInstance:
     - target: {fileID: 4826971977536504847, guid: 66a287b5fcb4a1247b08aa67507c0d23,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4826971977536504847, guid: 66a287b5fcb4a1247b08aa67507c0d23,
         type: 3}
@@ -84,7 +127,7 @@ PrefabInstance:
     - target: {fileID: 4826971977536504847, guid: 66a287b5fcb4a1247b08aa67507c0d23,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4826971977536504847, guid: 66a287b5fcb4a1247b08aa67507c0d23,
         type: 3}

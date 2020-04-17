@@ -470,7 +470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7a09776255c3946a08d77a8b4485bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathFindingMethod: 0
+  pathFindingMethod: 1
   decisionMethod: 1
 --- !u!1001 &8389834025345406882
 PrefabInstance:
