@@ -33,7 +33,7 @@
                     "name": "Zoom",
                     "type": "PassThrough",
                     "id": "cca020f1-fb48-4759-98b6-3569c70af482",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
                 },
@@ -309,6 +309,17 @@
                     "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "48421384-3001-48b4-a4ff-c56d680709de",
+                    "path": "*/{ScrollVertical}",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

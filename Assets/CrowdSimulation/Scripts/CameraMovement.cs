@@ -5,13 +5,21 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class CameraMovement : MonoBehaviour
 {
+
     public float speed = 1f;
+    public float zoomSpeed = 1f;
     public float movementTime = 1f;
     public float rotationAmount = 1f;
 
+    public float maxDistance = 300f;
+    public float minDistance = 5f;
+    
+
+    private Transform cameraTransform;
     private Vector3 speedDirection;
     private float zoom;
     private float rotate;
+    private Vector3 cameraPos;
 
     private Vector3 newPosition;
     private Quaternion newRotation;
@@ -23,7 +31,7 @@ public class CameraMovement : MonoBehaviour
     }
     public void OnZoom(InputValue value)
     {
-        zoom = value.Get<float>();
+        zoom = value.Get<float>() / 120; 
     }
 
     public void OnRotate(InputValue value)
@@ -35,6 +43,8 @@ public class CameraMovement : MonoBehaviour
     {
         newPosition = transform.position;
         newRotation = transform.rotation;
+        cameraTransform = Camera.main.transform;
+        cameraPos = cameraTransform.localPosition;
     }
 
     // Update is called once per frame
@@ -48,7 +58,16 @@ public class CameraMovement : MonoBehaviour
 
         if (!Camera.main.orthographic)
         {
-            transform.position += transform.forward * zoom * speed * Time.deltaTime * 5f;
+            cameraPos += transform.InverseTransformDirection(cameraTransform.forward) * zoom * zoomSpeed * Time.deltaTime;
+            if (cameraPos.magnitude > maxDistance)
+            {
+                cameraPos = cameraPos.normalized * maxDistance;
+            }
+            if (cameraPos.magnitude < minDistance)
+            {
+                cameraPos = cameraPos.normalized * minDistance;
+            }
+            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, cameraPos, Time.deltaTime * movementTime);
         }
         else
         {

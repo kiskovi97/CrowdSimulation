@@ -43,7 +43,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         {
             if (selection) return;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            float distance = 200f;
+            float distance = 1000f;
             var entity = Raycast(ray.origin, ray.origin + ray.direction * distance);
             if (entity == Entity.Null) return;
 
@@ -158,7 +158,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         private void MonoBehaviourRayCast(UnityEngine.Ray ray)
         {
             if (GUIUtility.hotControl != 0) return;
-            if (Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 100f))
+            if (Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
             {
                 var goalPoint = hit.point;
 
