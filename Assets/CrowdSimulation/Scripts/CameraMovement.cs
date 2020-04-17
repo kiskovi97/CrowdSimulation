@@ -13,7 +13,7 @@ public class CameraMovement : MonoBehaviour
 
     public float maxDistance = 300f;
     public float minDistance = 5f;
-    
+
 
     private Transform cameraTransform;
     private Vector3 speedDirection;
@@ -31,7 +31,7 @@ public class CameraMovement : MonoBehaviour
     }
     public void OnZoom(InputValue value)
     {
-        zoom = value.Get<float>() / 120; 
+        zoom = value.Get<float>() / 120;
     }
 
     public void OnRotate(InputValue value)
@@ -53,28 +53,30 @@ public class CameraMovement : MonoBehaviour
         newPosition += transform.rotation * speedDirection * Time.deltaTime;
         transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime);
 
-        newRotation *= Quaternion.Euler(Vector3.up * rotationAmount * rotate * Time.deltaTime);
-        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);
 
         if (!Camera.main.orthographic)
         {
+            var tmp = cameraPos;
             cameraPos += transform.InverseTransformDirection(cameraTransform.forward) * zoom * zoomSpeed * Time.deltaTime;
-            if (cameraPos.magnitude > maxDistance)
+            if ((cameraPos.magnitude > maxDistance) || (cameraPos.magnitude < minDistance) || (cameraPos.y < 0))
             {
-                cameraPos = cameraPos.normalized * maxDistance;
+                cameraPos = tmp;
             }
-            if (cameraPos.magnitude < minDistance)
+            else
             {
-                cameraPos = cameraPos.normalized * minDistance;
+                cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, cameraPos, Time.deltaTime * movementTime);
             }
-            cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, cameraPos, Time.deltaTime * movementTime);
         }
         else
         {
             Camera.main.orthographicSize -= zoom * speed * Time.deltaTime;
         }
 
+
+        newRotation *= Quaternion.Euler(Vector3.up * rotationAmount * rotate * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);
+
         //if (RayCast.IsPointerOverUIObject()) return;
-        
+
     }
 }
