@@ -16,6 +16,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
     public class RayCast : MonoBehaviour
     {
         public RectTransform selectionBox;
+        public static bool building;
         private Vector2 startPos;
         private bool selection = false;
 
@@ -56,14 +57,19 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             }
         }
 
-        public void OnGoTo()
+        public void OnClick()
         {
             if (IsPointerOverUIObject())
             {
                 return;
             }
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            MonoBehaviourRayCast(ray);
+            SelectedSetGoalPoint(ray);
+        }
+
+        public void OnBuilding()
+        {
+            building = !building;
         }
 
         public void OnCursorMove(InputValue value)
@@ -72,7 +78,18 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             {
                 SetBoxFromMouse(value.Get<Vector2>());
             }
+            if (building)
+            {
+                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (!Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
+                {
+                    return;
+                }
+                currentPoint = hit.point;
+            }
         }
+
+        public static Vector3 currentPoint;
 
         public void SetBoxFromMouse(Vector2 endPos)
         {
@@ -152,38 +169,41 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             results = results.Where((result) => !result.gameObject.tag.Equals("Ignore")).ToList();
-            return results.Count > 0;
+            return results.Count > 0 || (GUIUtility.hotControl != 0);
         }
 
-        private void MonoBehaviourRayCast(UnityEngine.Ray ray)
+        private void SelectedSetGoalPoint(UnityEngine.Ray ray)
         {
-            if (GUIUtility.hotControl != 0) return;
-            if (Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
+            if (!Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
             {
-                var goalPoint = hit.point;
+                return;
+            }
+            var goalPoint = hit.point;
 
-                var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-                var all = em.GetAllEntities(Unity.Collections.Allocator.Temp);
-                var count = 0;
-                foreach (var entity in all)
+            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+            var all = em.GetAllEntities(Unity.Collections.Allocator.Temp);
+            var count = 0;
+            foreach (var entity in all)
+            {
+                if (!em.HasComponent<Selection>(entity))
                 {
-                    if (em.HasComponent<Selection>(entity))
-                    {
-                        var selection = em.GetComponentData<Selection>(entity);
-                        if (selection.Selected)
-                        {
-                            if (em.HasComponent<Fighter>(entity))
-                            {
-                                count++;
-                                var radius = Mathf.Sqrt(count / Mathf.PI);
-                                var fighter = em.GetComponentData<Fighter>(entity);
-                                fighter.goalPos = goalPoint;
-                                fighter.goalRadius = radius;
-                                em.SetComponentData(entity, fighter);
-                            }
-                        }
-                    }
+                    continue;
                 }
+                var selection = em.GetComponentData<Selection>(entity);
+                if (!selection.Selected)
+                {
+                    continue;
+                }
+                if (!em.HasComponent<Fighter>(entity))
+                {
+                    continue;
+                }
+                count++;
+                var radius = Mathf.Sqrt(count / Mathf.PI);
+                var fighter = em.GetComponentData<Fighter>(entity);
+                fighter.goalPos = goalPoint;
+                fighter.goalRadius = radius;
+                em.SetComponentData(entity, fighter);
             }
         }
     }

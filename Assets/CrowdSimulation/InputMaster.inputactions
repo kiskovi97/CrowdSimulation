@@ -62,7 +62,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "GoTo",
+                    "name": "Click",
                     "type": "Button",
                     "id": "1f0dad31-25af-48bf-892d-4c91ecf516d2",
                     "expectedControlType": "",
@@ -73,6 +73,14 @@
                     "name": "Rotate",
                     "type": "PassThrough",
                     "id": "42be902e-bd03-40df-a80d-d4103641736e",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Building",
+                    "type": "Button",
+                    "id": "9db2e574-8c68-4686-a222-5bf6a7a72f10",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
@@ -273,7 +281,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "GoTo",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -318,6 +326,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2621d670-1e5a-4ae2-aaac-89835a6c533e",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Building",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
