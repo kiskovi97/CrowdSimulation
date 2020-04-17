@@ -5,64 +5,57 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class CameraMovement : MonoBehaviour
 {
-    public float edge = 10f;
     public float speed = 1f;
-    public bool mouse = false;
-    private Vector3 right;
-    private Vector3 forward;
+    public float movementTime = 1f;
+    public float rotationAmount = 1f;
 
     private Vector3 speedDirection;
-    private float scroll;
+    private float zoom;
+    private float rotate;
+
+    private Vector3 newPosition;
+    private Quaternion newRotation;
 
     public void OnMovement(InputValue value)
     {
         var v = value.Get<Vector2>();
-        right = transform.right;
-        forward = transform.forward;
-        right.y = 0;
-        forward.y = 0;
-        right.Normalize();
-        forward.Normalize();
-        speedDirection = forward * v.y + right * v.x;
+        speedDirection = (Vector3.forward * v.y + Vector3.right * v.x) * speed;
     }
     public void OnZoom(InputValue value)
     {
-        scroll = value.Get<float>();
+        zoom = value.Get<float>();
+    }
+
+    public void OnRotate(InputValue value)
+    {
+        rotate = value.Get<float>();
+    }
+
+    private void Start()
+    {
+        newPosition = transform.position;
+        newRotation = transform.rotation;
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.position += speedDirection * Time.deltaTime * speed;
+        newPosition += transform.rotation * speedDirection * Time.deltaTime;
+        transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime);
+
+        newRotation *= Quaternion.Euler(Vector3.up * rotationAmount * rotate * Time.deltaTime);
+        transform.rotation = Quaternion.Lerp(transform.rotation, newRotation, Time.deltaTime * movementTime);
+
         if (!Camera.main.orthographic)
         {
-            transform.position += transform.forward * scroll * speed * Time.deltaTime;
+            transform.position += transform.forward * zoom * speed * Time.deltaTime * 5f;
         }
         else
         {
-            Camera.main.orthographicSize -= scroll * speed * Time.deltaTime;
+            Camera.main.orthographicSize -= zoom * speed * Time.deltaTime;
         }
 
-        if (RayCast.IsPointerOverUIObject()) return;
-
-        var mp = Input.mousePosition;
-        //if (mp.y > Screen.height || mp.y < 0 || mp.x > Screen.width || mp.x < 0) return;
-        if (mouse && mp.x > Screen.width - edge)
-        {
-            transform.position += (mp.x - (Screen.width - edge)) / (edge) * right * Time.deltaTime * speed;
-        }
-        if (mouse && mp.x < edge)
-        {
-            transform.position += (edge - mp.x) / (edge) * -right * Time.deltaTime * speed;
-        }
-
-        if (mouse && mp.y > Screen.height - edge)
-        {
-            transform.position += (mp.y - (Screen.height - edge)) / (edge) * forward * Time.deltaTime * speed;
-        }
-        if (mouse && mp.y < edge)
-        {
-            transform.position += (edge - mp.y) / (edge) * -forward * Time.deltaTime * speed;
-        }
+        //if (RayCast.IsPointerOverUIObject()) return;
+        
     }
 }

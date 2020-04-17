@@ -43,7 +43,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         {
             if (selection) return;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            float distance = 50f;
+            float distance = 200f;
             var entity = Raycast(ray.origin, ray.origin + ray.direction * distance);
             if (entity == Entity.Null) return;
 
