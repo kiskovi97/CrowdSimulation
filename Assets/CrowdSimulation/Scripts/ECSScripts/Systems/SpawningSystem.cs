@@ -32,7 +32,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     var fighter = new Fighter
                     {
                         groupId = parameters.groupId,
-                        goalPos = translation.Value + math.mul(rotation.Value, parameters.offset),
+                        goalPos = translation.Value + parameters.offset,
                         state = FightState.Standing,
                         attackStrength = 2f,
                         attackRadius = 2f,
