@@ -16,6 +16,5 @@ namespace Assets.CrowdSimulation.Scripts.UI
             menuWindow.SetActive(open);
             backgroundBlur.SetActive(open);
         }
-
     }
 }

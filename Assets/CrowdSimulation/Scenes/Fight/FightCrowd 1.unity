@@ -203,7 +203,29 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4133413}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1144723424}
+        m_MethodName: SetBuilding
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 816086111}
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4133413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,7 +340,7 @@ GameObject:
   m_Component:
   - component: {fileID: 462371914}
   m_Layer: 0
-  m_Name: Building01 (1)
+  m_Name: BuildingShow2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -919,7 +941,29 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 740365124}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1144723424}
+        m_MethodName: SetBuilding
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 816086111}
+        m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &740365124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1038,6 +1082,17 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 816086111}
         m_MethodName: OnClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1144723424}
+        m_MethodName: SetSelection
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1901,7 +1956,7 @@ GameObject:
   - component: {fileID: 1144723425}
   - component: {fileID: 1144723424}
   m_Layer: 0
-  m_Name: Building
+  m_Name: BuildingBuilder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1922,6 +1977,7 @@ MonoBehaviour:
   selectedTransform: {fileID: 2053330985}
   selectedRenderer: {fileID: 2053330983}
   round: 2
+  rotateRound: 45
 --- !u!4 &1144723425
 Transform:
   m_ObjectHideFlags: 0
@@ -3623,7 +3679,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2013130131}
   m_Layer: 0
-  m_Name: Building01
+  m_Name: BuildingShow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3657,7 +3713,7 @@ GameObject:
   - component: {fileID: 2053330984}
   - component: {fileID: 2053330983}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: BuildingPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,11 +1,8 @@
-﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics.Systems;
-using Unity.Transforms;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -23,9 +20,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
     public class RayCast : MonoBehaviour
     {
         public static Vector3 CurrentMonoPoint;
-
-        public static bool IsBuilding { get => State == RayCastState.Building; }
-
+        
         private static bool MonoPointUpdate { get => State == RayCastState.Building; }
         private static RayCastState State { get; set; } = RayCastState.Normal;
 
@@ -48,44 +43,67 @@ namespace Assets.CrowdSimulation.Scripts.UI
 
         public void OnSecondaryAction()
         {
-            if (State != RayCastState.Normal) return;
-            var entity = GetRayCastEntity();
-            EntitySelection.SelectEntity(entity);
+            switch (State)
+            {
+                case RayCastState.Normal:
+                    var entity = GetRayCastEntity();
+                    EntitySelection.SelectEntity(entity);
+                    break;
+                case RayCastState.Building:
+                    BuildingBuilder.OnSecondaryAction();
+                    break;
+            }
         }
 
         public void OnPrimaryAction()
         {
-            if (IsPointerOverUIObject())
-            {
-                return;
-            }
+            if (IsPointerOverUIObject()) return;
+            
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (!Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
             {
                 return;
             }
             var goalPoint = hit.point;
-            EntitySelection.SelectedSetGoalPoint(goalPoint);
+            switch (State)
+            {
+                case RayCastState.Normal:
+                    EntitySelection.SelectedSetGoalPoint(goalPoint);
+                    break;
+                case RayCastState.Building:
+                    BuildingBuilder.OnPrimaryAction();
+                    break;
+            }            
         }
 
         public void OnCursorMove(InputValue value)
         {
-            if (State == RayCastState.SquereSelection)
+            switch (State)
             {
-                EntitySelection.SetSelectionBoxFromPosition(value.Get<Vector2>());
-            }
-            if (MonoPointUpdate)
-            {
-                var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (!Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
-                {
-                    return;
-                }
-                CurrentMonoPoint = hit.point;
+                case RayCastState.SquereSelection:
+                    EntitySelection.SetSelectionBoxFromPosition(value.Get<Vector2>());
+                    break;
+                case RayCastState.Building:
+                    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    if (!Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
+                    {
+                        return;
+                    }
+                    BuildingBuilder.OnMouseMove(hit.point);
+                    break;
             }
         }
         
-        
+        public static void SetToBuilding()
+        {
+            State = RayCastState.Building;
+        }
+
+        public static void ResetState()
+        {
+            State = RayCastState.Normal;
+        }
+
         private void Start()
         {
             Cursor.lockState = CursorLockMode.None;
