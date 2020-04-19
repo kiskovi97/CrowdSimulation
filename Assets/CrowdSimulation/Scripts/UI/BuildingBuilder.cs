@@ -13,7 +13,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
 
         private void Update()
         {
-            if (RayCast.Building)
+            if (RayCast.IsBuilding)
             {
                 selectedTransform.gameObject.SetActive(true);
                 var count = selectedRenderer.materials.Length;
@@ -23,7 +23,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
                     list.Add(Materails.Instance.okayBuilding);
                 }
                 selectedRenderer.materials = list.ToArray();
-                var point = RayCast.currentPoint;
+                var point = RayCast.CurrentMonoPoint;
                 selectedTransform.position = new Vector3(((int)Math.Round(point.x / round)) * round, point.y, ((int)Math.Round(point.z / round)) * round);
             } else
             {

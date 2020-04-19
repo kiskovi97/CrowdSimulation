@@ -45,6 +45,19 @@ namespace Assets.CrowdSimulation.Scripts.UI
             SelectionBox.anchoredPosition = (startPos + endPos) / 2f;
         }
 
+        public static void SelectEntity(Entity entity)
+        {
+            if (entity == Entity.Null) return;
+
+            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
+            if (em.HasComponent<Selection>(entity))
+            {
+                var selection = em.GetComponentData<Selection>(entity);
+                selection.Selected = !selection.Selected;
+                em.SetComponentData(entity, selection);
+            }
+        }
+
         public static void SelectedSetGoalPoint(float3 goalPoint)
         {
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;

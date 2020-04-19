@@ -22,42 +22,35 @@ namespace Assets.CrowdSimulation.Scripts.UI
     [RequireComponent(typeof(PlayerInput))]
     public class RayCast : MonoBehaviour
     {
-        public static Vector3 currentPoint;
-        public static bool Building { get => state == RayCastState.Building; }
-        private static RayCastState state = RayCastState.Normal;
+        public static Vector3 CurrentMonoPoint;
+
+        public static bool IsBuilding { get => State == RayCastState.Building; }
+
+        private static bool MonoPointUpdate { get => State == RayCastState.Building; }
+        private static RayCastState State { get; set; } = RayCastState.Normal;
 
         public void OnSecondaryActionWithModifier(InputValue inputValue)
         {
             var value = inputValue.Get<float>();
             if (value == 1)
             {
-                if (state == RayCastState.SquereSelection) return;
-                state = RayCastState.SquereSelection;
+                if (State == RayCastState.SquereSelection) return;
+                State = RayCastState.SquereSelection;
                 EntitySelection.OnSelectionBegin();
             }
             else
             {
-                if (state != RayCastState.SquereSelection) return;
-                state = RayCastState.Normal;
+                if (State != RayCastState.SquereSelection) return;
+                State = RayCastState.Normal;
                 EntitySelection.OnSelectionEnd();
             }
         }
 
         public void OnSecondaryAction()
         {
-            if (state != RayCastState.Normal) return;
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            float distance = 1000f;
-            var entity = GetRayCastEntity(ray.origin, ray.origin + ray.direction * distance);
-            if (entity == Entity.Null) return;
-
-            var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-            if (em.HasComponent<Selection>(entity))
-            {
-                var selection = em.GetComponentData<Selection>(entity);
-                selection.Selected = !selection.Selected;
-                em.SetComponentData(entity, selection);
-            }
+            if (State != RayCastState.Normal) return;
+            var entity = GetRayCastEntity();
+            EntitySelection.SelectEntity(entity);
         }
 
         public void OnPrimaryAction()
@@ -77,18 +70,18 @@ namespace Assets.CrowdSimulation.Scripts.UI
 
         public void OnCursorMove(InputValue value)
         {
-            if (state == RayCastState.SquereSelection)
+            if (State == RayCastState.SquereSelection)
             {
                 EntitySelection.SetSelectionBoxFromPosition(value.Get<Vector2>());
             }
-            if (Building)
+            if (MonoPointUpdate)
             {
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (!Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
                 {
                     return;
                 }
-                currentPoint = hit.point;
+                CurrentMonoPoint = hit.point;
             }
         }
         
@@ -108,8 +101,13 @@ namespace Assets.CrowdSimulation.Scripts.UI
             return results.Count > 0 || (GUIUtility.hotControl != 0);
         }
 
-        private Entity GetRayCastEntity(float3 from, float3 to)
+        private Entity GetRayCastEntity()
         {
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            float distance = 1000f;
+            var from = ray.origin;
+            var to = ray.origin + ray.direction * distance;
+
             BuildPhysicsWorld buildPhysicsWorld = World.DefaultGameObjectInjectionWorld.GetExistingSystem<BuildPhysicsWorld>();
             var collisionWOrld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
 
