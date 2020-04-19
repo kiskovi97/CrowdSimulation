@@ -2,25 +2,9 @@
     "name": "InputMaster",
     "maps": [
         {
-            "name": "Player",
+            "name": "Camera",
             "id": "a3ab8767-aa59-4e05-84c3-2488f68142aa",
             "actions": [
-                {
-                    "name": "Attack",
-                    "type": "Button",
-                    "id": "df167130-cb42-4799-a7e7-331556da40cf",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Rest",
-                    "type": "Button",
-                    "id": "2215f580-5f0d-4e20-8292-6dc04e6a225d",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": ""
-                },
                 {
                     "name": "Movement",
                     "type": "PassThrough",
@@ -38,77 +22,15 @@
                     "interactions": ""
                 },
                 {
-                    "name": "SquereSelect",
-                    "type": "PassThrough",
-                    "id": "4f3502c4-b367-4c16-ab7a-a59a61d6c974",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "CursorMove",
-                    "type": "PassThrough",
-                    "id": "d807d20a-6077-4413-bfce-a42b38e89581",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Select",
-                    "type": "Button",
-                    "id": "e87d3555-ef63-41c8-9217-54ac0cb8170d",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Click",
-                    "type": "Button",
-                    "id": "1f0dad31-25af-48bf-892d-4c91ecf516d2",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
                     "name": "Rotate",
                     "type": "PassThrough",
                     "id": "42be902e-bd03-40df-a80d-d4103641736e",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "Building",
-                    "type": "Button",
-                    "id": "9db2e574-8c68-4686-a222-5bf6a7a72f10",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": ""
                 }
             ],
             "bindings": [
-                {
-                    "name": "",
-                    "id": "5f26ae44-e92c-46e7-b69e-361f962a3fee",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Attack",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "8194e4ec-ee39-4fc8-b700-74e57969ae12",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Rest",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
                 {
                     "name": "WASD",
                     "id": "c8ee7dd0-1e57-4a07-977b-0e0232c289ef",
@@ -220,72 +142,6 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "RightClick + Shift",
-                    "id": "3e4f20c6-e15a-43b0-a0b3-0adcd0467639",
-                    "path": "ButtonWithOneModifier",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SquereSelect",
-                    "isComposite": true,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "modifier",
-                    "id": "b3d62ca8-25d0-4859-a3fc-669ec7f6eccd",
-                    "path": "<Keyboard>/shift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SquereSelect",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "button",
-                    "id": "2a6d4cff-bc25-4138-989e-caa696bb01ce",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SquereSelect",
-                    "isComposite": false,
-                    "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "6b156d00-f615-4e76-ba7d-90b6f926f16c",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CursorMove",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "e44f615e-fb33-4292-87ee-78244d63d5cc",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6f171aa2-a2d9-44a1-9ddf-ef1bd2a1269f",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Click",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
                     "name": "QE",
                     "id": "2d4717f4-c3ec-4776-96a1-9b3117d7e933",
                     "path": "1DAxis",
@@ -328,10 +184,189 @@
                     "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Cursor",
+            "id": "cf9c512f-51f3-4fc9-a4c9-cc9660724991",
+            "actions": [
+                {
+                    "name": "SecondaryActionWithModifier",
+                    "type": "PassThrough",
+                    "id": "16693963-764d-40bd-a94e-5908ec7bb5a2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "CursorMove",
+                    "type": "PassThrough",
+                    "id": "85308729-ab39-4808-a2cf-5296858ae7dd",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "SecondaryAction",
+                    "type": "Button",
+                    "id": "c3297a11-424b-441a-9d3b-af1e6f488ea2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "PrimaryAction",
+                    "type": "Button",
+                    "id": "b2be8e95-14f4-4603-a9ff-add37ae9e56c",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "RightClick + Shift",
+                    "id": "694d2392-d105-4c1a-ae4f-1bc04b61e38d",
+                    "path": "ButtonWithOneModifier",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryActionWithModifier",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "e3604a5d-0bb9-4435-a6b4-77b91f9ca6ff",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryActionWithModifier",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "button",
+                    "id": "0aebfdab-af72-42d2-b038-022c83b0378b",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryActionWithModifier",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
-                    "id": "2621d670-1e5a-4ae2-aaac-89835a6c533e",
+                    "id": "8c11a580-5b20-4558-a4e9-4a1f77d0855e",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CursorMove",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6d5673e4-2406-4923-827d-59a0b45b357d",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SecondaryAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "141b6c83-990c-4295-8fc5-55528966da6d",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PrimaryAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Actions",
+            "id": "5508a68e-d496-4978-ac45-01833da47f79",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "b4a3008a-e987-4446-9fa2-3248b27f3e53",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "03725073-5583-415c-825d-25ad34e61528",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Rest",
+                    "type": "Button",
+                    "id": "334b852f-7fc6-4567-b4b3-5eb1a81cddf3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Building",
+                    "type": "Button",
+                    "id": "2933e31a-81aa-49dc-a0f1-dc12b0b9c828",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "67cc1db3-1595-4169-8613-7c3cde76da21",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e1435513-dd29-40df-8f0d-89bbef6bec49",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6fccbd82-ce37-43fc-9652-b65c3129e0f8",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rest",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "24173209-f4d8-47c8-8ca4-ac4e4f78c224",
                     "path": "<Keyboard>/b",
                     "interactions": "",
                     "processors": "",

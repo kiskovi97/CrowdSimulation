@@ -1,19 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class MenuItem : MonoBehaviour
+namespace Assets.CrowdSimulation.Scripts.UI
 {
-    public GameObject menuWindow;
-    public GameObject backgroundBlur;
-
-    public bool open = false;
-
-    public void OnClick()
+    public class MenuItem : MonoBehaviour
     {
-        open = !open;
-        menuWindow.SetActive(open);
-        backgroundBlur.SetActive(open);
-    }
+        public GameObject menuWindow;
+        public GameObject backgroundBlur;
 
+        public bool open = false;
+
+        public void OnClick()
+        {
+            open = !open;
+            menuWindow.SetActive(open);
+            backgroundBlur.SetActive(open);
+        }
+
+    }
 }

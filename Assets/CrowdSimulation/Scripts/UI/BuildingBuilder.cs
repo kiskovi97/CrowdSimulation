@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
+namespace Assets.CrowdSimulation.Scripts.UI
 {
     public class BuildingBuilder: MonoBehaviour
     {
@@ -12,7 +13,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 
         private void Update()
         {
-            if (RayCast.building)
+            if (RayCast.Building)
             {
                 selectedTransform.gameObject.SetActive(true);
                 var count = selectedRenderer.materials.Length;
