@@ -23,7 +23,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 spawnTimer = 0,
                 maxEntity = maxEntity,
                 currentEntity = 0,
-                offset = transform.InverseTransformDirection(offset.localPosition),
+                offset = transform.TransformDirection(offset.localPosition),
             });
         }
     }

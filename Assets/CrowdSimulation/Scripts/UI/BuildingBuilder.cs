@@ -17,8 +17,13 @@ namespace Assets.CrowdSimulation.Scripts.UI
     {
         public Transform selectedTransform;
         public Renderer selectedRenderer;
+
+        public GameObject[] prefabs;
+
         public float round = 2f;
         public float rotateRound = 30f;
+
+        public int selectedId = 0; 
 
         public static BuildingBuilder instance;
         private static BuilderState State;
@@ -38,10 +43,15 @@ namespace Assets.CrowdSimulation.Scripts.UI
             switch (State)
             {
                 case BuilderState.Building:
-                    RayCast.ResetState();
+                    instance.CreateInstance();
                     ResetState();
                     break;
             }
+        }
+
+        private void CreateInstance()
+        {
+            var obj = Instantiate(prefabs[selectedId], selectedTransform.position, selectedTransform.rotation * Quaternion.Euler(90,0,0));
         }
 
         public static void OnMouseMove(Vector3 point)
@@ -61,6 +71,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
 
         public void SetBuilding(int id)
         {
+            selectedId = id;
             State = BuilderState.Building;
             RayCast.SetToBuilding();
         }

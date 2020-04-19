@@ -28,7 +28,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     }
 
                     var entity = EntityManager.Instantiate(prefab.prefab);
-                    EntityManager.SetComponentData(entity, new Translation { Value = translation.Value + parameters.offset + new float3(random.NextFloat(3f), 0, random.NextFloat(3f)) });
+                    var randomSize = 1f;
+                    var randomOffset = new float3(random.NextFloat(randomSize * 2) - randomSize, 0, random.NextFloat(randomSize * 2) - randomSize);
+                    EntityManager.SetComponentData(entity, new Translation {
+                        Value = translation.Value + parameters.offset + randomOffset
+                    });
                     var fighter = new Fighter
                     {
                         groupId = parameters.groupId,
