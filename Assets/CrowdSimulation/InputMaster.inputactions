@@ -298,7 +298,7 @@
             "id": "5508a68e-d496-4978-ac45-01833da47f79",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "Cancel",
                     "type": "Button",
                     "id": "b4a3008a-e987-4446-9fa2-3248b27f3e53",
                     "expectedControlType": "",
@@ -320,25 +320,17 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
-                },
-                {
-                    "name": "Building",
-                    "type": "Button",
-                    "id": "2933e31a-81aa-49dc-a0f1-dc12b0b9c828",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": ""
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "67cc1db3-1595-4169-8613-7c3cde76da21",
-                    "path": "",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -361,17 +353,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Rest",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "24173209-f4d8-47c8-8ca4-ac4e4f78c224",
-                    "path": "<Keyboard>/b",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Building",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

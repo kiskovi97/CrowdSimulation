@@ -49,6 +49,11 @@ namespace Assets.CrowdSimulation.Scripts.UI
             }
         }
 
+        public void OnCancel()
+        {
+            ResetState();
+        }
+
         private void CreateInstance()
         {
             var obj = Instantiate(prefabs[selectedId], selectedTransform.position, selectedTransform.rotation * Quaternion.Euler(90,0,0));
