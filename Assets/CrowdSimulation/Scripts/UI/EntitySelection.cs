@@ -10,6 +10,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
     class EntitySelection : MonoBehaviour
     {
         public RectTransform selectionBox;
+        public LoadingUI loadingIcon;
 
         public static EntitySelection instance;
 
@@ -55,6 +56,10 @@ namespace Assets.CrowdSimulation.Scripts.UI
                 var selection = em.GetComponentData<Selection>(entity);
                 selection.Selected = !selection.Selected;
                 em.SetComponentData(entity, selection);
+            }
+            if (em.HasComponent<SpawnerPrefabContainer>(entity))
+            {
+                instance.loadingIcon.SetEntity(entity);
             }
         }
 

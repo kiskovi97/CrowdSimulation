@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groupId: 0
-  spawnTime: 0.2
+  spawnTime: 2
   maxEntity: 20
   offset: {fileID: 1285435029115688381}
 --- !u!114 &5932534044113058652

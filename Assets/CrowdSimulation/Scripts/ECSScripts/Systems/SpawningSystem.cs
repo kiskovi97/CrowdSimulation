@@ -15,6 +15,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 // SPawn!
                 Entities.ForEach((ref SpawnerParameters parameters, ref SpawnerPrefabContainer prefab, ref Translation translation, ref Rotation rotation) =>
                 {
+                    if (parameters.currentEntity >= parameters.maxEntity)
+                    {
+                        parameters.spawnTimer = parameters.spawnTime;
+                        return;
+                    }
                     parameters.spawnTimer -= Time.DeltaTime;
                     if (parameters.spawnTimer > 0f)
                     {
@@ -22,10 +27,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     }
                     parameters.spawnTimer = parameters.spawnTime;
                     parameters.currentEntity++;
-                    if (parameters.currentEntity >= parameters.maxEntity)
-                    {
-                        return;
-                    }
 
                     var entity = EntityManager.Instantiate(prefab.prefab);
                     var randomSize = 1f;
