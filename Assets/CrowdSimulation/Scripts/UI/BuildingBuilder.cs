@@ -56,18 +56,12 @@ namespace Assets.CrowdSimulation.Scripts.UI
 
         private void CreateInstance()
         {
-            var obj = Instantiate(prefabs[selectedId], selectedTransform.position, selectedTransform.rotation * Quaternion.Euler(90,0,0));
+            Instantiate(prefabs[selectedId], selectedTransform.position, selectedTransform.rotation * Quaternion.Euler(90,0,0));
         }
 
         public static void OnMouseMove(Vector3 point)
         {
-            var count = instance.selectedRenderer.materials.Length;
-            var list = new List<Material>();
-            for (int i = 0; i < count; i++)
-            {
-                list.Add(Materails.Instance.okayBuilding);
-            }
-            instance.selectedRenderer.materials = list.ToArray();
+            instance.selectedRenderer.material = Materails.Instance.okayBuilding;
             instance.selectedTransform.position = 
                 new Vector3(((int)Math.Round(point.x / instance.round)) * instance.round, point.y, 
                 ((int)Math.Round(point.z / instance.round)) * instance.round);

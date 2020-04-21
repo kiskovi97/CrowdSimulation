@@ -85,11 +85,10 @@ namespace Assets.CrowdSimulation.Scripts.UI
                     break;
                 case RayCastState.Building:
                     var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                    if (!Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
+                    if (Physics.Raycast(ray, out UnityEngine.RaycastHit hit, 500f))
                     {
-                        return;
+                        BuildingBuilder.OnMouseMove(hit.point);
                     }
-                    BuildingBuilder.OnMouseMove(hit.point);
                     break;
             }
         }

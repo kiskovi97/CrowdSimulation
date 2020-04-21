@@ -75,7 +75,6 @@ namespace Assets.CrowdSimulation.Scripts.UI
             {
                 var spawn = em.GetComponentData<SpawnerParameters>(entity);
                 Clear();
-                //
                 for (var i = 0; i< spawn.level; i++)
                 {
                     AddFighter(spawn.groupId);
