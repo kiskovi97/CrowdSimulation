@@ -109,14 +109,17 @@ namespace Assets.CrowdSimulation.Scripts.UI
             Cursor.lockState = CursorLockMode.None;
         }
 
+        static readonly List<RaycastResult> results = new List<RaycastResult>();
         private static bool IsPointerOverUIObject()
         {
-            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-            eventDataCurrentPosition.position = Mouse.current.position.ReadValue();
-            List<RaycastResult> results = new List<RaycastResult>();
+            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current)
+            {
+                position = Mouse.current.position.ReadValue()
+            };
+            results.Clear();
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-            results = results.Where((result) => !result.gameObject.tag.Equals("Ignore")).ToList();
-            return results.Count > 0 || (GUIUtility.hotControl != 0);
+            var count = results.Where((result) => !result.gameObject.tag.Equals("Ignore")).Count();
+            return count > 0 || (GUIUtility.hotControl != 0);
         }
 
         private Entity GetRayCastEntity()
@@ -140,9 +143,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
                     GroupIndex = 0,
                 }
             };
-
-            Unity.Physics.RaycastHit hit = new Unity.Physics.RaycastHit();
-            if (collisionWOrld.CastRay(input, out hit))
+            if (collisionWOrld.CastRay(input, out Unity.Physics.RaycastHit hit))
             {
                 Entity hitEntity = buildPhysicsWorld.PhysicsWorld.Bodies[hit.RigidBodyIndex].Entity;
                 return hitEntity;
