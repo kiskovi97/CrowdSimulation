@@ -11,6 +11,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         public int groupId;
         public float spawnTime;
         public int maxEntity;
+        public int level = 1;
 
         public Transform offset;
 
@@ -18,11 +19,22 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         {
             dstManager.AddComponentData(entity, new SpawnerParameters
             {
+                level = level,
                 groupId = groupId,
-                spawnTime = spawnTime,
-                spawnTimer = 0,
-                maxEntity = maxEntity,
-                currentEntity = 0,
+                simple = new OneSpawnParameter()
+                {
+                    spawnTime = spawnTime,
+                    spawnTimer = 0,
+                    maxEntity = maxEntity,
+                    currentEntity = 0,
+                },
+                master = new OneSpawnParameter()
+                {
+                    spawnTime = spawnTime * 2,
+                    spawnTimer = 0,
+                    maxEntity = maxEntity,
+                    currentEntity = 0,
+                },
                 offset = transform.TransformDirection(offset.localPosition),
             });
         }

@@ -10,6 +10,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     [GenerateAuthoringComponent]
     struct SpawnerPrefabContainer : IComponentData
     {
-        public Entity prefab;
+        public Entity prefab_Simple;
+        public Entity prefab_Master;
     }
 }

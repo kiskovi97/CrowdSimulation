@@ -7,10 +7,17 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     public struct SpawnerParameters : IComponentData
     {
         public int groupId;
-        public float spawnTimer;
+        public int level;
+        public float3 offset;
+        public OneSpawnParameter simple;
+        public OneSpawnParameter master;
+    }
+
+    public struct OneSpawnParameter
+    {
         public float spawnTime;
+        public float spawnTimer;
         public int maxEntity;
         public int currentEntity;
-        public float3 offset;
     }
 }

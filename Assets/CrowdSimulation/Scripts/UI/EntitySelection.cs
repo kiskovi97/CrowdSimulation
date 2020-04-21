@@ -48,6 +48,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
 
         public static void SelectEntity(Entity entity)
         {
+            instance.loadingIcon.SetEntity(entity);
             if (entity == Entity.Null) return;
 
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -56,10 +57,6 @@ namespace Assets.CrowdSimulation.Scripts.UI
                 var selection = em.GetComponentData<Selection>(entity);
                 selection.Selected = !selection.Selected;
                 em.SetComponentData(entity, selection);
-            }
-            if (em.HasComponent<SpawnerPrefabContainer>(entity))
-            {
-                instance.loadingIcon.SetEntity(entity);
             }
         }
 

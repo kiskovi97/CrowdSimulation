@@ -105,7 +105,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0.000024438, y: 158.7}
-  m_SizeDelta: {x: 578.09, y: 210}
+  m_SizeDelta: {x: 580, y: 210}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1403983221863967832
 GameObject:
@@ -305,6 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parentLayout: {fileID: 1743127591192197912}
   prefab: {fileID: 1667534549015906319, guid: 1dff7dba8f26a8d49a8428f14e9c9d33, type: 3}
+  buble: {fileID: 6255811201410639608}
   colors:
   - {r: 0, g: 0.65882355, b: 1, a: 1}
   - {r: 0.9843137, g: 0.77254903, b: 0.19215687, a: 1}

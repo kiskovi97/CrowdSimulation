@@ -62,8 +62,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   groupId: 1
-  spawnTime: 2
+  spawnTime: 1
   maxEntity: 20
+  level: 1
   offset: {fileID: 7839439015480551491}
 --- !u!114 &2622366053580900410
 MonoBehaviour:
@@ -77,7 +78,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e333e07fe2de9849b81e8f405b80c4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 6014953267392912931, guid: f2c89d80f029207499549036811e99c5, type: 3}
+  prefab_Simple: {fileID: 6014953267392912931, guid: f2c89d80f029207499549036811e99c5,
+    type: 3}
+  prefab_Master: {fileID: 6014953267392912931, guid: f2c89d80f029207499549036811e99c5,
+    type: 3}
 --- !u!114 &7360248986685481464
 MonoBehaviour:
   m_ObjectHideFlags: 0

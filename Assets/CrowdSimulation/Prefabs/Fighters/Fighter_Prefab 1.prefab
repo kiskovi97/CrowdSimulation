@@ -205,6 +205,7 @@ GameObject:
   - component: {fileID: 8847824335073405561}
   - component: {fileID: 3422382370778331992}
   - component: {fileID: -3745427346064439621}
+  - component: {fileID: 6519804937287145660}
   m_Layer: 0
   m_Name: Fighter_Prefab 1
   m_TagString: Untagged
@@ -472,6 +473,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathFindingMethod: 1
   decisionMethod: 1
+--- !u!114 &6519804937287145660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6014953267392912931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d764db43689e934286fc0f066c5108a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attack: 0
+  attackRadius: 2
+  Id: 0
+  groupId: 0
+  attackStrength: 2
+  targetId: 0
+  state: 0
+  goalPos:
+    x: 0
+    y: 0
+    z: 0
+  goalRadius: 0
 --- !u!1001 &8389834025345406882
 PrefabInstance:
   m_ObjectHideFlags: 0

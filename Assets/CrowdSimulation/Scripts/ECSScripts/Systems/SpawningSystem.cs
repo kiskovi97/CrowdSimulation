@@ -15,38 +15,45 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 // SPawn!
                 Entities.ForEach((ref SpawnerParameters parameters, ref SpawnerPrefabContainer prefab, ref Translation translation, ref Rotation rotation) =>
                 {
-                    if (parameters.currentEntity >= parameters.maxEntity)
-                    {
-                        parameters.spawnTimer = parameters.spawnTime;
-                        return;
-                    }
-                    parameters.spawnTimer -= Time.DeltaTime;
-                    if (parameters.spawnTimer > 0f)
-                    {
-                        return;
-                    }
-                    parameters.spawnTimer = parameters.spawnTime;
-                    parameters.currentEntity++;
-
-                    var entity = EntityManager.Instantiate(prefab.prefab);
-                    var randomSize = 1f;
-                    var randomOffset = new float3(random.NextFloat(randomSize * 2) - randomSize, 0, random.NextFloat(randomSize * 2) - randomSize);
-                    EntityManager.SetComponentData(entity, new Translation {
-                        Value = translation.Value + parameters.offset + randomOffset
-                    });
-                    var fighter = new Fighter
-                    {
-                        groupId = parameters.groupId,
-                        goalPos = translation.Value + parameters.offset,
-                        state = FightState.Standing,
-                        attackStrength = 2f,
-                        attackRadius = 2f,
-                        Id = entity.Index,
-                    };
-                    EntityManager.AddComponentData(entity, fighter);
-                    FighterEntityContainer.AddEntity(entity);
+                    if (parameters.level > 0)
+                        Spawn(ref parameters.simple, prefab.prefab_Simple, ref random, translation.Value + parameters.offset, parameters.groupId);
+                    if (parameters.level > 1)
+                        Spawn(ref parameters.master, prefab.prefab_Master, ref random, translation.Value + parameters.offset, parameters.groupId);
                 });
             
+        }
+
+        private void Spawn(ref OneSpawnParameter parameter, Entity prefab, ref Random random, float3 position, int groupId)
+        {
+            if (parameter.currentEntity >= parameter.maxEntity)
+            {
+                parameter.spawnTimer = parameter.spawnTime;
+                return;
+            }
+            parameter.spawnTimer -= Time.DeltaTime;
+            if (parameter.spawnTimer > 0f)
+            {
+                return;
+            }
+            parameter.spawnTimer = parameter.spawnTime;
+            parameter.currentEntity++;
+
+            var entity = EntityManager.Instantiate(prefab);
+            var randomSize = 1f;
+            var randomOffset = new float3(random.NextFloat(randomSize * 2) - randomSize, 0, random.NextFloat(randomSize * 2) - randomSize);
+            EntityManager.SetComponentData(entity, new Translation
+            {
+                Value = position + randomOffset
+            });
+
+            var fighter = EntityManager.GetComponentData<Fighter>(entity);
+            fighter.groupId = groupId;
+            fighter.goalPos = position;
+            fighter.state = FightState.Standing;
+            fighter.Id = entity.Index;
+            EntityManager.SetComponentData(entity, fighter);
+
+            FighterEntityContainer.AddEntity(entity);
         }
 
         
