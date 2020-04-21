@@ -9,5 +9,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     public struct Selection : IComponentData
     {
         public bool Selected;
+        public bool changed;
     }
 }

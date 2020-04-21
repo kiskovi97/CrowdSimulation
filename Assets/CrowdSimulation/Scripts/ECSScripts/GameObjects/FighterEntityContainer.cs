@@ -38,9 +38,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 {
                     if (!em.Exists(entity)) continue;
                     if (!em.HasComponent<Selection>(entity)) continue;
-                    var data = em.GetComponentData<Selection>(entity);
-                    data.Selected = false;
-                    em.SetComponentData(entity, data);
+                    SetSelect(false, entity, em);
                 }
             }
         }
@@ -56,8 +54,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 if (!em.HasComponent<Selection>(entity)) continue;
                 var selection = em.GetComponentData<Selection>(entity);
                 all &= selection.Selected;
-                selection.Selected = true;
-                em.SetComponentData(entity, selection);
+                SetSelect(true, entity, em);
             }
             if (all)
             {
@@ -65,9 +62,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 {
                     if (!em.Exists(entity)) continue;
                     if (!em.HasComponent<Selection>(entity)) continue;
-                    var selection = em.GetComponentData<Selection>(entity);
-                    selection.Selected = false;
-                    em.SetComponentData(entity, selection);
+                    SetSelect(false, entity, em);
                 }
             }
         }
@@ -164,6 +159,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                     em.SetComponentData(entity, data);
                 }
             }
+        }
+
+        public static void SetSelect(bool select, Entity entity, EntityManager em)
+        {
+            em.SetComponentData(entity, new Selection() { Selected = select, changed = true });
         }
     }
 }

@@ -497,6 +497,7 @@ GameObject:
   - component: {fileID: 1134148550}
   - component: {fileID: 1134148551}
   - component: {fileID: 1134148552}
+  - component: {fileID: 1134148553}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -664,6 +665,18 @@ MonoBehaviour:
   m_DefaultActionMap: Cursor
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &1134148553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134148544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3767913eccb0af42ba230264b6db570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1144723423
 GameObject:
   m_ObjectHideFlags: 0

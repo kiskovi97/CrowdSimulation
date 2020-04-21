@@ -1,4 +1,5 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -55,8 +56,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
             if (em.HasComponent<Selection>(entity))
             {
                 var selection = em.GetComponentData<Selection>(entity);
-                selection.Selected = !selection.Selected;
-                em.SetComponentData(entity, selection);
+                FighterEntityContainer.SetSelect(!selection.Selected, entity, em);
             }
         }
 
@@ -104,9 +104,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
                     {
                         if (em.HasComponent<Selection>(entity))
                         {
-                            var selection = em.GetComponentData<Selection>(entity);
-                            selection.Selected = true;
-                            em.SetComponentData(entity, selection);
+                            FighterEntityContainer.SetSelect(true, entity, em);
                         }
                     }
                 }

@@ -23,23 +23,17 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         }
         protected override void OnUpdate()
         {
-            var query = GetEntityQuery((typeof(Selection)));
-            var entities = query.ToEntityArray(Unity.Collections.Allocator.TempJob);
-            var selections = query.ToComponentDataArray<Selection>(Unity.Collections.Allocator.TempJob);
-
-            for (int i = 0; i < entities.Length; i++)
-            {
-                var entity = entities[i];
-                var selection = selections[i];
+            var buffer = endSimulation.CreateCommandBuffer();
+            Entities.ForEach((Entity entity, ref Selection selection) => {
+                if (!selection.changed) return;
+                selection.changed = false;
                 if (EntityManager.HasComponent<RenderMesh>(entity))
                 {
                     var mesh = EntityManager.GetSharedComponentData<RenderMesh>(entity);
                     mesh.material = selection.Selected ? Materails.Instance.selected : Materails.Instance.notSelected;
-                    EntityManager.SetSharedComponentData(entity, mesh);
+                    buffer.SetSharedComponent(entity, mesh);
                 }
-            }
-            entities.Dispose();
-            selections.Dispose();
+            });
         }
     }
 }

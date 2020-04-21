@@ -38,9 +38,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             foreach (var entity in entities)
             {
                 if (!em.Exists(entity)) continue;
-                var selection = em.GetComponentData<Selection>(entity);
-                selection.Selected = false;
-                em.SetComponentData(entity, selection);
+                SetSelect(false, entity, em);
             }
         }
 
@@ -53,17 +51,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 if (!em.Exists(entity)) continue;
                 var selection = em.GetComponentData<Selection>(entity);
                 allSelected &= selection.Selected;
-                selection.Selected = true;
-                em.SetComponentData(entity, selection);
+                SetSelect(true, entity, em);
             }
             if (allSelected)
             {
                 foreach (var entity in typeMaster)
                 {
                     if (!em.Exists(entity)) continue;
-                    var selection = em.GetComponentData<Selection>(entity);
-                    selection.Selected = false;
-                    em.SetComponentData(entity, selection);
+                    SetSelect(false, entity, em);
                 }
             }
         }
@@ -77,17 +72,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 if (!em.Exists(entity)) continue;
                 var selection = em.GetComponentData<Selection>(entity);
                 allSelected &= selection.Selected;
-                selection.Selected = true;
-                em.SetComponentData(entity, selection);
+                SetSelect(true, entity, em);
             }
             if (allSelected)
             {
                 foreach (var entity in typeSimple)
                 {
                     if (!em.Exists(entity)) continue;
-                    var selection = em.GetComponentData<Selection>(entity);
-                    selection.Selected = false;
-                    em.SetComponentData(entity, selection);
+                    SetSelect(false, entity, em);
                 }
             }
         }
@@ -217,6 +209,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 data.state = fight ? FightState.GoToFight : FightState.Standing;
                 em.SetComponentData(entity, data);
             }
+        }
+
+        private void SetSelect(bool select, Entity entity, EntityManager em)
+        {
+            em.SetComponentData(entity, new Selection() { Selected = select, changed = true});
         }
 
     }

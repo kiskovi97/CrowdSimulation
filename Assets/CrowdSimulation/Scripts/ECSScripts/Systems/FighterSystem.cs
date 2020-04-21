@@ -10,9 +10,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     class FighterSystem : ComponentSystem
     {
         public static NativeMultiHashMap<int, Fighter> hashMap;
+
+        private EndSimulationEntityCommandBufferSystem endSimulation;
+
         protected override void OnCreate()
         {
             hashMap = new NativeMultiHashMap<int, Fighter>(0, Allocator.Persistent);
+            endSimulation = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
             base.OnCreate();
         }
 
@@ -47,6 +51,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             {
                 targetMap = FightersHashMap.quadrantHashMap,
                 deltaTime = Time.DeltaTime,
+                commandBuffer = endSimulation.CreateCommandBuffer(),
             };
             var hHandle = hJob.Schedule(this);
             hHandle.Complete();

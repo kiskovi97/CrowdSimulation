@@ -9,15 +9,19 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct HurtingJob : IJobForEach<Fighter, Condition, Translation, CollisionParameters>
+    public struct HurtingJob : IJobForEachWithEntity<Fighter, Condition, Translation, CollisionParameters>
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
 
+        [NativeDisableParallelForRestriction]
+        public EntityCommandBuffer commandBuffer;
+
         public float deltaTime;
 
-        public void Execute(ref Fighter fighter, ref Condition condition, [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters)
+        public void Execute(Entity entity, int index, ref Fighter fighter, ref Condition condition, 
+            [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters)
         {
             condition.hurting -= deltaTime;
             condition.hurting = math.max(condition.hurting, 0f);
@@ -28,6 +32,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
 
             ForeachAround(translation.Value, fighter, ref condition);
+
+            if (condition.lifeLine < 0f)
+            {
+                commandBuffer.DestroyEntity(entity);
+            }
         }
 
         private void ForeachAround(float3 position, Fighter me, ref Condition condition)
