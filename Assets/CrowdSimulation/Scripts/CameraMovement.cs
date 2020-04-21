@@ -50,10 +50,7 @@ public class CameraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        newPosition += transform.rotation * speedDirection * Time.deltaTime;
-        transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime);
-
-
+        var speedMulti = 1f;
         if (!Camera.main.orthographic)
         {
             var tmp = cameraPos;
@@ -65,12 +62,16 @@ public class CameraMovement : MonoBehaviour
             else
             {
                 cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, cameraPos, Time.deltaTime * movementTime);
+                speedMulti = Mathf.Max(1f, cameraPos.magnitude / 40f);
             }
         }
         else
         {
             Camera.main.orthographicSize -= zoom * speed * Time.deltaTime;
         }
+
+        newPosition += transform.rotation * speedDirection * Time.deltaTime * speedMulti;
+        transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime * movementTime * speedMulti);
 
 
         newRotation *= Quaternion.Euler(Vector3.up * rotationAmount * rotate * Time.deltaTime);

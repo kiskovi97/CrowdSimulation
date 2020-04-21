@@ -4,7 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/CrowdSimulation/Scenes/Fight/FightCrowd 1.unity
+    guid: e12d08b7cbca3464ca1fa8c0e6193214
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: ef6c09f324496944b8a5f220c734cb81,
       type: 2}

@@ -18,6 +18,11 @@ namespace Assets.CrowdSimulation.Scripts.UI
         private static RectTransform SelectionBox;
         private static Vector2 startPos;
 
+        public void OnEscape()
+        {
+            Application.Quit();
+        }
+
         private void Start()
         {
             instance = this;

@@ -806,7 +806,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
-  zoomSpeed: 100
+  zoomSpeed: 200
   movementTime: 3
   rotationAmount: 40
   maxDistance: 200
