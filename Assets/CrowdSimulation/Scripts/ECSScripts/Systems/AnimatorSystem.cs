@@ -140,18 +140,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         protected override void OnUpdate()
         {
-            Entities.ForEach((ref Parent parent, ref AnimatorData animator) =>
-            {
-                if (EntityManager.HasComponent<Walker>(parent.Value))
-                {
-                    var walker = EntityManager.GetComponentData<Walker>(parent.Value);
-                    if (animator.animationIndex == 0)
-                    {
-                        animator.speed = math.length(walker.direction) * 2f;
-                    }
-                }
-            });
-
             var random = new Random((uint)UnityEngine.Random.Range(1, 100000));
             var deltaTime = Time.DeltaTime;
             var job = new AnimatorJob()
