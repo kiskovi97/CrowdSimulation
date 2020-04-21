@@ -26,12 +26,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 
         public void OnAttack()
         {
-            ChangeState(true);
-        }
-
-        public void OnRest()
-        {
-            ChangeState(false);
+            ChangeState();
         }
 
         public void ClearAll()
@@ -156,7 +151,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             }
         }
 
-        private void ChangeState(bool fight)
+        private void ChangeState()
         {
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
             foreach (var list in entities.Values)
