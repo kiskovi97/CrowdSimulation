@@ -1,27 +1,24 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace Assets.CrowdSimulation.Scripts.UI
 {
     public class LoadingUI : MonoBehaviour
     {
-        public Image[] loadingCircleImg;
-        public Image[] colorables;
-        public TextMeshProUGUI[] text;
-        public float[] loading;
+        private readonly List<LoadingFighter> fighters = new List<LoadingFighter>();
+        public RectTransform parentLayout;
+        public LoadingFighter prefab;
 
         public Color[] colors;
+        public Sprite[] icons;
 
         private Entity entity;
+
 
         void Update()
         {
@@ -38,14 +35,13 @@ namespace Assets.CrowdSimulation.Scripts.UI
                 transform.position = new Vector2(0, Camera.main.pixelHeight);
             }
 
-            for ( int id = 0; id < loading.Length; id++)
+            for ( int id = 0; id < fighters.Count; id++)
             {
-                loadingCircleImg[id].fillAmount = loading[id];
                 if (em.HasComponent<SpawnerParameters>(entity))
                 {
                     var spawn = em.GetComponentData<SpawnerParameters>(entity);
-                    loading[id] = 1f - spawn.spawnTimer / spawn.spawnTime;
-                    text[id].text = $"{spawn.currentEntity} / {spawn.maxEntity}";
+                    var loading = 1f - spawn.spawnTimer / spawn.spawnTime;
+                    fighters[id].SetLoading(loading,spawn.currentEntity,spawn.maxEntity);
                 }
             }
         }
@@ -68,11 +64,37 @@ namespace Assets.CrowdSimulation.Scripts.UI
             if (em.HasComponent<SpawnerParameters>(entity))
             {
                 var spawn = em.GetComponentData<SpawnerParameters>(entity);
-                foreach (var image in colorables)
-                {
-                    image.color = colors[spawn.groupId];
-                }
+                Clear();
+                //
+                AddFighter(spawn.groupId);
+                AddFighter(spawn.groupId);
+                AddFighter(spawn.groupId);
             }
         }
+
+        private void Clear()
+        {
+            foreach(var fighter in fighters)
+            {
+                Destroy(fighter.gameObject);
+            }
+            fighters.Clear();
+        }
+
+        private void AddFighter(int groupId)
+        {
+            var obj = Instantiate(prefab.gameObject, parentLayout);
+            var fighter = obj.GetComponent<LoadingFighter>();
+            var button = obj.GetComponent<Button>();
+            var id = fighters.Count;
+
+            button.onClick.AddListener(() => NewPeople(id));
+            fighter.SetImage(icons[id]);
+            fighter.SetColor(colors[groupId]);
+            fighters.Add(fighter);
+
+        }
+
+
     }
 }
