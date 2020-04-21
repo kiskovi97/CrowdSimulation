@@ -26,7 +26,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
             originalHeight = buble.sizeDelta.y;
         }
 
-        void Update()
+        void LateUpdate()
         {
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
 
