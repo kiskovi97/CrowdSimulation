@@ -9,22 +9,22 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct ForceJob : IJobForEach<PathForce, Walker>
+    public struct ForceJob : IJobForEach<Walker>
     {
         public float deltaTime;
 
-        public void Execute([ReadOnly] ref PathForce pathForce, ref Walker walker)
+        public void Execute(ref Walker walker)
         {
-            var b3 = math.isnan(pathForce.force);
+            var b3 = math.isnan(walker.force);
             if (!b3.x && !b3.y && !b3.z)
             {
-                if (math.length(pathForce.force) == 0f)
+                if (math.length(walker.force) == 0f)
                 {
                     walker.direction -= walker.direction * deltaTime * 4f;
                 }
                 else
                 {
-                    walker.direction += pathForce.force * deltaTime * 4f;
+                    walker.direction += walker.force * deltaTime * 4f;
                 }
             }
 

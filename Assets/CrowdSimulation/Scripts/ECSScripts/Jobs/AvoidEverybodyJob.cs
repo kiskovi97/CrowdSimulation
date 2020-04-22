@@ -10,15 +10,16 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct AvoidEverybody : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation, PathForce>
+    public struct AvoidEverybody : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation>
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeMultiHashMap<int, EntitiesHashMap.MyData> targetMap;
 
 
-        public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly]ref DecidedForce decidedForce, [ReadOnly]ref CollisionParameters collisionParameters, [ReadOnly]ref Walker walker,
-             [ReadOnly]ref Translation translation, ref PathForce pathForce)
+        public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly]ref DecidedForce decidedForce, 
+            [ReadOnly]ref CollisionParameters collisionParameters, 
+            ref Walker walker, [ReadOnly]ref Translation translation)
         {
             if (data.pathFindingMethod != PathFindingMethod.No)
             {
@@ -28,7 +29,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
                 ref avoidanceForce, collisionParameters.innerRadius * 2);
 
-            pathForce.force = decidedForce.force + avoidanceForce;
+            walker.force = decidedForce.force + avoidanceForce;
         }
 
         private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, float radius)

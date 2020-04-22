@@ -10,15 +10,15 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct ForcePathFindingJob : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation, PathForce>
+    public struct ForcePathFindingJob : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation>
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeMultiHashMap<int, EntitiesHashMap.MyData> targetMap;
 
 
-        public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly]ref DecidedForce decidedForce, [ReadOnly]ref CollisionParameters collisionParameters, [ReadOnly]ref Walker walker,
-             [ReadOnly]ref Translation translation, ref PathForce pathForce)
+        public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly]ref DecidedForce decidedForce, 
+            [ReadOnly]ref CollisionParameters collisionParameters, ref Walker walker, [ReadOnly]ref Translation translation)
         {
             if (!(data.pathFindingMethod == PathFindingMethod.Forces))
             {
@@ -30,11 +30,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
                 ref avoidanceForce, ref convinientForce, ref bros, collisionParameters.outerRadius);
 
-            pathForce.force = decidedForce.force + avoidanceForce;
+            walker.force = decidedForce.force + avoidanceForce;
 
             if (bros > 0)
             {
-                pathForce.force += convinientForce *= 1 / bros;
+                walker.force += convinientForce *= 1 / bros;
             }
         }
 

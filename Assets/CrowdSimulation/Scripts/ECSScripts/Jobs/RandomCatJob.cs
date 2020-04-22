@@ -9,26 +9,26 @@ using Unity.Burst;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct RandomCatJob : IJobForEach<RandomCat, PathForce, Translation>
+    public struct RandomCatJob : IJobForEach<RandomCat, Walker, Translation>
     {
         public Random random;
         public float deltaTime;
-        public void Execute([ReadOnly] ref RandomCat randomCat, ref PathForce pathForce, ref Translation translation)
+        public void Execute([ReadOnly] ref RandomCat randomCat, ref Walker walker, ref Translation translation)
         {
             if (random.NextFloat() < deltaTime * randomCat.random)
             {
                 var dir = random.NextFloat2Direction();
-                pathForce.force = new float3(dir.x, 0, dir.y);
+                walker.force = new float3(dir.x, 0, dir.y);
             }
         }
     }
 
     [BurstCompile]
-    public struct RandomCatGroupJob : IJobForEach<RandomCat, PathForce, Translation, GroupCondition>
+    public struct RandomCatGroupJob : IJobForEach<RandomCat, Walker, Translation, GroupCondition>
     {
         public Random random;
         public float deltaTime;
-        public void Execute([ReadOnly] ref RandomCat randomCat, ref PathForce pathForce, ref Translation translation, ref GroupCondition groupCondition)
+        public void Execute([ReadOnly] ref RandomCat randomCat, ref Walker walker, ref Translation translation, ref GroupCondition groupCondition)
         {
             if (random.NextFloat() < deltaTime * randomCat.random)
             {
@@ -36,9 +36,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 var pos = groupCondition.goalPoint - translation.Value;
 
                 var distance = math.length(pos);
-                pathForce.force += deltaTime * distance * pos * 0.03f;
-                //pathForce.force = pos;
-
+                walker.force += deltaTime * distance * pos * 0.03f;
             }
         }
     }

@@ -10,7 +10,7 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct DensityAvoidanceJob : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation, PathForce>
+    public struct DensityAvoidanceJob : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation>
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
@@ -20,7 +20,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public MapValues max;
 
         public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision,
-            [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation, ref PathForce pathForce)
+            ref Walker walker, [ReadOnly] ref Translation translation)
         {
             if (!(data.pathFindingMethod == PathFindingMethod.DensityGrid))
             {
@@ -50,7 +50,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 }
             }
 
-            pathForce.force = force; // decidedForce.force +
+            walker.force = force; // decidedForce.force +
         }
     }
 }
