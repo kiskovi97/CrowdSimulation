@@ -8,5 +8,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     {
         public float3 goalPoint;
         public float goalRadius;
+
+        [System.NonSerialized]
+        public float3 force;
     }
 }

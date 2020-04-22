@@ -8,11 +8,11 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct SetGroupForceJob : IJobForEach<GroupForce, PathFindingData>
+    public struct SetGroupForceJob : IJobForEach<GroupCondition, PathFindingData>
     {
-        public void Execute([ReadOnly] ref GroupForce groupForce, ref PathFindingData pathFindingData)
+        public void Execute([ReadOnly] ref GroupCondition group, ref PathFindingData pathFindingData)
         {
-            pathFindingData.decidedForce = groupForce.force;
+            pathFindingData.decidedForce = group.force;
         }
     }
 
@@ -26,21 +26,21 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     }
 
     [BurstCompile]
-    public struct DecisionJob : IJobForEach<GroupForce, DesireForce, PathFindingData, Walker>
+    public struct DecisionJob : IJobForEach<GroupCondition, DesireForce, PathFindingData, Walker>
     {
-        public void Execute([ReadOnly] ref GroupForce groupForce, [ReadOnly] ref DesireForce desireForce, ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker)
+        public void Execute([ReadOnly] ref GroupCondition group, [ReadOnly] ref DesireForce desireForce, ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker)
         {
             if (math.length(desireForce.force) == 0f)
             {
-                if (math.length(groupForce.force) == 0f)
+                if (math.length(group.force) == 0f)
                 {
                     pathFindingData.decidedForce = -walker.direction;
                     return;
                 }
-                pathFindingData.decidedForce = groupForce.force;
+                pathFindingData.decidedForce = group.force;
                 return;
             }
-            if (math.length(groupForce.force) == 0f)
+            if (math.length(group.force) == 0f)
             {
                 pathFindingData.decidedForce = desireForce.force;
                 return;
@@ -48,24 +48,24 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
             if (pathFindingData.decisionMethod == DecisionMethod.Max)
             {
-                if (math.length(desireForce.force) < math.length(groupForce.force))
-                    pathFindingData.decidedForce = groupForce.force;
+                if (math.length(desireForce.force) < math.length(group.force))
+                    pathFindingData.decidedForce = group.force;
                 else
                     pathFindingData.decidedForce = desireForce.force;
                 return;
             }
             if (pathFindingData.decisionMethod == DecisionMethod.Min)
             {
-                if (math.length(desireForce.force) < math.length(groupForce.force))
+                if (math.length(desireForce.force) < math.length(group.force))
                     pathFindingData.decidedForce = desireForce.force;
                 else
-                    pathFindingData.decidedForce = groupForce.force;
+                    pathFindingData.decidedForce = group.force;
                 return;
             }
 
             if (pathFindingData.decisionMethod == DecisionMethod.Plus)
             {
-                pathFindingData.decidedForce = groupForce.force + desireForce.force;
+                pathFindingData.decidedForce = group.force + desireForce.force;
             }
         }
     }
