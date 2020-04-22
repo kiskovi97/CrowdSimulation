@@ -72,7 +72,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                     if (distanceNormalized > 0f && distanceNormalized < 1f)
                     {
-                        var dot = (math.dot(math.normalize(-direction), math.normalize(me.direction)) + 1f) * 0.5f;
+                        var dot = (math.dot(math.normalizesafe(-direction), math.normalizesafe(me.direction)) + 1f) * 0.5f;
 
                         var forceMultiplyer = math.length(other.data2.direction) + 0.7f;
 
@@ -80,7 +80,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                         var multiplyerSin = math.sin(multiplyer * math.PI / 2f);
 
-                        avoidanceForce += math.normalize(other.data2.direction) * multiplyerSin;
+                        avoidanceForce += math.normalizesafe(other.data2.direction) * multiplyerSin;
 
                         avoidanceForce += direction / radius;
                     }
