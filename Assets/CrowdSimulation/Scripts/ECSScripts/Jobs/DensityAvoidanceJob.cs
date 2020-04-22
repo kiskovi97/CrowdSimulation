@@ -29,7 +29,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
             var group = oneLayer * walker.broId;
 
-            var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * math.length(pathFindingData.force), max);
+            var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * math.length(pathFindingData.decidedForce), max);
 
             var force = float3.zero;
             var multiMin = float.MaxValue;
@@ -41,7 +41,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                 var density = densityMap[group + index];
                 var currentForce = indexes[i].position - translation.Value;
-                density -= (math.dot(math.normalize(pathFindingData.force), math.normalize(currentForce)) + 1f) * 0.1f;
+                density -= (math.dot(math.normalize(pathFindingData.decidedForce), math.normalize(currentForce)) + 1f) * 0.1f;
 
                 if (multiMin > density)
                 {

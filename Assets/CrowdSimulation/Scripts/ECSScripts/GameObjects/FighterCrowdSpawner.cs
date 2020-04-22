@@ -49,7 +49,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             foreach (var entity in typeMaster)
             {
                 if (!em.Exists(entity)) continue;
-                var selection = em.GetComponentData<Selection>(entity);
+                var selection = em.GetComponentData<Selectable>(entity);
                 allSelected &= selection.Selected;
                 SetSelect(true, entity, em);
             }
@@ -70,7 +70,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             foreach (var entity in typeSimple)
             {
                 if (!em.Exists(entity)) continue;
-                var selection = em.GetComponentData<Selection>(entity);
+                var selection = em.GetComponentData<Selectable>(entity);
                 allSelected &= selection.Selected;
                 SetSelect(true, entity, em);
             }
@@ -213,7 +213,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 
         private void SetSelect(bool select, Entity entity, EntityManager em)
         {
-            em.SetComponentData(entity, new Selection() { Selected = select, changed = true});
+            em.SetComponentData(entity, new Selectable() { Selected = select, changed = true});
         }
 
     }

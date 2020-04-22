@@ -58,9 +58,9 @@ namespace Assets.CrowdSimulation.Scripts.UI
             if (entity == Entity.Null) return;
 
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
-            if (em.HasComponent<Selection>(entity))
+            if (em.HasComponent<Selectable>(entity))
             {
-                var selection = em.GetComponentData<Selection>(entity);
+                var selection = em.GetComponentData<Selectable>(entity);
                 FighterEntityContainer.SetSelect(!selection.Selected, entity, em);
             }
         }
@@ -72,11 +72,11 @@ namespace Assets.CrowdSimulation.Scripts.UI
             var count = 0;
             foreach (var entity in all)
             {
-                if (!em.HasComponent<Selection>(entity))
+                if (!em.HasComponent<Selectable>(entity))
                 {
                     continue;
                 }
-                var selection = em.GetComponentData<Selection>(entity);
+                var selection = em.GetComponentData<Selectable>(entity);
                 if (!selection.Selected)
                 {
                     continue;
@@ -107,7 +107,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
 
                     if (min.x < screenPos.x && min.y < screenPos.y && max.x > screenPos.x && max.y > screenPos.y)
                     {
-                        if (em.HasComponent<Selection>(entity))
+                        if (em.HasComponent<Selectable>(entity))
                         {
                             FighterEntityContainer.SetSelect(true, entity, em);
                         }

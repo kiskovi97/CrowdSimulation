@@ -13,9 +13,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     {
         public PathFindingMethod pathFindingMethod;
         public DecisionMethod decisionMethod;
-
-        [System.NonSerialized]
-        public float3 force;
+        public float3 decidedForce;
     }
 
     public enum PathFindingMethod

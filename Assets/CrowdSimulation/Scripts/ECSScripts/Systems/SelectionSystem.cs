@@ -24,7 +24,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         protected override void OnUpdate()
         {
             var buffer = endSimulation.CreateCommandBuffer();
-            Entities.ForEach((Entity entity, ref Selection selection) => {
+            Entities.ForEach((Entity entity, ref Selectable selection) => {
                 if (!selection.changed) return;
                 selection.changed = false;
                 if (EntityManager.HasComponent<RenderMesh>(entity))

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
     [GenerateAuthoringComponent]
-    public struct Selection : IComponentData
+    public struct Selectable : IComponentData
     {
         [System.NonSerialized]
         public bool Selected;

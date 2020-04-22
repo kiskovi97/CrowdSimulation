@@ -12,7 +12,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     {
         public void Execute([ReadOnly] ref GroupForce groupForce, ref PathFindingData pathFindingData)
         {
-            pathFindingData.force = groupForce.force;
+            pathFindingData.decidedForce = groupForce.force;
         }
     }
 
@@ -21,7 +21,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     {
         public void Execute([ReadOnly] ref DesireForce desireFoce, ref PathFindingData pathFindingData)
         {
-            pathFindingData.force = desireFoce.force;
+            pathFindingData.decidedForce = desireFoce.force;
         }
     }
 
@@ -34,38 +34,38 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             {
                 if (math.length(groupForce.force) == 0f)
                 {
-                    pathFindingData.force = -walker.direction;
+                    pathFindingData.decidedForce = -walker.direction;
                     return;
                 }
-                pathFindingData.force = groupForce.force;
+                pathFindingData.decidedForce = groupForce.force;
                 return;
             }
             if (math.length(groupForce.force) == 0f)
             {
-                pathFindingData.force = desireForce.force;
+                pathFindingData.decidedForce = desireForce.force;
                 return;
             }
 
             if (pathFindingData.decisionMethod == DecisionMethod.Max)
             {
                 if (math.length(desireForce.force) < math.length(groupForce.force))
-                    pathFindingData.force = groupForce.force;
+                    pathFindingData.decidedForce = groupForce.force;
                 else
-                    pathFindingData.force = desireForce.force;
+                    pathFindingData.decidedForce = desireForce.force;
                 return;
             }
             if (pathFindingData.decisionMethod == DecisionMethod.Min)
             {
                 if (math.length(desireForce.force) < math.length(groupForce.force))
-                    pathFindingData.force = desireForce.force;
+                    pathFindingData.decidedForce = desireForce.force;
                 else
-                    pathFindingData.force = groupForce.force;
+                    pathFindingData.decidedForce = groupForce.force;
                 return;
             }
 
             if (pathFindingData.decisionMethod == DecisionMethod.Plus)
             {
-                pathFindingData.force = groupForce.force + desireForce.force;
+                pathFindingData.decidedForce = groupForce.force + desireForce.force;
             }
         }
     }
