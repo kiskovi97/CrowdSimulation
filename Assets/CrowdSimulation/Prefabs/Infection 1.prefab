@@ -300,6 +300,14 @@ MonoBehaviour:
   infected: {fileID: 2100000, guid: 9f7d26166fcd90044a06f72b86bd8c1f, type: 2}
   notInfected: {fileID: 2100000, guid: dcc27c178343c6c48bb68fdca8f7021b, type: 2}
   immune: {fileID: 2100000, guid: 3864e8118431e7a47b13a67b15d0be7f, type: 2}
+  selected: {fileID: 0}
+  notSelected: {fileID: 0}
+  hurting: {fileID: 0}
+  healing: {fileID: 0}
+  rest: {fileID: 0}
+  toLow: {fileID: 0}
+  okayBuilding: {fileID: 0}
+  wrongBuilding: {fileID: 0}
 --- !u!1001 &7986457786415896598
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -375,6 +383,7 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 3602954732834177742, guid: bddec555ff4d8404fb6f129f7f8e4a7c, type: 3}
     - {fileID: 575393969632547000, guid: bddec555ff4d8404fb6f129f7f8e4a7c, type: 3}
+    - {fileID: 4763428774261413103, guid: bddec555ff4d8404fb6f129f7f8e4a7c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bddec555ff4d8404fb6f129f7f8e4a7c, type: 3}
 --- !u!4 &8438773510946786444 stripped
 Transform:

@@ -14,8 +14,6 @@ GameObject:
   - component: {fileID: 3439931779323062130}
   - component: {fileID: 6905670702339336196}
   - component: {fileID: 2002152154697913497}
-  - component: {fileID: 507381195719950296}
-  - component: {fileID: 5316944907716031032}
   - component: {fileID: 1765546287408250412}
   - component: {fileID: 9129354872065775742}
   m_Layer: 0
@@ -86,6 +84,10 @@ MonoBehaviour:
   lifeLine: 0
   hunger: 1
   thirst: 0
+  hurting: 0
+  hurtingTime: 0
+  maxLifeLine: 0
+  healingSpeed: 0
 --- !u!114 &6905670702339336196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,38 +114,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
---- !u!114 &507381195719950296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002152154697913493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 404ada9b05fc9b9459fa8969f34937d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force:
-    x: 0
-    y: 0
-    z: 0
---- !u!114 &5316944907716031032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002152154697913493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed25eaf8c5dc81349a12023817d2b585, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force:
-    x: 0
-    y: 0
-    z: 0
 --- !u!114 &1765546287408250412
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -101,8 +101,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3077000596222250766}
-  - component: {fileID: 2548299281673808476}
-  - component: {fileID: 4364145007350262585}
   - component: {fileID: 6400707534058334412}
   - component: {fileID: 5318790643383939231}
   - component: {fileID: 7020279327375492474}
@@ -135,38 +133,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2548299281673808476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6014953267392912931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 404ada9b05fc9b9459fa8969f34937d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force:
-    x: 0
-    y: 0
-    z: 0
---- !u!114 &4364145007350262585
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6014953267392912931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed25eaf8c5dc81349a12023817d2b585, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force:
-    x: 0
-    y: 0
-    z: 0
 --- !u!114 &6400707534058334412
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,6 +192,7 @@ MonoBehaviour:
   hunger: 0
   thirst: 0
   hurting: 0
+  hurtingTime: 0
   maxLifeLine: 60
   healingSpeed: 0.5
 --- !u!114 &7471394616226922654
@@ -240,7 +207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34e235a7e7b130f4eaf978e62035d828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Selected: 0
 --- !u!23 &8082158232504292844
 MeshRenderer:
   m_ObjectHideFlags: 0
