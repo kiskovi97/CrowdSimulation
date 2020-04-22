@@ -12,7 +12,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     {
         public void Execute([ReadOnly] ref GroupCondition group, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
         {
-            pathFindingData.decidedForce = group.Force(translation.Value);
+            pathFindingData.decidedGoal = group.goalPoint;
         }
     }
 
@@ -21,7 +21,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     {
         public void Execute([ReadOnly] ref Condition condition, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
         {
-            pathFindingData.decidedForce = condition.Force(translation.Value);
+            pathFindingData.decidedGoal = condition.goal;
         }
     }
 
@@ -39,38 +39,38 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             {
                 if (groupDistance == 0f)
                 {
-                    pathFindingData.decidedForce = -walker.direction;
+                    pathFindingData.decidedGoal = translation.Value;
                     return;
                 }
-                pathFindingData.decidedForce = group.Force(translation.Value);
+                pathFindingData.decidedGoal = group.goal;
                 return;
             }
             if (groupDistance == 0f)
             {
-                pathFindingData.decidedForce = condition.Force(translation.Value);
+                pathFindingData.decidedGoal = condition.goal;
                 return;
             }
 
             if (pathFindingData.decisionMethod == DecisionMethod.Max)
             {
                 if (conditionDistance < groupDistance)
-                    pathFindingData.decidedForce = group.Force(translation.Value);
+                    pathFindingData.decidedGoal = group.goal;
                 else
-                    pathFindingData.decidedForce = condition.Force(translation.Value);
+                    pathFindingData.decidedGoal = condition.goal;
                 return;
             }
             if (pathFindingData.decisionMethod == DecisionMethod.Min)
             {
                 if (conditionDistance < groupDistance)
-                    pathFindingData.decidedForce = condition.Force(translation.Value);
+                    pathFindingData.decidedGoal = condition.goal;
                 else
-                    pathFindingData.decidedForce = group.Force(translation.Value);
+                    pathFindingData.decidedGoal = group.goal;
                 return;
             }
 
-            if (pathFindingData.decisionMethod == DecisionMethod.Plus)
+            if (pathFindingData.decisionMethod == DecisionMethod.Avarage)
             {
-                pathFindingData.decidedForce = group.Force(translation.Value) + condition.Force(translation.Value);
+                pathFindingData.decidedGoal = (group.goal + condition.goal)/2f;
             }
         }
     }

@@ -13,7 +13,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     {
         public PathFindingMethod pathFindingMethod;
         public DecisionMethod decisionMethod;
-        public float3 decidedForce;
+        public float3 decidedGoal;
+        public float3 Force(float3 pos)
+        {
+            return math.normalizesafe(decidedGoal - pos);
+        }
     }
 
     public enum PathFindingMethod
@@ -25,7 +29,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 
     public enum DecisionMethod
     {
-        Plus,
+        Avarage,
         Max,
         Min
     }

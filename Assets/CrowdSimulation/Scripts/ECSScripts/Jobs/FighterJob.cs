@@ -27,12 +27,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                 if (math.length(direction) < fighter.attackRadius)
                 {
-                    pathFindingData.decidedForce = direction * 0.1f;
+                    pathFindingData.decidedGoal = translation.Value + direction * 0.1f;
                     RotateForward(direction, ref walker);
                     fighter.state = FightState.Fight;
                 } else
                 {
-                    pathFindingData.decidedForce = direction * 0.5f;
+                    pathFindingData.decidedGoal = translation.Value + direction * 0.5f;
                     fighter.state = FightState.GoToFight;
                 }
             }
@@ -64,12 +64,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 {
                     force = math.normalizesafe(force);
                 }
-                pathFindingData.decidedForce = force * 0.5f;
+                pathFindingData.decidedGoal = translation.Value + force * 0.5f;
                 return false;
             }
             else
             {
-                pathFindingData.decidedForce = float3.zero;
+                pathFindingData.decidedGoal = translation.Value;
                 return true;
             }
         }

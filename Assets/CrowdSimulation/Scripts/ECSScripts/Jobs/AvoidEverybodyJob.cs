@@ -27,7 +27,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
                 ref avoidanceForce, collisionParameters.innerRadius * 2);
 
-            walker.force = data.decidedForce + avoidanceForce;
+            walker.force = data.Force(translation.Value) + avoidanceForce;
         }
 
         private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, float radius)
