@@ -29,7 +29,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
                 ref avoidanceForce, ref convinientForce, ref bros, collisionParameters.outerRadius);
 
-            walker.force = data.Force(translation.Value) + avoidanceForce;
+            walker.force = data.Force(translation.Value, walker.direction) + avoidanceForce;
 
             if (bros > 0)
             {

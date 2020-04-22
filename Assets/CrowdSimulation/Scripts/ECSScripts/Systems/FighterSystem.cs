@@ -7,6 +7,7 @@ using Unity.Entities;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
     [UpdateAfter(typeof(FightersHashMap))]
+    [UpdateAfter(typeof(GoalSystem))]
     class FighterSystem : ComponentSystem
     {
         public static NativeMultiHashMap<int, Fighter> hashMap;

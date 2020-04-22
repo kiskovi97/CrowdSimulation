@@ -14,8 +14,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         public PathFindingMethod pathFindingMethod;
         public DecisionMethod decisionMethod;
         public float3 decidedGoal;
-        public float3 Force(float3 pos)
+        public float3 Force(float3 pos, float3 walkerDirection)
         {
+            if (math.length(pos - decidedGoal) <= 0.1f)
+                return walkerDirection * -1;
             return math.normalizesafe(decidedGoal - pos);
         }
     }

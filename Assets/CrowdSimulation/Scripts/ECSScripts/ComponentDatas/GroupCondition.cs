@@ -11,10 +11,5 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 
         [System.NonSerialized]
         public float3 goal;
-
-        public float3 Force(float3 pos)
-        {
-            return math.normalizesafe(goal - pos);
-        }
     }
 }

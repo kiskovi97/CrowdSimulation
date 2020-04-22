@@ -310,6 +310,8 @@ GameObject:
   - component: {fileID: 1453972597}
   - component: {fileID: 1453972601}
   - component: {fileID: 1453972602}
+  - component: {fileID: 1453972603}
+  - component: {fileID: 1453972604}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -423,6 +425,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   innerRadius: 1
   outerRadius: 1
+--- !u!114 &1453972603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453972596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa7a09776255c3946a08d77a8b4485bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathFindingMethod: 0
+  decisionMethod: 0
+  decidedGoal:
+    x: 0
+    y: 0
+    z: 0
+--- !u!114 &1453972604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1453972596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 991d4d29d923a43488d985f2023ae542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goalPoint:
+    x: 0
+    y: 0
+    z: 5
+  goalRadius: 4
 --- !u!1 &1898240302
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,6 +474,8 @@ GameObject:
   - component: {fileID: 1898240304}
   - component: {fileID: 1898240303}
   - component: {fileID: 1898240308}
+  - component: {fileID: 1898240309}
+  - component: {fileID: 1898240310}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Untagged
@@ -550,6 +589,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   innerRadius: 1
   outerRadius: 1
+--- !u!114 &1898240309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1898240302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa7a09776255c3946a08d77a8b4485bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pathFindingMethod: 0
+  decisionMethod: 0
+  decidedGoal:
+    x: 0
+    y: 0
+    z: 0
+--- !u!114 &1898240310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1898240302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 991d4d29d923a43488d985f2023ae542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goalPoint:
+    x: 0
+    y: 0
+    z: 5
+  goalRadius: 4
 --- !u!1 &2017571521
 GameObject:
   m_ObjectHideFlags: 0
