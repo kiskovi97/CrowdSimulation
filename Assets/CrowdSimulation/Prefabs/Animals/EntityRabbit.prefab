@@ -104,7 +104,6 @@ GameObject:
   - component: {fileID: 2002152154697913498}
   - component: {fileID: 8591329665465834898}
   - component: {fileID: 3524544514489451338}
-  - component: {fileID: -5939553050195494251}
   - component: {fileID: -2176088025487669420}
   - component: {fileID: 2823695101134469478}
   - component: {fileID: 2577643803585070198}
@@ -163,22 +162,13 @@ MonoBehaviour:
     y: 0
     z: 1
   maxSpeed: 1.5
---- !u!114 &-5939553050195494251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002152154697913493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d4d9e19f3cbe1b498f7f0a3a102a8d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force:
-    x: -1
-    y: 0
-    z: 0
+  pathFindingData:
+    pathFindingMethod: 1
+    decisionMethod: 2
+    decidedForce:
+      x: 0
+      y: 0
+      z: 0
 --- !u!114 &-2176088025487669420
 MonoBehaviour:
   m_ObjectHideFlags: 0

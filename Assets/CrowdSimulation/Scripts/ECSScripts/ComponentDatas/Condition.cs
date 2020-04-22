@@ -14,6 +14,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         public float maxLifeLine;
         public float healingSpeed;
 
+        [System.NonSerialized]
         public float3 goal;
         public float3 Force(float3 pos)
         {

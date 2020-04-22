@@ -10,7 +10,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         public float3 direction;
         public float maxSpeed;
         private int broId;
-        private PathFindingData pathFindingData = new PathFindingData()
+        public PathFindingData pathFindingData = new PathFindingData()
         {
             decisionMethod = DecisionMethod.Max,
             pathFindingMethod = PathFindingMethod.No

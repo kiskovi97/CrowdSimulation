@@ -26,7 +26,6 @@ GameObject:
   - component: {fileID: 3439931779323062130}
   - component: {fileID: 6905670702339336196}
   - component: {fileID: 2002152154697913497}
-  - component: {fileID: 1765546287408250412}
   m_Layer: 0
   m_Name: EntityBull
   m_TagString: Untagged
@@ -99,6 +98,10 @@ MonoBehaviour:
   hurtingTime: 0
   maxLifeLine: 0
   healingSpeed: 0
+  goal:
+    x: 0
+    y: 0
+    z: 0
 --- !u!114 &6905670702339336196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,22 +128,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
---- !u!114 &1765546287408250412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002152154697913493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d4d9e19f3cbe1b498f7f0a3a102a8d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force:
-    x: 0
-    y: 0
-    z: 0
 --- !u!1001 &6057950524032992877
 PrefabInstance:
   m_ObjectHideFlags: 0

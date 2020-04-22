@@ -19,21 +19,25 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     [BurstCompile]
     public struct SetDesireForceJob : IJobForEach<Condition, PathFindingData, Translation>
     {
-        public void Execute([ReadOnly] ref Condition desireFoce, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
+        public void Execute([ReadOnly] ref Condition condition, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
         {
-            pathFindingData.decidedForce = desireFoce.Force(translation.Value);
+            pathFindingData.decidedForce = condition.Force(translation.Value);
         }
     }
 
     [BurstCompile]
     public struct DecisionJob : IJobForEach<GroupCondition, Condition, PathFindingData, Walker, Translation>
     {
-        public void Execute([ReadOnly] ref GroupCondition group, [ReadOnly] ref Condition desireForce, 
+        public void Execute([ReadOnly] ref GroupCondition group, [ReadOnly] ref Condition condition, 
             ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation)
         {
-            if (math.length(desireForce.goal - translation.Value) == 0f)
+
+            var conditionDistance = math.length(condition.goal - translation.Value);
+            var groupDistance = math.length(group.goal - translation.Value);
+
+            if (conditionDistance == 0f)
             {
-                if (math.length(group.goal - translation.Value) == 0f)
+                if (groupDistance == 0f)
                 {
                     pathFindingData.decidedForce = -walker.direction;
                     return;
@@ -41,24 +45,24 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 pathFindingData.decidedForce = group.Force(translation.Value);
                 return;
             }
-            if (math.length(group.goal - translation.Value) == 0f)
+            if (groupDistance == 0f)
             {
-                pathFindingData.decidedForce = desireForce.Force(translation.Value);
+                pathFindingData.decidedForce = condition.Force(translation.Value);
                 return;
             }
 
             if (pathFindingData.decisionMethod == DecisionMethod.Max)
             {
-                if (math.length(desireForce.Force(translation.Value)) < math.length(group.Force(translation.Value)))
+                if (conditionDistance < groupDistance)
                     pathFindingData.decidedForce = group.Force(translation.Value);
                 else
-                    pathFindingData.decidedForce = desireForce.Force(translation.Value);
+                    pathFindingData.decidedForce = condition.Force(translation.Value);
                 return;
             }
             if (pathFindingData.decisionMethod == DecisionMethod.Min)
             {
-                if (math.length(desireForce.Force(translation.Value)) < math.length(group.Force(translation.Value)))
-                    pathFindingData.decidedForce = desireForce.Force(translation.Value);
+                if (conditionDistance < groupDistance)
+                    pathFindingData.decidedForce = condition.Force(translation.Value);
                 else
                     pathFindingData.decidedForce = group.Force(translation.Value);
                 return;
@@ -66,7 +70,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
             if (pathFindingData.decisionMethod == DecisionMethod.Plus)
             {
-                pathFindingData.decidedForce = group.Force(translation.Value) + desireForce.Force(translation.Value);
+                pathFindingData.decidedForce = group.Force(translation.Value) + condition.Force(translation.Value);
             }
         }
     }
