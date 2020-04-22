@@ -24,12 +24,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
         public float deltaTime;
 
-        public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, [ReadOnly] ref FoodHierarchie foodHierarchie, ref DesireForce desireForce, ref Walker walker)
+        public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, 
+            [ReadOnly] ref FoodHierarchie foodHierarchie, ref DesireForce desireForce, ref Walker walker)
         {
-            //condition.hunger += deltaTime / secondPerHunger;
             if (condition.hunger < hungerLimit)
             {
-                desireForce.force = float3.zero;
+                desireForce.goal = translation.Value;
                 return;
             }
 
@@ -48,19 +48,19 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     if (condition.hunger < 0) condition.hunger = 0;
                     if (length < 0.01f)
                     {
-                        desireForce.force = float3.zero;
+                        desireForce.goal = translation.Value;
                         return;
                     }
                 }
-                desireForce.force = math.normalize(foundFood.position - translation.Value);
-                if (length < math.dot(desireForce.force, walker.direction))
+                desireForce.goal = foundFood.position;
+                if (length < math.dot(math.normalizesafe(foundFood.position - translation.Value), walker.direction))
                 {
                     walker.direction *= 0.9f;
                 }
             }
             else
             {
-                desireForce.force = float3.zero;
+                desireForce.goal = translation.Value;
             }
         }
 
