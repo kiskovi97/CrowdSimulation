@@ -67,9 +67,9 @@ public class Map : MonoBehaviour
     {
         prevPositions = new List<Vector3>();
 
-        for (int i = 0; i < obstaclesNumber; i++)
+        for (int i = 0; i < obstaclesNumber && obstacles.Length > 0; i++)
         {
-            var index = (int)(Random.value * obstacles.Length);
+            var index = (int)(Random.value * obstacles.Length);            
             Vector3 pos;
             int max = 0;
             do
@@ -83,7 +83,7 @@ public class Map : MonoBehaviour
             obj.transform.Rotate(new Vector3(0, Random.value * 180, 0));
         }
 
-        for (int i = 0; i < ediblesNumber; i++)
+        for (int i = 0; i < ediblesNumber && edibles.Length > 0; i++)
         {
             var index = (int)(Random.value * edibles.Length);
             Vector3 pos;
