@@ -4,13 +4,12 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHierarchie, DesireForce, Walker>
+    public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHierarchie, Walker>
     {
         private static readonly float secondPerHunger = 60f;
         private static readonly float hungerLimit = 1f;
@@ -25,11 +24,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public float deltaTime;
 
         public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, 
-            [ReadOnly] ref FoodHierarchie foodHierarchie, ref DesireForce desireForce, ref Walker walker)
+            [ReadOnly] ref FoodHierarchie foodHierarchie, ref Walker walker)
         {
             if (condition.hunger < hungerLimit)
             {
-                desireForce.goal = translation.Value;
+                condition.goal = translation.Value;
                 return;
             }
 
@@ -48,11 +47,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     if (condition.hunger < 0) condition.hunger = 0;
                     if (length < 0.01f)
                     {
-                        desireForce.goal = translation.Value;
+                        condition.goal = translation.Value;
                         return;
                     }
                 }
-                desireForce.goal = foundFood.position;
+                condition.goal = foundFood.position;
                 if (length < math.dot(math.normalizesafe(foundFood.position - translation.Value), walker.direction))
                 {
                     walker.direction *= 0.9f;
@@ -60,7 +59,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
             else
             {
-                desireForce.goal = translation.Value;
+                condition.goal = translation.Value;
             }
         }
 

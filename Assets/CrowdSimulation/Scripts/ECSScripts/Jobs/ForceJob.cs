@@ -4,7 +4,6 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {

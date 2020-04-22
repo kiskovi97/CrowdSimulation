@@ -1,4 +1,5 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
@@ -12,5 +13,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         public float hurtingTime;
         public float maxLifeLine;
         public float healingSpeed;
+
+        public float3 goal;
+        public float3 Force(float3 pos)
+        {
+            return math.normalizesafe(goal - pos);
+        }
     }
 }

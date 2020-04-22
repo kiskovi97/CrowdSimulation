@@ -3,7 +3,6 @@ using Unity.Mathematics;
 using Unity.Burst;
 using Unity.Collections;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces;
 using Unity.Transforms;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
@@ -18,18 +17,18 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     }
 
     [BurstCompile]
-    public struct SetDesireForceJob : IJobForEach<DesireForce, PathFindingData, Translation>
+    public struct SetDesireForceJob : IJobForEach<Condition, PathFindingData, Translation>
     {
-        public void Execute([ReadOnly] ref DesireForce desireFoce, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
+        public void Execute([ReadOnly] ref Condition desireFoce, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
         {
             pathFindingData.decidedForce = desireFoce.Force(translation.Value);
         }
     }
 
     [BurstCompile]
-    public struct DecisionJob : IJobForEach<GroupCondition, DesireForce, PathFindingData, Walker, Translation>
+    public struct DecisionJob : IJobForEach<GroupCondition, Condition, PathFindingData, Walker, Translation>
     {
-        public void Execute([ReadOnly] ref GroupCondition group, [ReadOnly] ref DesireForce desireForce, 
+        public void Execute([ReadOnly] ref GroupCondition group, [ReadOnly] ref Condition desireForce, 
             ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation)
         {
             if (math.length(desireForce.goal - translation.Value) == 0f)
