@@ -8,64 +8,64 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas.Forces;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct SetGroupForceJob : IJobForEach<GroupForce, DecidedForce>
+    public struct SetGroupForceJob : IJobForEach<GroupForce, PathFindingData>
     {
-        public void Execute([ReadOnly] ref GroupForce groupForce, ref DecidedForce decidedForce)
+        public void Execute([ReadOnly] ref GroupForce groupForce, ref PathFindingData pathFindingData)
         {
-            decidedForce.force = groupForce.force;
+            pathFindingData.force = groupForce.force;
         }
     }
 
     [BurstCompile]
-    public struct SetDesireForceJob : IJobForEach<DesireForce, DecidedForce>
+    public struct SetDesireForceJob : IJobForEach<DesireForce, PathFindingData>
     {
-        public void Execute([ReadOnly] ref DesireForce desireFoce, ref DecidedForce decidedForce)
+        public void Execute([ReadOnly] ref DesireForce desireFoce, ref PathFindingData pathFindingData)
         {
-            decidedForce.force = desireFoce.force;
+            pathFindingData.force = desireFoce.force;
         }
     }
 
     [BurstCompile]
-    public struct DecisionJob : IJobForEach<GroupForce, DesireForce, DecidedForce, PathFindingData, Walker>
+    public struct DecisionJob : IJobForEach<GroupForce, DesireForce, PathFindingData, Walker>
     {
-        public void Execute([ReadOnly] ref GroupForce groupForce, [ReadOnly] ref DesireForce desireForce, ref DecidedForce decidedForce, ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker)
+        public void Execute([ReadOnly] ref GroupForce groupForce, [ReadOnly] ref DesireForce desireForce, ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker)
         {
             if (math.length(desireForce.force) == 0f)
             {
                 if (math.length(groupForce.force) == 0f)
                 {
-                    decidedForce.force = -walker.direction;
+                    pathFindingData.force = -walker.direction;
                     return;
                 }
-                decidedForce.force = groupForce.force;
+                pathFindingData.force = groupForce.force;
                 return;
             }
             if (math.length(groupForce.force) == 0f)
             {
-                decidedForce.force = desireForce.force;
+                pathFindingData.force = desireForce.force;
                 return;
             }
 
             if (pathFindingData.decisionMethod == DecisionMethod.Max)
             {
                 if (math.length(desireForce.force) < math.length(groupForce.force))
-                    decidedForce.force = groupForce.force;
+                    pathFindingData.force = groupForce.force;
                 else
-                    decidedForce.force = desireForce.force;
+                    pathFindingData.force = desireForce.force;
                 return;
             }
             if (pathFindingData.decisionMethod == DecisionMethod.Min)
             {
                 if (math.length(desireForce.force) < math.length(groupForce.force))
-                    decidedForce.force = desireForce.force;
+                    pathFindingData.force = desireForce.force;
                 else
-                    decidedForce.force = groupForce.force;
+                    pathFindingData.force = groupForce.force;
                 return;
             }
 
             if (pathFindingData.decisionMethod == DecisionMethod.Plus)
             {
-                decidedForce.force = groupForce.force + desireForce.force;
+                pathFindingData.force = groupForce.force + desireForce.force;
             }
         }
     }

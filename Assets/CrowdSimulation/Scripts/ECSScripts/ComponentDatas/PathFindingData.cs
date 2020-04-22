@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
@@ -12,6 +13,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     {
         public PathFindingMethod pathFindingMethod;
         public DecisionMethod decisionMethod;
+
+        [System.NonSerialized]
+        public float3 force;
     }
 
     public enum PathFindingMethod

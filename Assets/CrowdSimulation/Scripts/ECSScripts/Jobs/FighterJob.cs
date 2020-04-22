@@ -10,13 +10,14 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct FighterJob : IJobForEach<Fighter, Condition, DecidedForce, Translation, Rotation>
+    public struct FighterJob : IJobForEach<Fighter, Condition, PathFindingData, Translation, Rotation>
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
 
-        public void Execute(ref Fighter fighter, ref Condition condition, ref DecidedForce decidedForce, [ReadOnly] ref Translation translation, ref Rotation walker)
+        public void Execute(ref Fighter fighter, ref Condition condition, ref PathFindingData pathFindingData, 
+            [ReadOnly] ref Translation translation, ref Rotation walker)
         {
             var selected = new FightersHashMap.MyData();
             var found = ForeachAround(translation.Value, ref selected, fighter.groupId);
@@ -27,19 +28,19 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                 if (math.length(direction) < fighter.attackRadius)
                 {
-                    decidedForce.force = direction * 0.1f;
+                    pathFindingData.force = direction * 0.1f;
                     RotateForward(direction, ref walker);
                     fighter.state = FightState.Fight;
                 } else
                 {
-                    decidedForce.force = direction * 0.5f;
+                    pathFindingData.force = direction * 0.5f;
                     fighter.state = FightState.GoToFight;
                 }
             }
             else
             {
                 fighter.targetId = -1;
-                var isNear = GetNear(fighter.goalPos, fighter.goalRadius, translation, ref decidedForce);
+                var isNear = GetNear(fighter.goalPos, fighter.goalRadius, translation, ref pathFindingData);
                 fighter.state = isNear ? FightState.Standing : FightState.GoToPlace;
             }
         }
@@ -55,7 +56,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
         }
 
-        private bool GetNear(float3 goal, float radius, Translation translation, ref DecidedForce decidedForce)
+        private bool GetNear(float3 goal, float radius, Translation translation, ref PathFindingData pathFindingData)
         {
             var force = (goal - translation.Value);
             if (math.length(force) > radius)
@@ -64,12 +65,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 {
                     force = math.normalizesafe(force);
                 }
-                decidedForce.force = force * 0.5f;
+                pathFindingData.force = force * 0.5f;
                 return false;
             }
             else
             {
-                decidedForce.force = float3.zero;
+                pathFindingData.force = float3.zero;
                 return true;
             }
         }

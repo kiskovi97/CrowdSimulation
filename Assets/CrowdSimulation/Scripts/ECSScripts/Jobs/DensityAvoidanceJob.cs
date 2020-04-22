@@ -10,7 +10,7 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct DensityAvoidanceJob : IJobForEach<PathFindingData, DecidedForce, CollisionParameters, Walker, Translation>
+    public struct DensityAvoidanceJob : IJobForEach<PathFindingData, CollisionParameters, Walker, Translation>
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
@@ -19,17 +19,17 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public int oneLayer;
         public MapValues max;
 
-        public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly] ref DecidedForce decidedForce, [ReadOnly] ref CollisionParameters collision,
+        public void Execute([ReadOnly] ref PathFindingData pathFindingData, [ReadOnly] ref CollisionParameters collision,
             ref Walker walker, [ReadOnly] ref Translation translation)
         {
-            if (!(data.pathFindingMethod == PathFindingMethod.DensityGrid))
+            if (!(pathFindingData.pathFindingMethod == PathFindingMethod.DensityGrid))
             {
                 return;
             }
 
             var group = oneLayer * walker.broId;
 
-            var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * math.length(decidedForce.force), max);
+            var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius * math.length(pathFindingData.force), max);
 
             var force = float3.zero;
             var multiMin = float.MaxValue;
@@ -41,7 +41,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                 var density = densityMap[group + index];
                 var currentForce = indexes[i].position - translation.Value;
-                density -= (math.dot(math.normalize(decidedForce.force), math.normalize(currentForce)) + 1f) * 0.1f;
+                density -= (math.dot(math.normalize(pathFindingData.force), math.normalize(currentForce)) + 1f) * 0.1f;
 
                 if (multiMin > density)
                 {
