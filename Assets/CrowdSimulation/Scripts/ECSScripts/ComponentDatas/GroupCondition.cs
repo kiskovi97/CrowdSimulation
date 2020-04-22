@@ -10,6 +10,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         public float goalRadius;
 
         [System.NonSerialized]
-        public float3 force;
+        public float3 goal;
+
+        public float3 Force(float3 pos)
+        {
+            return math.normalizesafe(goal - pos);
+        }
     }
 }
