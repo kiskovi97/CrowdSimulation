@@ -13,6 +13,7 @@ public struct MapValues
     public int MaxGroup;
     public int heightPoints;
     public int widthPoints;
+    public int LayerSize;
 }
 
 public class Map : MonoBehaviour
@@ -53,6 +54,7 @@ public class Map : MonoBehaviour
             MaxGroup = MaxGroup,
             heightPoints = MaxHeight * density * 2,
             widthPoints = MaxWidth * density * 2,
+            LayerSize = OneLayer
         };
     }
 
