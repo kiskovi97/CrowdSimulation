@@ -16,14 +16,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
             if (math.length(pathFindingData.decidedGoal - translation.Value) < ShortestPathSystem.minDistance)
             {
-                walker.force = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
+                walker.force = -walker.direction;
             }
 
             var minvalue = ShortestPathSystem.GetMinValue(translation.Value, values, pathFindingData.decidedGoal);
 
             if (math.length(minvalue.offsetVector) < 0.1f)
             {
-                walker.force = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
+                walker.force = -walker.direction;
             } else
             {
                 walker.force = math.normalizesafe(minvalue.offsetVector);

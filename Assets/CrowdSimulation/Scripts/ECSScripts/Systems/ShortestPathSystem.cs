@@ -14,7 +14,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     class ShortestPathSystem : ComponentSystem
     {
         private static readonly int batchSize = 64;
-        public static readonly float minDistance = 2f;
+        public static readonly float minDistance = 10f;
 
         public static NativeList<float> densityMatrix;
         public static NativeList<bool> collisionMatrix;
@@ -198,9 +198,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var switchHandle = switchJob.Schedule(densityMatrix.Length, batchSize);
             switchHandle.Complete();
 
-            Debug(Map.Values, goalPoints.Length - 1, Color.black);
-            Debug(Map.Values, goalPoints.Length - 2, Color.blue);
             Debug(Map.Values, goalPoints.Length - 3, Color.green);
+            Debug(Map.Values, goalPoints.Length - 2, Color.blue);
+            Debug(Map.Values, goalPoints.Length - 1, Color.black);
         }
 
         private int colliderCount = 0;
