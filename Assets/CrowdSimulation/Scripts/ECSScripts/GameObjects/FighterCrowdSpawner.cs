@@ -6,6 +6,7 @@ using System;
 using Unity.Transforms;
 using Unity.Mathematics;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
@@ -197,6 +198,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 data.goalRadius = radius;
                 em.SetComponentData(entity, data);
             }
+            ShortestPathSystem.AddGoalPoint(pos);
         }
 
         private void ChangeState(bool fight)

@@ -3,6 +3,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
@@ -37,6 +38,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                 },
                 offset = transform.TransformDirection(offset.localPosition),
             });
+
+            ShortestPathSystem.AddGoalPoint(offset.position);
         }
     }
 }

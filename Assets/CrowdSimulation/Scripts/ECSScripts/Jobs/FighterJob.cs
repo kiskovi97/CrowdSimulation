@@ -60,10 +60,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             var force = (goal - translation.Value);
             if (math.length(force) > radius)
             {
-                if (math.length(force) > 1f)
-                {
-                    force = math.normalizesafe(force);
-                }
                 pathFindingData.decidedGoal = goal;
                 return false;
             }

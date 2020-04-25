@@ -5,6 +5,7 @@ using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine.InputSystem;
 using Unity.Mathematics;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
@@ -159,6 +160,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                     em.SetComponentData(entity, data);
                 }
             }
+
+            ShortestPathSystem.AddGoalPoint(new float3(0, 2, 0));
         }
 
         public static void SetSelect(bool select, Entity entity, EntityManager em)

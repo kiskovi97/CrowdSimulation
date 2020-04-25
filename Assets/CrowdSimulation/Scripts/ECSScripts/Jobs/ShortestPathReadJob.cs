@@ -1,9 +1,5 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -17,6 +13,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public void Execute([ReadOnly] ref PathFindingData pathFindingData, ref Walker walker, [ReadOnly] ref Translation translation)
         {
             if (pathFindingData.pathFindingMethod != PathFindingMethod.ShortesPath) return;
+
+            if (math.length(pathFindingData.decidedGoal - translation.Value) < ShortestPathSystem.minDistance)
+            {
+                walker.force = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
+            }
 
             var minvalue = ShortestPathSystem.GetMinValue(translation.Value, values, pathFindingData.decidedGoal);
 

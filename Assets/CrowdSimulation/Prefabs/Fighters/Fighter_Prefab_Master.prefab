@@ -424,7 +424,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34e235a7e7b130f4eaf978e62035d828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Selected: 0
 --- !u!114 &-3477124263329339478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -437,8 +436,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7a09776255c3946a08d77a8b4485bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathFindingMethod: 1
+  pathFindingMethod: 2
   decisionMethod: 1
+  decidedGoal:
+    x: 0
+    y: 0
+    z: 0
 --- !u!114 &-5033707049684536771
 MonoBehaviour:
   m_ObjectHideFlags: 0
