@@ -44,6 +44,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             public float value;
             public int index;
             public float3 offsetVector;
+            public float3 goalPoint;
         }
 
         [BurstCompile]
@@ -83,19 +84,31 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     index = index.key,
                     offsetVector = new float3(0, 0, 0),
                     value = 0f,
+                    goalPoint = goal,
                 };
             }
             var min = ClosestGoalPoint(goal);
-            return GetMinValue(index.key + min * values.LayerSize, values);
+            if (index.key < 0)
+            {
+                return new MinValue()
+                {
+                    index = index.key,
+                    offsetVector = new float3(0, 0, 0),
+                    value = 0f,
+                    goalPoint = goal,
+                };
+            }
+            return GetMinValue(index.key + min * values.LayerSize, values, min);
         }
 
-        private static MinValue GetMinValue(int index, MapValues value)
+        private static MinValue GetMinValue(int index, MapValues value, int goalIndex)
         {
             MinValue tmp = new MinValue()
             {
                 index = 0,
                 value = densityMatrix[index],
                 offsetVector = float3.zero,
+                goalPoint = goalPoints[goalIndex],
             };
             SetMinValue(ref tmp, index - 1, value, new float3(0, 0, -1) / (float)value.density);
             SetMinValue(ref tmp, index + 1, value, new float3(0, 0, 1) / (float)value.density);
@@ -198,8 +211,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var switchHandle = switchJob.Schedule(densityMatrix.Length, batchSize);
             switchHandle.Complete();
 
-            Debug(Map.Values, goalPoints.Length - 3, Color.green);
-            Debug(Map.Values, goalPoints.Length - 2, Color.blue);
+            //Debug(Map.Values, goalPoints.Length - 3, Color.green);
+            //Debug(Map.Values, goalPoints.Length - 2, Color.blue);
             Debug(Map.Values, goalPoints.Length - 1, Color.black);
         }
 
@@ -262,7 +275,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 var point = DensitySystem.ConvertToWorld(new float3(height, 0, width), values);
                 if (densityMatrix[index] > 0f)
                 {
-                    var minValue = GetMinValue(index, Map.Values);
+                    var minValue = GetMinValue(index, Map.Values, groupId);
                     DebugProxy.DrawLine(point, point + minValue.offsetVector, color);
                 }
             }
