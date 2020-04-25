@@ -8,7 +8,7 @@ using Unity.Entities;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 {
     [GenerateAuthoringComponent]
-    struct PathCollidable : IComponentData
+    public struct PathCollidable : IComponentData
     {
     }
 }

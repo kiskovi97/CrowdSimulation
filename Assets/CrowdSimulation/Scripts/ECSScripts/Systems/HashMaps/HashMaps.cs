@@ -17,7 +17,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
     public class EdibleHashMap : HashMapBase<Edible> { }
 
-    public class CollidersHashMap : HashMapBase<PhysicsCollider, LocalToWorld> { }
+    public class CollidersHashMap : HashMapBase<PhysicsCollider, LocalToWorld, PathCollidable> { }
 
     public class EntitiesHashMap : HashMapBase<CollisionParameters, Walker> { }
 

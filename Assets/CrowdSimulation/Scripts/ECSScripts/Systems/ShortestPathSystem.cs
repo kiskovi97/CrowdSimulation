@@ -11,6 +11,7 @@ using UnityEngine;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
+    [AlwaysSynchronizeSystem]
     class ShortestPathSystem : ComponentSystem
     {
         private static readonly int batchSize = 64;
@@ -267,7 +268,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         private void Debug(MapValues values, int groupId, Color color)
         {
             if (goalPoints.Length == 0 || groupId < 0) return;
-            for (int index = values.LayerSize * groupId; index < values.LayerSize * (groupId + 1); index += 9)
+            for (int index = values.LayerSize * groupId; index < values.LayerSize * (groupId + 1); index += 7)
             {
                 var small = index % values.LayerSize;
                 var height = small / values.heightPoints;

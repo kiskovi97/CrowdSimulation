@@ -24,7 +24,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             {
                 var direction = selected.position - translation.Value;
                 fighter.targetId = selected.data.Id;
-                pathFindingData.radius = fighter.attackRadius;
+                pathFindingData.radius = fighter.attackRadius * 0.5f;
                 if (math.length(direction) < fighter.attackRadius)
                 {
                     pathFindingData.decidedGoal = translation.Value + direction * 0.1f;
