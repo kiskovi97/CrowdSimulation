@@ -14,6 +14,7 @@ public struct MapValues
     public int heightPoints;
     public int widthPoints;
     public int LayerSize;
+    public float3 offset;
 }
 
 public class Map : MonoBehaviour
@@ -30,7 +31,7 @@ public class Map : MonoBehaviour
     public static int MaxHeight { get => Instance != null ? Instance.InputMaxHeight : 30; }
     public static int MaxWidth { get => Instance != null ? Instance.InputMaxWidth : 50; }
 
-    public static readonly int density = 2;
+    public static readonly int density = 1;
     private static readonly float outerRadius = 0.6f;
     private static readonly float innerRadius = 0.2f;
 
@@ -41,6 +42,8 @@ public class Map : MonoBehaviour
 
     public static int OneLayer { get => HeightPoints * WidthPoints; }
     public static int AllPoints { get => OneLayer * MaxGroup; }
+
+    public static float3 Offset { get => Instance.transform.position; }
 
     private static Map Instance;
 
@@ -54,7 +57,8 @@ public class Map : MonoBehaviour
             MaxGroup = MaxGroup,
             heightPoints = MaxHeight * density * 2,
             widthPoints = MaxWidth * density * 2,
-            LayerSize = OneLayer
+            LayerSize = OneLayer,
+            offset = Offset,
         };
     }
 

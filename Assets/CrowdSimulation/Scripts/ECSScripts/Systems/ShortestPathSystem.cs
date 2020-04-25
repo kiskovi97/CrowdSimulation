@@ -174,19 +174,24 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             DebugProxy.Log(densityMatrix.Length + " / " + densityMatrix.Capacity);
         }
 
-        private int LastGoalPointCount = 0;
-        private bool First = true;
+        private static int LastGoalPointCount = 0;
+        private static bool ColliderUpdate = true;
+
+        public static void UpdateColliders()
+        {
+            ColliderUpdate = true;
+            LastGoalPointCount = 0;
+        }
 
         protected override void OnUpdate()
         {
-            if (First)
+            if (ColliderUpdate)
             {
                 var collLayer = new NativeArray<bool>(Map.OneLayer, Allocator.TempJob);
                 collisionMatrix.AddRange(collLayer);
                 collLayer.Dispose();
-                AddGoalPoint(new float3(0, 2, 0));
-                AddGoalPoint(new float3(10, 2, 10));
-                First = false;
+                ForeachColliders();
+                ColliderUpdate = false;
             }
             if (LastGoalPointCount < goalPoints.Length)
             {
@@ -230,7 +235,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 var index = DensitySystem.IndexFromPosition(goalPoints[goalPoints.Length - 1], float3.zero, Map.Values);
                 densityMatrix[index.key + Map.OneLayer * LastGoalPointCount] = 0.5f;
                 tempMatrix[index.key + Map.OneLayer * LastGoalPointCount] = 0.5f;
-                ForeachColliders();
                 LastGoalPointCount++;
             }
         }

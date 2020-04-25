@@ -44,12 +44,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         private static float3 ConvertToLocal(float3 realWorldPosition, MapValues max)
         {
-            return (realWorldPosition + new float3(max.maxWidth, 0, max.maxHeight)) * Map.density;
+            return (realWorldPosition - max.offset + new float3(max.maxWidth, 0, max.maxHeight)) * Map.density;
         }
 
         public static float3 ConvertToWorld(float3 position, MapValues max)
         {
-            return position * (1f / Map.density) - new float3(max.maxWidth, 0, max.maxHeight);
+            return position * (1f / Map.density) - new float3(max.maxWidth, 0, max.maxHeight) + max.offset;
         }
 
         public struct KeyDistance

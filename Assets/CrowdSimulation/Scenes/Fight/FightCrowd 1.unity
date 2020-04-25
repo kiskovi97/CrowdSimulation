@@ -621,6 +621,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05e8fab5c9fd15c4199e839cab6d2676, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShortestPathFinder: 1
 --- !u!64 &1134148551
 MeshCollider:
   m_ObjectHideFlags: 0

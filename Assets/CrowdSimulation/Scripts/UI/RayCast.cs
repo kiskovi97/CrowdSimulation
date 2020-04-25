@@ -68,13 +68,14 @@ namespace Assets.CrowdSimulation.Scripts.UI
                 return;
             }
             var goalPoint = hit.point;
-            if (ShortestPathFinder)
-            {
-                ShortestPathSystem.AddGoalPoint(goalPoint);
-            }
+            
             switch (State)
             {
                 case RayCastState.Normal:
+                    if (ShortestPathFinder)
+                    {
+                        ShortestPathSystem.AddGoalPoint(goalPoint);
+                    }
                     EntitySelection.SelectedSetGoalPoint(goalPoint);
                     break;
                 case RayCastState.Building:
