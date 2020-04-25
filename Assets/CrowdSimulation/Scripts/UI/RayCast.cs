@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Entities;
 using Unity.Physics;
@@ -20,7 +21,9 @@ namespace Assets.CrowdSimulation.Scripts.UI
     public class RayCast : MonoBehaviour
     {
         public static Vector3 CurrentMonoPoint;
-        
+
+        public bool ShortestPathFinder = false;
+
         private static bool MonoPointUpdate { get => State == RayCastState.Building; }
         private static RayCastState State { get; set; } = RayCastState.Normal;
 
@@ -65,6 +68,10 @@ namespace Assets.CrowdSimulation.Scripts.UI
                 return;
             }
             var goalPoint = hit.point;
+            if (ShortestPathFinder)
+            {
+                ShortestPathSystem.AddGoalPoint(goalPoint);
+            }
             switch (State)
             {
                 case RayCastState.Normal:
@@ -116,6 +123,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
                 position = Mouse.current.position.ReadValue()
             };
             results.Clear();
+            if (EventSystem.current == null) return false;
             EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
             var count = results.Where((result) => !result.gameObject.tag.Equals("Ignore")).Count();
             return count > 0 || (GUIUtility.hotControl != 0);

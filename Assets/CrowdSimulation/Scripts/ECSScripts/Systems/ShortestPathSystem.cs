@@ -15,15 +15,22 @@ using UnityEngine;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
-    class ShortesPathSystem : ComponentSystem
+    class ShortestPathSystem : ComponentSystem
     {
-        private static int batchSize = 64;
+        private static readonly int batchSize = 64;
 
         public static NativeList<float> densityMatrix;
         public static NativeList<bool> collisionMatrix;
         public static NativeList<float> tempMatrix;
 
         public static NativeList<float3> goalPoints;
+
+        struct MinValue
+        {
+            public float value;
+            public int index;
+            public float3 offsetVector;
+        }
 
         [BurstCompile]
         struct ClearJob : IJobParallelFor
@@ -53,7 +60,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         }
 
         [BurstCompile]
-        struct CalculateJob : IJobParallelFor
+        struct CalculateShortestPathJob : IJobParallelFor
         {
             public NativeArray<float> array;
             [ReadOnly]
@@ -65,6 +72,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             public void Execute(int index)
             {
                 var tmp = readArray[index];
+                if (tmp >= 0f) return;
                 GetMin(ref tmp, index - 1);
                 GetMin(ref tmp, index + 1);
                 GetMin(ref tmp, index - values.heightPoints);
@@ -74,7 +82,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             private void GetMin(ref float tmp, int index)
             {
-                if (IsIn(index))
+                var small = index % values.LayerSize;
+                if (IsIn(index, values) && !collisionMatrix[small])
                 {
                     var next = readArray[index];
                     if (!(next < 0f) && (tmp < 0f || next + 1f < tmp))
@@ -83,15 +92,43 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     }
                 }
             }
+        }
 
-            private bool IsIn(int index)
+        private MinValue GetMinValue(int index, MapValues value)
+        {
+            MinValue tmp = new MinValue()
             {
-                var small = index % values.LayerSize;
-                var height = small / values.heightPoints;
-                var width = small % values.heightPoints;
-                return !(height < 1 || width < 1 || height > values.heightPoints - 2 || width > values.widthPoints - 2)
-                    && !collisionMatrix[index];
+                index = 0,
+                value = densityMatrix[index],
+                offsetVector = float3.zero,
+            };
+            GetMinValue(ref tmp, index - 1, value, new float3(0, 0, -1) / (float)value.density);
+            GetMinValue(ref tmp, index + 1, value, new float3(0, 0, 1) / (float)value.density);
+            GetMinValue(ref tmp, index - value.heightPoints, value, new float3(-1, 0, 0) / (float)value.density);
+            GetMinValue(ref tmp, index + value.heightPoints, value, new float3(1, 0, 0) / (float)value.density);
+            return tmp;
+        }
+
+        private void GetMinValue(ref MinValue tmp, int index, MapValues value, float3 offsetvector)
+        {
+            if (IsIn(index, value))
+            {
+                var next = densityMatrix[index];
+                if (next >= 0f && next < tmp.value)
+                {
+                    tmp.value = next;
+                    tmp.index = index;
+                    tmp.offsetVector = offsetvector;
+                }
             }
+        }
+
+        private static bool IsIn(int index, MapValues values)
+        {
+            var small = index % values.LayerSize;
+            var height = small / values.heightPoints;
+            var width = small % values.heightPoints;
+            return !(height < 1 || width < 1 || height > values.heightPoints - 2 || width > values.widthPoints - 2);
         }
 
         private void ForeachColliders()
@@ -106,11 +143,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             };
             var handle = JobForEachExtensions.Schedule(job, entityQuery);
             handle.Complete();
-        }
-
-        public static float3 ConvertToWorld(float3 position, MapValues max)
-        {
-            return position * (1f / Map.density) - new float3(max.maxWidth, 0, max.maxHeight);
         }
 
         protected override void OnCreate()
@@ -136,41 +168,32 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             goalPoints.Add(goalPoint);
             var layer = new NativeArray<float>(Map.OneLayer, Allocator.TempJob);
             densityMatrix.AddRange(layer);
-            var layer2 = new NativeArray<float>(Map.OneLayer, Allocator.TempJob);
-            tempMatrix.AddRange(layer2);
-            var collLayer = new NativeArray<bool>(Map.OneLayer, Allocator.TempJob);
-            collisionMatrix.AddRange(collLayer);
-
+            tempMatrix.AddRange(layer);
             layer.Dispose();
-            layer2.Dispose();
-            collLayer.Dispose();
+
+            DebugProxy.Log(densityMatrix.Length + " / " + densityMatrix.Capacity);
         }
-        bool First = true;
+
+        private int LastGoalPointCount = 0;
+        private bool First = true;
 
         protected override void OnUpdate()
         {
             if (First)
             {
+                var collLayer = new NativeArray<bool>(Map.OneLayer, Allocator.TempJob);
+                collisionMatrix.AddRange(collLayer);
+                collLayer.Dispose();
+                AddGoalPoint(new float3(0, 2, 0));
+                AddGoalPoint(new float3(10, 2, 10));
                 First = false;
-                var goalPoint = new float3(0, 2, 0);
-                AddGoalPoint(goalPoint);
-
-                var clearJob = new ClearJob()
-                {
-                    array = densityMatrix,
-                    array2 = tempMatrix,
-                    minIndex = densityMatrix.Length - Map.OneLayer
-                };
-                var clearHandle = clearJob.Schedule(densityMatrix.Length, batchSize);
-                clearHandle.Complete();
-
-                var index = DensitySystem.IndexFromPosition(goalPoint, float3.zero, Map.Values);
-                densityMatrix[index.key] = 0.5f;
-                tempMatrix[index.key] = 0.5f;
-                ForeachColliders();
             }
-
-            var calculateJob = new CalculateJob()
+            if (LastGoalPointCount < goalPoints.Length)
+            {
+                NewGoalPointAdded();
+            }
+            
+            var calculateJob = new CalculateShortestPathJob()
             {
                 array = tempMatrix,
                 readArray = densityMatrix,
@@ -188,20 +211,43 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var switchHandle = switchJob.Schedule(densityMatrix.Length, batchSize);
             switchHandle.Complete();
 
-            Debug(Map.Values);
+            Debug(Map.Values, goalPoints.Length - 1);
         }
 
-        private void Debug(MapValues values)
+        private void NewGoalPointAdded()
         {
-            for (int index = 0; index < densityMatrix.Length; index += 1)
+            var clearJob = new ClearJob()
+            {
+                array = densityMatrix,
+                array2 = tempMatrix,
+                minIndex = densityMatrix.Length - Map.OneLayer * (goalPoints.Length - LastGoalPointCount)
+            };
+            var clearHandle = clearJob.Schedule(densityMatrix.Length, batchSize);
+            clearHandle.Complete();
+
+            while (LastGoalPointCount < goalPoints.Length)
+            {
+                var index = DensitySystem.IndexFromPosition(goalPoints[goalPoints.Length - 1], float3.zero, Map.Values);
+                densityMatrix[index.key + Map.OneLayer * LastGoalPointCount] = 0.5f;
+                tempMatrix[index.key + Map.OneLayer * LastGoalPointCount] = 0.5f;
+                ForeachColliders();
+                LastGoalPointCount++;
+            }
+        }
+
+        private void Debug(MapValues values, int groupId)
+        {
+            if (goalPoints.Length == 0 || groupId < 0) return;
+            for (int index = values.LayerSize * groupId; index < values.LayerSize * (groupId + 1); index += 9)
             {
                 var small = index % values.LayerSize;
                 var height = small / values.heightPoints;
                 var width = small % values.heightPoints;
-                var point = ConvertToWorld(new float3(height, 0, width), values);
+                var point = DensitySystem.ConvertToWorld(new float3(height, 0, width), values);
                 if (densityMatrix[index] > 0f)
                 {
-                    DebugProxy.DrawLine(point, point + new float3(0, densityMatrix[index] * 0.1f, 0), Color.black);
+                    var minValue = GetMinValue(index, Map.Values);
+                    DebugProxy.DrawLine(point, point + minValue.offsetVector, Color.black);
                 }
             }
         }
