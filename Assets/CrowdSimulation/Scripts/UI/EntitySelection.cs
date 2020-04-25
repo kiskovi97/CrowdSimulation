@@ -1,4 +1,5 @@
-﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+﻿using System;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 using Unity.Entities;
@@ -88,17 +89,46 @@ namespace Assets.CrowdSimulation.Scripts.UI
                     continue;
                 }
                 count++;
-                var radius = math.sqrt(count / math.PI);
                 var fighter = em.GetComponentData<Fighter>(entity);
                 fighter.goalPos = goalPoint;
+                em.SetComponentData(entity, fighter);
+            }
+
+            var radius = math.sqrt(count / math.PI);
+            DrawSphere(goalPoint, radius);
+            foreach (var entity in all)
+            {
+                if (!em.HasComponent<Selectable>(entity))
+                {
+                    continue;
+                }
+                var selection = em.GetComponentData<Selectable>(entity);
+                if (!selection.Selected)
+                {
+                    continue;
+                }
+                if (!em.HasComponent<Fighter>(entity))
+                {
+                    continue;
+                }
+                var fighter = em.GetComponentData<Fighter>(entity);
                 fighter.goalRadius = radius;
                 em.SetComponentData(entity, fighter);
             }
+
 
             if (count > 0)
             {
                 ShortestPathSystem.AddGoalPoint(goalPoint);
             }
+        }
+
+        private static void DrawSphere(float3 goalPoint, float radius)
+        {
+            Debug.DrawLine(goalPoint, goalPoint + new float3(1, 0, 0) * radius, Color.green, 10f, false);
+            Debug.DrawLine(goalPoint, goalPoint + new float3(-1, 0, 0) * radius, Color.green, 10f, false);
+            Debug.DrawLine(goalPoint, goalPoint + new float3(0, 0, 1) * radius, Color.green, 10f, false);
+            Debug.DrawLine(goalPoint, goalPoint + new float3(0, 0, -1) * radius, Color.green, 10f, false);
         }
 
         private static void SelectSquere(Vector2 min, Vector2 max)

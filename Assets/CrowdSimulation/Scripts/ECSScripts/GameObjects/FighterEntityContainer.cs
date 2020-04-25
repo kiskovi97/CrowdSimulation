@@ -80,13 +80,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                     instance.entities.Add(fighter.groupId, new List<Entity>());
                     instance.groupIds.Add(fighter.groupId);
                 }
-
-                var area = instance.entities[fighter.groupId].Count;
-                var radius = Mathf.Sqrt(area / Mathf.PI);
-                fighter.goalRadius = radius;
-
                 instance.entities[fighter.groupId].Add(entity);
-                em.SetComponentData(entity, fighter);
                 instance.foreachHelp.Enqueue(entity);
             }
 
@@ -111,6 +105,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                         em.SetComponentData(ent, fighter);
                     }
                 }
+                updated = false;
             }
 
             while(foreachHelp.Count > 0)

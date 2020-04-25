@@ -16,5 +16,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 
         [System.NonSerialized]
         public float3 goal;
+        public bool isSet;
     }
 }

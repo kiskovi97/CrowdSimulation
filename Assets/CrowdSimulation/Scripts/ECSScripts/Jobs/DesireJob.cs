@@ -27,8 +27,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         {
             if (condition.hunger < hungerLimit)
             {
-                condition.goal = translation.Value;
-                return;
+                condition.isSet = false;
             }
 
             bool found = false;
@@ -46,7 +45,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     if (condition.hunger < 0) condition.hunger = 0;
                     if (length < 0.01f)
                     {
-                        condition.goal = translation.Value;
+                        condition.isSet = false;
                         return;
                     }
                 }
@@ -58,7 +57,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
             else
             {
-                condition.goal = translation.Value;
+                condition.isSet = false;
             }
         }
 

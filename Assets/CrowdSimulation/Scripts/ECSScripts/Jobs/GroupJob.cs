@@ -16,10 +16,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             if (math.length(force) > group.goalRadius)
             {
                 group.goal = group.goalPoint;
+                group.isSet = true;
             }
             else
             {
-                group.goal = translation.Value;
+                group.isSet = false;
             }
         }
     }

@@ -24,7 +24,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             {
                 var direction = selected.position - translation.Value;
                 fighter.targetId = selected.data.Id;
-
+                pathFindingData.radius = fighter.attackRadius;
                 if (math.length(direction) < fighter.attackRadius)
                 {
                     pathFindingData.decidedGoal = translation.Value + direction * 0.1f;
@@ -58,6 +58,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         private bool GetNear(float3 goal, float radius, Translation translation, ref PathFindingData pathFindingData)
         {
             var force = (goal - translation.Value);
+            pathFindingData.radius = radius;
             if (math.length(force) > radius)
             {
                 pathFindingData.decidedGoal = goal;

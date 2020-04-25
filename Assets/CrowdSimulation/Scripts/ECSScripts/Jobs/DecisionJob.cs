@@ -12,7 +12,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     {
         public void Execute([ReadOnly] ref GroupCondition group, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
         {
-            pathFindingData.decidedGoal = group.goalPoint;
+            if (group.isSet)
+            {
+                pathFindingData.decidedGoal = group.goal;
+                pathFindingData.radius = group.goalRadius;
+            } else
+            {
+                pathFindingData.decidedGoal = translation.Value;
+            }
         }
     }
 
@@ -21,7 +28,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     {
         public void Execute([ReadOnly] ref Condition condition, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
         {
-            pathFindingData.decidedGoal = condition.goal;
+            if (condition.isSet)
+            {
+                pathFindingData.decidedGoal = condition.goal;
+            } else
+            {
+                pathFindingData.decidedGoal = translation.Value;
+            }
         }
     }
 
@@ -32,12 +45,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation)
         {
 
-            var conditionDistance = math.length(condition.goal - translation.Value);
-            var groupDistance = math.length(group.goal - translation.Value);
-
-            if (conditionDistance < 0.2f)
+            if (!condition.isSet)
             {
-                if (groupDistance < 0.2f)
+                if (!group.isSet)
                 {
                     pathFindingData.decidedGoal = translation.Value;
                     return;
@@ -45,12 +55,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 pathFindingData.decidedGoal = group.goal;
                 return;
             }
-            if (groupDistance < 0.2f)
+            if (!group.isSet)
             {
                 pathFindingData.decidedGoal = condition.goal;
                 return;
             }
 
+            var conditionDistance = math.length(condition.goal - translation.Value);
+            var groupDistance = math.length(group.goal - translation.Value);
             if (pathFindingData.decisionMethod == DecisionMethod.Max)
             {
                 if (conditionDistance < groupDistance)
