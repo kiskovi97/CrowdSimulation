@@ -35,9 +35,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             var conditionDistance = math.length(condition.goal - translation.Value);
             var groupDistance = math.length(group.goal - translation.Value);
 
-            if (conditionDistance == 0f)
+            if (conditionDistance < 0.2f)
             {
-                if (groupDistance == 0f)
+                if (groupDistance < 0.2f)
                 {
                     pathFindingData.decidedGoal = translation.Value;
                     return;
@@ -45,7 +45,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 pathFindingData.decidedGoal = group.goal;
                 return;
             }
-            if (groupDistance == 0f)
+            if (groupDistance < 0.2f)
             {
                 pathFindingData.decidedGoal = condition.goal;
                 return;

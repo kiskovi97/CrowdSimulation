@@ -32,7 +32,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             };
             var desireHandle = desireJob.Schedule(this, inputDeps);
 
-
             var groupGoalJob = new GroupGoalJob();
             var groupHandle = groupGoalJob.Schedule(this, desireHandle);
 

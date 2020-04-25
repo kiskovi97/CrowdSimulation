@@ -9,7 +9,7 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct DesireJob : IJobForEachWithEntity<Translation, Condition, FoodHierarchie, Walker>
+    public struct DesireJob : IJobForEachWithEntity<Translation, Condition, Walker>
     {
         private static readonly float secondPerHunger = 60f;
         private static readonly float hungerLimit = 1f;
@@ -23,8 +23,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
         public float deltaTime;
 
-        public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, 
-            [ReadOnly] ref FoodHierarchie foodHierarchie, ref Walker walker)
+        public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, ref Walker walker)
         {
             if (condition.hunger < hungerLimit)
             {

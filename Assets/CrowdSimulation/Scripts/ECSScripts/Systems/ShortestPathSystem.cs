@@ -26,7 +26,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         public static NativeList<float3> goalPoints;
 
-        struct MinValue
+        public struct MinValue
         {
             public float value;
             public int index;
@@ -95,7 +95,33 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             }
         }
 
-        private MinValue GetMinValue(int index, MapValues value)
+        public static MinValue GetMinValue(float3 position, MapValues values, float3 goal)
+        {
+            
+            var index = DensitySystem.IndexFromPosition(position, position, values);
+            if (goalPoints.Length <= 0)
+            {
+                return new MinValue()
+                {
+                    index = index.key,
+                    offsetVector = new float3(0, 0, 0),
+                    value = 0f,
+                };
+            }
+            var min = 0;
+            for (int i=1; i<goalPoints.Length; i++)
+            {
+                if (math.lengthsq(goalPoints[min] - goal) > math.lengthsq(goalPoints[i] - goal))
+                {
+                    min = i;
+                }
+            }
+
+            return GetMinValue(index.key + min * values.LayerSize, values);
+        }
+
+
+        private static MinValue GetMinValue(int index, MapValues value)
         {
             MinValue tmp = new MinValue()
             {
@@ -107,10 +133,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             GetMinValue(ref tmp, index + 1, value, new float3(0, 0, 1) / (float)value.density);
             GetMinValue(ref tmp, index - value.heightPoints, value, new float3(-1, 0, 0) / (float)value.density);
             GetMinValue(ref tmp, index + value.heightPoints, value, new float3(1, 0, 0) / (float)value.density);
+
+            GetMinValue(ref tmp, index - 1 + value.heightPoints, value, new float3(1, 0, -1) / (float)value.density);
+            GetMinValue(ref tmp, index + 1 + value.heightPoints, value, new float3(1, 0, 1) / (float)value.density);
+            GetMinValue(ref tmp, index - 1 - value.heightPoints, value, new float3(-1, 0, -1) / (float)value.density);
+            GetMinValue(ref tmp, index + 1 - value.heightPoints, value, new float3(-1, 0, 1) / (float)value.density);
             return tmp;
         }
 
-        private void GetMinValue(ref MinValue tmp, int index, MapValues value, float3 offsetvector)
+        private static void GetMinValue(ref MinValue tmp, int index, MapValues value, float3 offsetvector)
         {
             if (IsIn(index, value))
             {

@@ -10,6 +10,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     [UpdateAfter(typeof(GoalSystem))]
     [UpdateAfter(typeof(EntitiesHashMap))]
     [UpdateAfter(typeof(FighterSystem))]
+    [UpdateAfter(typeof(ShortestPathSystem))]
     public class PathFindingSystem : ComponentSystem
     {
         protected override void OnUpdate()
@@ -30,8 +31,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 oneLayer = Map.OneLayer,
                 max = Map.Values
             };
-            var handle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
-            handle.Complete();
+            var densityHandle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
+
+            var shortestPathJob = new ShortestPathReadJob()
+            {
+                values = Map.Values
+            };
+            var shortestHandle = shortestPathJob.Schedule(this, densityHandle);
+            shortestHandle.Complete();
         }
     }
 }

@@ -64,7 +64,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 {
                     force = math.normalizesafe(force);
                 }
-                pathFindingData.decidedGoal = translation.Value + force * 0.5f;
+                pathFindingData.decidedGoal = goal;
                 return false;
             }
             else
