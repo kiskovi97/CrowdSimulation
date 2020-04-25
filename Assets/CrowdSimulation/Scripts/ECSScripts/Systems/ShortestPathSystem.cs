@@ -1,4 +1,5 @@
-﻿using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,20 +132,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             return !(height < 1 || width < 1 || height > values.heightPoints - 2 || width > values.widthPoints - 2);
         }
 
-        private void ForeachColliders()
-        {
-            EntityQuery entityQuery = GetEntityQuery(typeof(PhysicsCollider), typeof(LocalToWorld));
-            var job = new SetDensityClosestPathJob()
-            {
-                densityMatrix = collisionMatrix,
-                widthPoints = Map.WidthPoints,
-                heightPoints = Map.HeightPoints,
-                max = Map.Values
-            };
-            var handle = JobForEachExtensions.Schedule(job, entityQuery);
-            handle.Complete();
-        }
-
         protected override void OnCreate()
         {
             densityMatrix = new NativeList<float>(Allocator.Persistent);
@@ -177,14 +164,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         private static int LastGoalPointCount = 0;
         private static bool ColliderUpdate = true;
 
-        public static void UpdateColliders()
-        {
-            ColliderUpdate = true;
-            LastGoalPointCount = 0;
-        }
-
         protected override void OnUpdate()
         {
+            SearchForCollider();
             if (ColliderUpdate)
             {
                 var collLayer = new NativeArray<bool>(Map.OneLayer, Allocator.TempJob);
@@ -217,6 +199,34 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             switchHandle.Complete();
 
             Debug(Map.Values, goalPoints.Length - 1);
+        }
+
+        private int colliderCount = 0;
+
+        private void SearchForCollider()
+        {
+            EntityQuery entityQuery = GetEntityQuery(ComponentType.ReadOnly<PathCollidable>());
+            var count = entityQuery.CalculateEntityCount();
+            if (colliderCount != count)
+            {
+                colliderCount = count;
+                ColliderUpdate = true;
+                LastGoalPointCount = 0;
+            }
+        }
+
+        private void ForeachColliders()
+        {
+            EntityQuery entityQuery = GetEntityQuery(typeof(PhysicsCollider), typeof(LocalToWorld), ComponentType.ReadOnly<PathCollidable>());
+            var job = new SetDensityClosestPathJob()
+            {
+                densityMatrix = collisionMatrix,
+                widthPoints = Map.WidthPoints,
+                heightPoints = Map.HeightPoints,
+                max = Map.Values
+            };
+            var handle = JobForEachExtensions.Schedule(job, entityQuery);
+            handle.Complete();
         }
 
         private void NewGoalPointAdded()
