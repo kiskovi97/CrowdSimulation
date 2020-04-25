@@ -1,5 +1,6 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -70,6 +71,7 @@ namespace Assets.CrowdSimulation.Scripts.UI
             var em = World.DefaultGameObjectInjectionWorld.EntityManager;
             var all = em.GetAllEntities(Unity.Collections.Allocator.Temp);
             var count = 0;
+
             foreach (var entity in all)
             {
                 if (!em.HasComponent<Selectable>(entity))
@@ -91,6 +93,11 @@ namespace Assets.CrowdSimulation.Scripts.UI
                 fighter.goalPos = goalPoint;
                 fighter.goalRadius = radius;
                 em.SetComponentData(entity, fighter);
+            }
+
+            if (count > 0)
+            {
+                ShortestPathSystem.AddGoalPoint(goalPoint);
             }
         }
 

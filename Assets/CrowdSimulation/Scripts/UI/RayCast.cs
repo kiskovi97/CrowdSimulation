@@ -72,10 +72,6 @@ namespace Assets.CrowdSimulation.Scripts.UI
             switch (State)
             {
                 case RayCastState.Normal:
-                    if (ShortestPathFinder)
-                    {
-                        ShortestPathSystem.AddGoalPoint(goalPoint);
-                    }
                     EntitySelection.SelectedSetGoalPoint(goalPoint);
                     break;
                 case RayCastState.Building:
