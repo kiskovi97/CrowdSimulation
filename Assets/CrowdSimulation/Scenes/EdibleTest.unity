@@ -356,6 +356,11 @@ MonoBehaviour:
   data:
     pathFindingMethod: 1
     decisionMethod: 1
+    decidedGoal:
+      x: 0
+      y: 0
+      z: 0
+    radius: 0
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 2
@@ -497,6 +502,7 @@ GameObject:
   - component: {fileID: 1752895782}
   - component: {fileID: 1752895781}
   - component: {fileID: 1752895780}
+  - component: {fileID: 1752895785}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -651,6 +657,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1752895785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1752895779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 547f4519515bd944a8022bd2893b584b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2063423005
 GameObject:
   m_ObjectHideFlags: 0

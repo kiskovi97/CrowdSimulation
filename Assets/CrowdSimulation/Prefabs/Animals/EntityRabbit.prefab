@@ -164,11 +164,12 @@ MonoBehaviour:
   maxSpeed: 1.5
   pathFindingData:
     pathFindingMethod: 1
-    decisionMethod: 2
-    decidedForce:
+    decisionMethod: 1
+    decidedGoal:
       x: 0
       y: 0
       z: 0
+    radius: 0
 --- !u!114 &-2176088025487669420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,6 +189,7 @@ MonoBehaviour:
   hurtingTime: 0
   maxLifeLine: 0
   healingSpeed: 0
+  isSet: 0
 --- !u!114 &2823695101134469478
 MonoBehaviour:
   m_ObjectHideFlags: 0

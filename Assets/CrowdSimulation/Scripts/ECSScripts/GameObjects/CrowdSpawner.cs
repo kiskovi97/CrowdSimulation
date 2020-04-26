@@ -6,6 +6,7 @@ using Unity.Transforms;
 using UnityEngine;
 using TMPro;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
@@ -77,6 +78,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         // Start is called before the first frame update
         void Start()
         {
+            ShortestPathSystem.AddGoalPoint(goal);
             var cond = new GroupCondition() { goalPoint = goal, goalRadius = goalRadius };
             Id++;
             if (Id >= Map.MaxGroup)

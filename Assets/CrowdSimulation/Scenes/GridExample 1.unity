@@ -254,6 +254,7 @@ GameObject:
   - component: {fileID: 515814569}
   - component: {fileID: 515814568}
   - component: {fileID: 515814567}
+  - component: {fileID: 515814571}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -336,6 +337,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &515814571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 515814566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7e1a38a4325bf498ba701b05d24f9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  edibles: []
+  obstacles: []
+  distance: 1
+  ediblesNumber: 30
+  obstaclesNumber: 30
+  InputMaxHeight: 30
+  InputMaxWidth: 50
 --- !u!1 &518963817
 GameObject:
   m_ObjectHideFlags: 0
@@ -486,7 +506,7 @@ PrefabInstance:
     - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
@@ -522,7 +542,7 @@ PrefabInstance:
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
@@ -903,6 +923,11 @@ PrefabInstance:
       propertyPath: color
       value: 
       objectReference: {fileID: 2100000, guid: d47dc847da321de4ebad77b0a6dac247, type: 2}
+    - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: entityObject
@@ -934,6 +959,11 @@ PrefabInstance:
       propertyPath: color
       value: 
       objectReference: {fileID: 2100000, guid: 3864e8118431e7a47b13a67b15d0be7f, type: 2}
+    - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
+        type: 3}
+      propertyPath: data.pathFindingMethod
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: m_Name
