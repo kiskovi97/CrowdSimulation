@@ -412,6 +412,7 @@ MonoBehaviour:
   hurtingTime: 10
   maxLifeLine: 60
   healingSpeed: 2
+  isSet: 0
 --- !u!114 &8847824335073405561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,6 +443,7 @@ MonoBehaviour:
     x: 0
     y: 0
     z: 0
+  radius: 0
 --- !u!114 &-5033707049684536771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -459,13 +461,7 @@ MonoBehaviour:
   Id: 0
   groupId: 0
   attackStrength: 2
-  targetId: 0
-  state: 0
-  goalPos:
-    x: 0
-    y: 0
-    z: 0
-  goalRadius: 0
+  viewRadius: 6
 --- !u!1001 &5783626803917728525
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -292,6 +292,7 @@ MonoBehaviour:
   hurtingTime: 10
   maxLifeLine: 60
   healingSpeed: 2
+  isSet: 0
 --- !u!33 &2339528920809516773
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -438,6 +439,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathFindingMethod: 1
   decisionMethod: 1
+  decidedGoal:
+    x: 0
+    y: 0
+    z: 0
+  radius: 0
 --- !u!114 &6519804937287145660
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -455,13 +461,7 @@ MonoBehaviour:
   Id: 0
   groupId: 0
   attackStrength: 2
-  targetId: 0
-  state: 0
-  goalPos:
-    x: 0
-    y: 0
-    z: 0
-  goalRadius: 0
+  viewRadius: 6
 --- !u!1001 &8389834025345406882
 PrefabInstance:
   m_ObjectHideFlags: 0

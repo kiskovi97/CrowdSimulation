@@ -13,11 +13,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         public int Id;
         public int groupId;
         public float attackStrength;
+        public float viewRadius;
 
         //State
+        [System.NonSerialized]
         public int targetId;
+        [System.NonSerialized]
         public FightState state;
+        [System.NonSerialized]
         public float3 goalPos;
+        [System.NonSerialized]
         public float goalRadius;
     }
 

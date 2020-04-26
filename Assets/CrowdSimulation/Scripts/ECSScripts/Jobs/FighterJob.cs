@@ -19,7 +19,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             [ReadOnly] ref Translation translation, ref Rotation walker)
         {
             var selected = new FightersHashMap.MyData();
-            var found = ForeachAround(translation.Value, ref selected, fighter.groupId);
+            var found = ForeachAround(translation.Value, ref selected, fighter);
             if (found)
             {
                 var direction = selected.position - translation.Value;
@@ -71,7 +71,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
         }
 
-        private bool ForeachAround(float3 position, ref FightersHashMap.MyData output, int myBroId)
+        private bool ForeachAround(float3 position, ref FightersHashMap.MyData output, Fighter myBroId)
         {
             var found = false;
             var key = QuadrantVariables.GetPositionHashMapKey(position);
@@ -87,14 +87,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             return found;
         }
 
-        private bool Foreach(int key, float3 position, ref FightersHashMap.MyData output, bool found, int myBroId)
+        private bool Foreach(int key, float3 position, ref FightersHashMap.MyData output, bool found, Fighter me)
         {
             if (targetMap.TryGetFirstValue(key, out FightersHashMap.MyData other, out NativeMultiHashMapIterator<int> iterator))
             {
                 do
                 {
-                    if (other.data.groupId == myBroId) continue;
-                    if (!found)
+                    if (other.data.groupId == me.groupId) continue;
+                    var nowDistance = math.length(other.position - position);
+                    if (!found && nowDistance < me.viewRadius)
                     {
                         output = other;
                         found = true;
@@ -102,7 +103,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     else
                     {
                         var prevDist = math.length(output.position - position);
-                        var nowDistance = math.length(other.position - position);
                         if (prevDist > nowDistance)
                         {
                             output = other;
