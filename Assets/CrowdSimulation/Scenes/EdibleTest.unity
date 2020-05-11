@@ -363,7 +363,7 @@ MonoBehaviour:
     radius: 0
   info: {fileID: 0}
   color: {fileID: 0}
-  goalRadius: 2
+  goalRadius: 3
   sizeX: 4
   sizeZ: 4
   distance: 2

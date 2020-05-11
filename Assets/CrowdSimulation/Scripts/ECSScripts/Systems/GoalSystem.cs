@@ -2,6 +2,8 @@
 using Unity.Jobs;
 using Unity.Collections;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
+using Unity.Transforms;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
@@ -10,10 +12,17 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     public class GoalSystem : JobComponentSystem
     {
         private EndSimulationEntityCommandBufferSystem endSimulation;
+        private EntityQuery decisionGroup;
 
         protected override void OnCreate()
         {
             endSimulation = World.DefaultGameObjectInjectionWorld.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            var query = new EntityQueryDesc
+            {
+                Any = new ComponentType[] { typeof(GroupCondition), typeof(Condition) },
+                All = new ComponentType[] { typeof(PathFindingData), ComponentType.ReadOnly<Translation>() }
+            };
+            decisionGroup = GetEntityQuery(query);
             base.OnCreate();
         }
 
@@ -24,6 +33,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
+            // Set Desires
             var desireJob = new FoodSearchingJob()
             {
                 targetMap = EdibleHashMap.quadrantHashMap,
@@ -31,16 +41,24 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 deltaTime = Time.DeltaTime
             };
             var desireHandle = desireJob.Schedule(this, inputDeps);
-
             var groupGoalJob = new GroupGoalJob();
             var groupHandle = groupGoalJob.Schedule(this, desireHandle);
+
+
 
             var gfJob = new SetGroupForceJob();
             var gfHandle = gfJob.Schedule(this, groupHandle);
             var dfJob = new SetDesireForceJob();
             var dfHandle = dfJob.Schedule(this, gfHandle);
-            var decisionJob = new DecisionJob();
-            var decisionHandle = decisionJob.Schedule(this, dfHandle);
+
+            var decisionJob = new DecisiionJobChunk()
+            {
+                 ConditionType = GetArchetypeChunkComponentType<Condition>(true),
+                 GroupConditionType = GetArchetypeChunkComponentType<GroupCondition>(true),
+                 TranslationType = GetArchetypeChunkComponentType<Translation>(true),
+                 PathFindingType = GetArchetypeChunkComponentType<PathFindingData>(false),
+            };
+            var decisionHandle = decisionJob.Schedule(decisionGroup, dfHandle);
 
             return decisionHandle;
         }

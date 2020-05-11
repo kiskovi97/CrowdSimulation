@@ -93,6 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  sizeMultiplyer: 10
 --- !u!1 &2002152154697913493
 GameObject:
   m_ObjectHideFlags: 0

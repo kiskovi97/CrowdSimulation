@@ -30,7 +30,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
 
     public enum DecisionMethod
     {
-        Avarage,
         Max,
         Min
     }

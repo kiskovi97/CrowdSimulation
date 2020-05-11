@@ -28,6 +28,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             if (condition.hunger < hungerLimit)
             {
                 condition.isSet = false;
+                return;
             }
 
             bool found = false;
