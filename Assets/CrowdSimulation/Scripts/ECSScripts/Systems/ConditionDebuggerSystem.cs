@@ -17,7 +17,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 var condition = EntityManager.GetComponentData<Condition>(parent.Value);
                 if (debugger.type == ConditionType.Hunger)
                 {
-                    if (condition.hunger > 1f)
+                    if (condition.hunger > 0.1f)
                         compositeScale.Value.y = condition.hunger * 0.01f * debugger.sizeMultiplyer;
                     else
                         compositeScale.Value.y = 0f;
