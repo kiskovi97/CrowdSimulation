@@ -37,22 +37,24 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             if (found)
             {
                 var length = math.length(foundFood.position - translation.Value);
+                
+                if (length < math.dot(math.normalizesafe(foundFood.position - translation.Value), walker.direction))
+                {
+                    walker.direction *= 0.9f;
+                }
 
                 if (length < 0.4f)
                 {
                     commandBuffer.DestroyEntity(index, foundFood.entity);
                     condition.hunger -= foundFood.data.nutrition;
                     if (condition.hunger < 0) condition.hunger = 0;
-                    if (length < 0.01f)
-                    {
-                        condition.isSet = false;
-                        return;
-                    }
+                    condition.isSet = false;
+                    return;
                 }
-                condition.goal = foundFood.position;
-                if (length < math.dot(math.normalizesafe(foundFood.position - translation.Value), walker.direction))
+                else
                 {
-                    walker.direction *= 0.9f;
+                    condition.goal = foundFood.position;
+                    condition.isSet = true;
                 }
             }
             else
