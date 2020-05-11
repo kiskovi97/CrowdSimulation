@@ -24,7 +24,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
-            var desireJob = new DesireJob()
+            var desireJob = new FoodSearchingJob()
             {
                 targetMap = EdibleHashMap.quadrantHashMap,
                 commandBuffer = endSimulation.CreateCommandBuffer().ToConcurrent(),

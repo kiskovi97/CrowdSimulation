@@ -9,7 +9,7 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct DesireJob : IJobForEachWithEntity<Translation, Condition, Walker>
+    public struct FoodSearchingJob : IJobForEachWithEntity<Translation, Condition, Walker>
     {
         private static readonly float secondPerHunger = 60f;
         private static readonly float hungerLimit = 1f;
