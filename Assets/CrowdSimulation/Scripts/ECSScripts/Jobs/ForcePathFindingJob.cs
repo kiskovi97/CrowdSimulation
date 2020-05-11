@@ -23,6 +23,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             {
                 return;
             }
+
+            var distance = translation.Value - data.decidedGoal;
+            if (math.length(distance) < data.radius)
+            {
+                walker.force = walker.direction * -1;
+            }
+
             var avoidanceForce = float3.zero;
             var convinientForce = float3.zero;
             var bros = 0;

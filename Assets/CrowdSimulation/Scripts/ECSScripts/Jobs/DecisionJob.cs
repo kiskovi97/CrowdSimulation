@@ -49,7 +49,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                         break;
                     case DecidedGoalType.None:
                         pathfinding.decidedGoal = translation.Value;
-                        pathfinding.radius = 0;
+                        pathfinding.radius = 1f;
                         break;
                 }
 
