@@ -26,6 +26,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 return;
             }
 
+            var distance = translation.Value - pathFindingData.decidedGoal;
+            if (math.length(distance) < pathFindingData.radius)
+            {
+                walker.force = walker.direction * -1;
+                return;
+            }
+
             var group = oneLayer * walker.broId;
 
             var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius, max); 

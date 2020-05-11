@@ -31,6 +31,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     public enum DecisionMethod
     {
         Max,
-        Min
+        Min,
+        ConditionOverGroup,
+        GroupOverCondition,
     }
 }

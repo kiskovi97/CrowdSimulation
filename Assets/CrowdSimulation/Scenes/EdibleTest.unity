@@ -355,7 +355,7 @@ MonoBehaviour:
   goalPoint: {fileID: 1258235198}
   data:
     pathFindingMethod: 1
-    decisionMethod: 1
+    decisionMethod: 2
     decidedGoal:
       x: 0
       y: 0

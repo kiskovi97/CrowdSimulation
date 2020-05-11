@@ -28,6 +28,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             if (math.length(distance) < data.radius)
             {
                 walker.force = walker.direction * -1;
+                return;
             }
 
             var avoidanceForce = float3.zero;

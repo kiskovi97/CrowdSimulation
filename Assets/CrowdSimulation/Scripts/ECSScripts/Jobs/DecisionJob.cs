@@ -75,18 +75,22 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
             var conditionDistance = math.length(condition.goal - translation.Value);
             var groupDistance = math.length(group.goal - translation.Value);
-            if (pathFindingData.decisionMethod == DecisionMethod.Max)
+
+            switch(pathFindingData.decisionMethod)
             {
-                if (conditionDistance < groupDistance)
-                    return DecidedGoalType.Group;
-                else
+                case DecisionMethod.Max:
+                    if (conditionDistance < groupDistance)
+                        return DecidedGoalType.Group;
+                    else
+                        return DecidedGoalType.Condition;
+                case DecisionMethod.Min:
+                    if (conditionDistance < groupDistance)
+                        return DecidedGoalType.Condition;
+                    else
+                        return DecidedGoalType.Group;
+                case DecisionMethod.ConditionOverGroup:
                     return DecidedGoalType.Condition;
-            }
-            if (pathFindingData.decisionMethod == DecisionMethod.Min)
-            {
-                if (conditionDistance < groupDistance)
-                    return DecidedGoalType.Condition;
-                else
+                case DecisionMethod.GroupOverCondition:
                     return DecidedGoalType.Group;
             }
             return DecidedGoalType.None;
