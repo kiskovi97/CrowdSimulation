@@ -23,6 +23,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
+            if (!chunk.HasChunkComponent(GroupConditionType))
+            {
+                return;
+            }
+
+            if (!chunk.HasChunkComponent(ConditionType))
+            {
+                return;
+            }
             var groupConditions = chunk.GetNativeArray(GroupConditionType);
             var conditions = chunk.GetNativeArray(ConditionType);
             var pathFindings = chunk.GetNativeArray(PathFindingType);
