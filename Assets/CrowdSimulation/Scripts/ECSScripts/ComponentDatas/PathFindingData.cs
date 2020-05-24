@@ -10,6 +10,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     {
         public PathFindingMethod pathFindingMethod;
         public DecisionMethod decisionMethod;
+        public DebugMessage lastMessage;
         public float3 decidedGoal;
         public float radius;
         public float3 Force(float3 pos, float3 walkerDirection)
@@ -34,5 +35,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         Min,
         ConditionOverGroup,
         GroupOverCondition,
+    }
+
+    public enum DebugMessage
+    {
+        NothingFound,
+        OnlyGroup,
+        OnlyCondition,
+        All
     }
 }

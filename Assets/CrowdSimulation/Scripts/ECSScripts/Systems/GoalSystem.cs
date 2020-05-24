@@ -9,7 +9,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
     [AlwaysSynchronizeSystem]
     [UpdateAfter(typeof(EdibleHashMap))]
-    public class GoalSystem : JobComponentSystem
+    public class GoalSystem : ComponentSystem
     {
         private EndSimulationEntityCommandBufferSystem endSimulation;
         private EntityQuery decisionGroup;
@@ -31,7 +31,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             base.OnDestroy();
         }
 
-        protected override JobHandle OnUpdate(JobHandle inputDeps)
+        protected override void OnUpdate()
         {
             // Set Desires
             var desireJob = new FoodSearchingJob()
@@ -40,27 +40,19 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 commandBuffer = endSimulation.CreateCommandBuffer().ToConcurrent(),
                 deltaTime = Time.DeltaTime
             };
-            var desireHandle = desireJob.Schedule(this, inputDeps);
+            var desireHandle = desireJob.Schedule(this);
             var groupGoalJob = new GroupGoalJob();
             var groupHandle = groupGoalJob.Schedule(this, desireHandle);
 
-
-
-            var gfJob = new SetGroupForceJob();
-            var gfHandle = gfJob.Schedule(this, groupHandle);
-            var dfJob = new SetDesireForceJob();
-            var dfHandle = dfJob.Schedule(this, gfHandle);
-
-            var decisionJob = new DecisiionJobChunk()
+            var decisionJob = new DecisionJobChunk()
             {
                  ConditionType = GetArchetypeChunkComponentType<Condition>(true),
                  GroupConditionType = GetArchetypeChunkComponentType<GroupCondition>(true),
                  TranslationType = GetArchetypeChunkComponentType<Translation>(true),
                  PathFindingType = GetArchetypeChunkComponentType<PathFindingData>(false),
             };
-            var decisionHandle = decisionJob.Schedule(decisionGroup, dfHandle);
-
-            return decisionHandle;
+            var decisionHandle = decisionJob.Schedule(decisionGroup, groupHandle);
+            decisionHandle.Complete();
         }
     }
 }

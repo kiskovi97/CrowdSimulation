@@ -156,6 +156,12 @@ MonoBehaviour:
   data:
     pathFindingMethod: 0
     decisionMethod: 1
+    lastMessage: 0
+    decidedGoal:
+      x: 0
+      y: 0
+      z: 0
+    radius: 0
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 4
@@ -176,6 +182,80 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: -450, z: 0}
+--- !u!1001 &202017068
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2002152154697913493, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_Name
+      value: EntityWolf
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002152154697913498, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3439931779323062130, guid: 675604770c7ff234386cd3a516950b97,
+        type: 3}
+      propertyPath: hunger
+      value: 50
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 675604770c7ff234386cd3a516950b97, type: 3}
 --- !u!1 &417381895
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,6 +529,12 @@ MonoBehaviour:
   data:
     pathFindingMethod: 1
     decisionMethod: 1
+    lastMessage: 0
+    decidedGoal:
+      x: 0
+      y: 0
+      z: 0
+    radius: 0
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 5
@@ -587,6 +673,12 @@ MonoBehaviour:
   data:
     pathFindingMethod: 0
     decisionMethod: 1
+    lastMessage: 0
+    decidedGoal:
+      x: 0
+      y: 0
+      z: 0
+    radius: 0
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 4
@@ -721,6 +813,12 @@ MonoBehaviour:
   data:
     pathFindingMethod: 0
     decisionMethod: 1
+    lastMessage: 0
+    decidedGoal:
+      x: 0
+      y: 0
+      z: 0
+    radius: 0
   info: {fileID: 0}
   color: {fileID: 0}
   goalRadius: 5

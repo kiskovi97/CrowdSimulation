@@ -7,10 +7,9 @@ using Unity.Transforms;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
-
-    public struct DecisiionJobChunk : IJobChunk
+    [BurstCompile]
+    public struct DecisionJobChunk : IJobChunk
     {
-
         enum DecidedGoalType
         {
             Group, Condition, None
@@ -23,15 +22,91 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
-            if (!chunk.HasChunkComponent(GroupConditionType))
+            var hasGroup = chunk.Has(GroupConditionType);
+            var hasCondition = chunk.Has(ConditionType);
+
+            if (!hasGroup && !hasCondition)
             {
+                var pathFindings = chunk.GetNativeArray(PathFindingType);
+                for (var i = 0; i < chunk.Count; i++)
+                {
+                    var pathfinding = pathFindings[i];
+                    pathfinding.lastMessage = DebugMessage.NothingFound;
+                    pathFindings[i] = pathfinding;
+                }
                 return;
             }
 
-            if (!chunk.HasChunkComponent(ConditionType))
+            if (!hasCondition)
             {
+                HasOnlyGroupCondition(chunk);
                 return;
             }
+
+            if (!hasGroup)
+            {
+                HasOnlyCondition(chunk);
+                return;
+            }
+
+            HasAllChank(chunk);
+        }
+
+        private void HasOnlyGroupCondition(ArchetypeChunk chunk)
+        {
+            var congroupConditions = chunk.GetNativeArray(GroupConditionType);
+            var pathFindings = chunk.GetNativeArray(PathFindingType);
+            var translations = chunk.GetNativeArray(TranslationType);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var groupCondition = congroupConditions[i];
+                var pathfinding = pathFindings[i];
+                var translation = translations[i];
+                pathfinding.lastMessage = DebugMessage.OnlyGroup;
+
+                if (groupCondition.isSet)
+                {
+                    pathfinding.decidedGoal = groupCondition.goal;
+                    pathfinding.radius = groupCondition.goalRadius;
+
+                } else
+                {
+                    SetToStop(ref pathfinding, translation);
+                }
+                pathFindings[i] = pathfinding;
+            }
+        }
+
+        private void HasOnlyCondition(ArchetypeChunk chunk)
+        {
+            var conditions = chunk.GetNativeArray(ConditionType);
+            var pathFindings = chunk.GetNativeArray(PathFindingType);
+            var translations = chunk.GetNativeArray(TranslationType);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var condition = conditions[i];
+                var pathfinding = pathFindings[i];
+                var translation = translations[i];
+                pathfinding.lastMessage = DebugMessage.OnlyCondition;
+
+                if (condition.isSet)
+                {
+                    pathfinding.decidedGoal = condition.goal;
+                    pathfinding.radius = 0;
+                }
+                else
+                {
+                    SetToStop(ref pathfinding, translation);
+                }
+
+                pathFindings[i] = pathfinding;
+            }
+        }
+
+        private void HasAllChank(ArchetypeChunk chunk)
+        {
             var groupConditions = chunk.GetNativeArray(GroupConditionType);
             var conditions = chunk.GetNativeArray(ConditionType);
             var pathFindings = chunk.GetNativeArray(PathFindingType);
@@ -43,6 +118,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 var condition = conditions[i];
                 var pathfinding = pathFindings[i];
                 var translation = translations[i];
+                pathfinding.lastMessage = DebugMessage.All;
 
                 var decidedGoal = DecidedGoal(groupCondition, condition, translation, ref pathfinding);
 
@@ -57,8 +133,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                         pathfinding.radius = groupCondition.goalRadius;
                         break;
                     case DecidedGoalType.None:
-                        pathfinding.decidedGoal = translation.Value;
-                        pathfinding.radius = 1f;
+                        SetToStop(ref pathfinding, translation);
                         break;
                 }
 
@@ -104,36 +179,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
             return DecidedGoalType.None;
         }
-    }
 
-    [BurstCompile]
-    public struct SetGroupForceJob : IJobForEach<GroupCondition, PathFindingData, Translation>
-    {
-        public void Execute([ReadOnly] ref GroupCondition group, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
+        private void SetToStop(ref PathFindingData pathFinding, Translation translation)
         {
-            if (group.isSet)
-            {
-                pathFindingData.decidedGoal = group.goal;
-                pathFindingData.radius = group.goalRadius;
-            } else
-            {
-                pathFindingData.decidedGoal = translation.Value;
-            }
-        }
-    }
-
-    [BurstCompile]
-    public struct SetDesireForceJob : IJobForEach<Condition, PathFindingData, Translation>
-    {
-        public void Execute([ReadOnly] ref Condition condition, ref PathFindingData pathFindingData, [ReadOnly]ref Translation translation)
-        {
-            if (condition.isSet)
-            {
-                pathFindingData.decidedGoal = condition.goal;
-            } else
-            {
-                pathFindingData.decidedGoal = translation.Value;
-            }
+            pathFinding.decidedGoal = translation.Value;
+            pathFinding.radius = 1f;
         }
     }
 }
