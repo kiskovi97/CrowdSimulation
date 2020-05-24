@@ -13,6 +13,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
         public float hurtingTime;
         public float maxLifeLine;
         public float healingSpeed;
+        public float viewAngle;
+        public float viewRadius;
 
         [System.NonSerialized]
         public float3 goal;

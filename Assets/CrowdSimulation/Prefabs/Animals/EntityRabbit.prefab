@@ -72,6 +72,7 @@ MonoBehaviour:
   pathFindingData:
     pathFindingMethod: 1
     decisionMethod: 1
+    lastMessage: 0
     decidedGoal:
       x: 0
       y: 0
@@ -96,6 +97,8 @@ MonoBehaviour:
   hurtingTime: 0
   maxLifeLine: 0
   healingSpeed: 0
+  viewAngle: 150
+  viewRadius: 5
   isSet: 0
 --- !u!114 &2823695101134469478
 MonoBehaviour:

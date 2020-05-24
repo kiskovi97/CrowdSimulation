@@ -356,6 +356,7 @@ MonoBehaviour:
   data:
     pathFindingMethod: 1
     decisionMethod: 2
+    lastMessage: 0
     decidedGoal:
       x: 0
       y: 0

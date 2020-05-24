@@ -214,7 +214,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             //Debug(Map.Values, goalPoints.Length - 3, Color.green);
             //Debug(Map.Values, goalPoints.Length - 2, Color.blue);
-            Debug(Map.Values, goalPoints.Length - 1, Color.black);
+            //Debug(Map.Values, goalPoints.Length - 1, Color.black);
         }
 
         private int colliderCount = 0;

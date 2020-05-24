@@ -33,7 +33,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
             bool found = false;
             EdibleHashMap.MyData foundFood = new HashMapBase<Edible>.MyData();
-            ForeachAround(translation.Value, ref foundFood, ref found);
+            ForeachAround(translation.Value, condition, walker.direction, ref foundFood, ref found);
 
             if (found)
             {
@@ -64,26 +64,28 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
         }
 
-        private void ForeachAround(float3 position, ref EdibleHashMap.MyData foundFood, ref bool found)
+        private void ForeachAround(float3 position, Condition condition, float3 direction, ref EdibleHashMap.MyData foundFood, ref bool found)
         {
             var key = QuadrantVariables.GetPositionHashMapKey(position);
-            Foreach(key, position, ref foundFood, ref found);
+            Foreach(key, position, condition, direction, ref foundFood, ref found);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
-            Foreach(key, position, ref foundFood, ref found);
+            Foreach(key, position, condition, direction, ref foundFood, ref found);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
-            Foreach(key, position, ref foundFood, ref found);
+            Foreach(key, position, condition, direction, ref foundFood, ref found);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
-            Foreach(key, position, ref foundFood, ref found);
+            Foreach(key, position, condition, direction, ref foundFood, ref found);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
-            Foreach(key, position, ref foundFood, ref found);
+            Foreach(key, position, condition, direction, ref foundFood, ref found);
         }
 
-        private void Foreach(int key, float3 me, ref EdibleHashMap.MyData foundFood, ref bool found)
+        private void Foreach(int key, float3 me, Condition condition, float3 direction, ref EdibleHashMap.MyData foundFood, ref bool found)
         {
             if (targetMap.TryGetFirstValue(key, out EdibleHashMap.MyData food, out NativeMultiHashMapIterator<int> iterator))
             {
                 do
                 {
+                    bool inRadius = IsInRadius(me, condition.viewRadius, condition.viewAngle, direction, food.position);
+                    if (!inRadius) continue;
                     if (!found)
                     {
                         foundFood = food;
@@ -101,6 +103,22 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                 } while (targetMap.TryGetNextValue(out food, ref iterator));
             }
+        }
+
+        private bool IsInRadius(float3 currentPosition, float radius, float viewAngle, float3 viewDirection, float3 searchedPosition)
+        {
+            var direction = searchedPosition - currentPosition;
+            var length = math.length(direction);
+            if (length > radius) return false;
+
+            if (math.length(viewDirection) < 0.1f) return true;
+            var normalized = math.normalizesafe(viewDirection);
+            var normalizedSearch = math.normalizesafe(direction);
+
+            var cosView = math.cos(math.radians(viewAngle / 2f));
+            var dot = math.dot(normalized, normalizedSearch);
+
+            return (dot > cosView);
         }
     }
 }

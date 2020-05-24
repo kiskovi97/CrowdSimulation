@@ -95,6 +95,8 @@ MonoBehaviour:
   hurtingTime: 0
   maxLifeLine: 0
   healingSpeed: 0
+  viewAngle: 180
+  viewRadius: 10
   isSet: 0
 --- !u!114 &6905670702339336196
 MonoBehaviour:
