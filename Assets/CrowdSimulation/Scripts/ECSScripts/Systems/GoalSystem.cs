@@ -13,6 +13,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     {
         private EndSimulationEntityCommandBufferSystem endSimulation;
         private EntityQuery decisionGroup;
+        private EntityQuery foodGroup;
 
         protected override void OnCreate()
         {
@@ -23,6 +24,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 All = new ComponentType[] { typeof(PathFindingData), ComponentType.ReadOnly<Translation>() }
             };
             decisionGroup = GetEntityQuery(query);
+            var foodQuery = new EntityQueryDesc
+            {
+                Any = new ComponentType[] { typeof(FoodHierarchie) },
+                All = new ComponentType[] { typeof(Condition), typeof(Walker), ComponentType.ReadOnly<Translation>() }
+            };
+            foodGroup = GetEntityQuery(foodQuery);
             base.OnCreate();
         }
 
@@ -37,10 +44,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var desireJob = new FoodSearchingJob()
             {
                 targetMap = EdibleHashMap.quadrantHashMap,
+                hierarchieMap = FoodHierarchieHashMap.quadrantHashMap,
                 commandBuffer = endSimulation.CreateCommandBuffer().ToConcurrent(),
-                deltaTime = Time.DeltaTime
+                deltaTime = Time.DeltaTime,
+
+                ConditionType = GetArchetypeChunkComponentType<Condition>(false),
+                FoodHieararchieType  = GetArchetypeChunkComponentType<FoodHierarchie>(false),
+                WalkerType = GetArchetypeChunkComponentType<Walker>(false),
+                TranslationType = GetArchetypeChunkComponentType<Translation>(true),
             };
-            var desireHandle = desireJob.Schedule(this);
+            var desireHandle = desireJob.Schedule(foodGroup);
             var groupGoalJob = new GroupGoalJob();
             var groupHandle = groupGoalJob.Schedule(this, desireHandle);
 

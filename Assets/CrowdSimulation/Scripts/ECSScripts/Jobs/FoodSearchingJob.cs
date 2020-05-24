@@ -9,7 +9,7 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct FoodSearchingJob : IJobForEachWithEntity<Translation, Condition, Walker>
+    public struct FoodSearchingJob : IJobChunk
     {
         private static readonly float secondPerHunger = 60f;
         private static readonly float hungerLimit = 1f;
@@ -19,11 +19,96 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         [ReadOnly]
         public NativeMultiHashMap<int, EdibleHashMap.MyData> targetMap;
 
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeMultiHashMap<int, FoodHierarchieHashMap.MyData> hierarchieMap;
+
         public EntityCommandBuffer.Concurrent commandBuffer;
 
         public float deltaTime;
 
-        public void Execute(Entity entity, int index, [ReadOnly] ref Translation translation, ref Condition condition, ref Walker walker)
+        [ReadOnly] public ArchetypeChunkComponentType<Translation> TranslationType;
+        public ArchetypeChunkComponentType<Walker> WalkerType;
+        public ArchetypeChunkComponentType<Condition> ConditionType;
+        public ArchetypeChunkComponentType<FoodHierarchie> FoodHieararchieType;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var walkers = chunk.GetNativeArray(WalkerType);
+            var conditions = chunk.GetNativeArray(ConditionType);
+            var translations = chunk.GetNativeArray(TranslationType);
+
+            if (chunk.Has(FoodHieararchieType))
+            {
+                var hieararchies = chunk.GetNativeArray(FoodHieararchieType);
+                for (var i = 0; i < chunk.Count; i++)
+                {
+                    var walker = walkers[i];
+                    var condition = conditions[i];
+                    var translation = translations[i];
+                    var hierarchie = hieararchies[i];
+
+                    if (hierarchie.hierarchieNumber > 0)
+                    {
+                        Execute(chunkIndex, translation, hierarchie, ref condition, ref walker);
+                    }
+                    else
+                    {
+                        Execute(chunkIndex, translation, ref condition, ref walker);
+                    }
+
+                    walkers[i] = walker;
+                    conditions[i] = condition;
+                }
+            }
+            else
+            {
+                for (var i = 0; i < chunk.Count; i++)
+                {
+                    var walker = walkers[i];
+                    var condition = conditions[i];
+                    var translation = translations[i];
+
+                    Execute(chunkIndex, translation, ref condition, ref walker);
+
+                    walkers[i] = walker;
+                    conditions[i] = condition;
+                }
+            }
+        }
+
+        private void Execute(int index, Translation translation, FoodHierarchie hierarchie, ref Condition condition, ref Walker walker)
+        {
+            if (condition.hunger < hungerLimit)
+            {
+                condition.isSet = false;
+                return;
+            }
+
+            var found = false;
+            var foundPrey = new FoodHierarchieHashMap.MyData();
+            ForeachAround(translation.Value, condition, walker.direction, hierarchie, ref foundPrey, ref found);
+
+            if (found)
+            {
+                var foundFood = new EdibleHashMap.MyData
+                {
+                    position = foundPrey.position,
+                    data = new Edible()
+                    {
+                        nutrition = foundPrey.data.nutrition,
+                    },
+                    entity = foundPrey.entity
+                };
+                FoundFood(translation, foundFood, index, ref walker, ref condition);
+            }
+            else
+            {
+                condition.isSet = false;
+            }
+        }
+
+        private void Execute(int index, Translation translation, ref Condition condition, ref Walker walker)
         {
             if (condition.hunger < hungerLimit)
             {
@@ -38,29 +123,34 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             if (found)
             {
                 var length = math.length(foundFood.position - translation.Value);
-                
+
                 if (length < math.dot(math.normalizesafe(foundFood.position - translation.Value), walker.direction))
                 {
                     walker.direction *= 0.9f;
                 }
 
-                if (length < 0.4f)
-                {
-                    commandBuffer.DestroyEntity(index, foundFood.entity);
-                    condition.hunger -= foundFood.data.nutrition;
-                    if (condition.hunger < 0) condition.hunger = 0;
-                    condition.isSet = false;
-                    return;
-                }
-                else
-                {
-                    condition.goal = foundFood.position;
-                    condition.isSet = true;
-                }
+                FoundFood(translation, foundFood, index, ref walker, ref condition);
             }
             else
             {
                 condition.isSet = false;
+            }
+        }
+
+        private void FoundFood(Translation translation, EdibleHashMap.MyData foundFood, int index, ref Walker walker, ref Condition condition)
+        {
+            if (IsInRadius(translation.Value, condition.eatingRadius, condition.viewAngle, walker.direction, foundFood.position))
+            {
+                commandBuffer.DestroyEntity(index, foundFood.entity);
+                condition.hunger -= foundFood.data.nutrition;
+                if (condition.hunger < 0) condition.hunger = 0;
+                condition.isSet = false;
+                return;
+            }
+            else
+            {
+                condition.goal = foundFood.position;
+                condition.isSet = true;
             }
         }
 
@@ -76,6 +166,20 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             Foreach(key, position, condition, direction, ref foundFood, ref found);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
             Foreach(key, position, condition, direction, ref foundFood, ref found);
+        }
+
+        private void ForeachAround(float3 position, Condition condition, float3 direction, FoodHierarchie hierarchie, ref FoodHierarchieHashMap.MyData foundFood, ref bool found)
+        {
+            var key = QuadrantVariables.GetPositionHashMapKey(position);
+            Foreach(key, position, condition, direction, hierarchie, ref foundFood, ref found);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
+            Foreach(key, position, condition, direction, hierarchie, ref foundFood, ref found);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
+            Foreach(key, position, condition, direction, hierarchie, ref foundFood, ref found);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
+            Foreach(key, position, condition, direction, hierarchie, ref foundFood, ref found);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
+            Foreach(key, position, condition, direction, hierarchie, ref foundFood, ref found);
         }
 
         private void Foreach(int key, float3 me, Condition condition, float3 direction, ref EdibleHashMap.MyData foundFood, ref bool found)
@@ -100,8 +204,35 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                             foundFood = food;
                         }
                     }
-
                 } while (targetMap.TryGetNextValue(out food, ref iterator));
+            }
+        }
+
+        private void Foreach(int key, float3 me, Condition condition, float3 direction, FoodHierarchie hierarchie, ref FoodHierarchieHashMap.MyData foundFood, ref bool found)
+        {
+            if (hierarchieMap.TryGetFirstValue(key, out FoodHierarchieHashMap.MyData food, out NativeMultiHashMapIterator<int> iterator))
+            {
+                do
+                {
+                    if (food.data.hierarchieNumber >= hierarchie.hierarchieNumber) continue;
+                    if (math.length(food.position - me) < 0.1f) continue;
+                    bool inRadius = IsInRadius(me, condition.viewRadius, condition.viewAngle, direction, food.position);
+                    if (!inRadius) continue;
+                    if (!found)
+                    {
+                        foundFood = food;
+                        found = true;
+                    }
+                    else
+                    {
+                        var prev = math.lengthsq(foundFood.position - me);
+                        var next = math.lengthsq(food.position - me);
+                        if (next < prev)
+                        {
+                            foundFood = food;
+                        }
+                    }
+                } while (hierarchieMap.TryGetNextValue(out food, ref iterator));
             }
         }
 

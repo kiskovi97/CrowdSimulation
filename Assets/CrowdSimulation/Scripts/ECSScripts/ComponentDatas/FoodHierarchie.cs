@@ -6,5 +6,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     public struct FoodHierarchie : IComponentData
     {
         public int hierarchieNumber;
+
+        public float nutrition;
     }
 }

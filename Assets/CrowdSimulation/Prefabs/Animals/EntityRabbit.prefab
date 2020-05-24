@@ -92,6 +92,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeLine: 0
   hunger: 2
+  eatingRadius: 0.4
   thirst: 0
   hurting: 0
   hurtingTime: 0
@@ -113,6 +114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hierarchieNumber: 0
+  nutrition: 0
 --- !u!114 &2577643803585070198
 MonoBehaviour:
   m_ObjectHideFlags: 0

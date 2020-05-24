@@ -74,7 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53f9929b1ee559a418388742331ea262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  innerRadius: 0.5
+  innerRadius: 0.2
   outerRadius: 2
 --- !u!114 &3439931779323062130
 MonoBehaviour:
@@ -90,6 +90,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeLine: 0
   hunger: 3
+  eatingRadius: 0.7
   thirst: 0
   hurting: 0
   hurtingTime: 0
@@ -110,7 +111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6be57a894b8a3514f819858e95603990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hierarchieNumber: 0
+  hierarchieNumber: 2
+  nutrition: 0
 --- !u!114 &2002152154697913497
 MonoBehaviour:
   m_ObjectHideFlags: 0
