@@ -26,7 +26,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 return;
             }
 
-            var distance = translation.Value - pathFindingData.decidedGoal;
+            var distance = pathFindingData.decidedGoal - translation.Value;
             if (math.length(distance) < pathFindingData.radius)
             {
                 walker.force = walker.direction * -1;
@@ -35,11 +35,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
             var group = oneLayer * walker.broId;
 
-            var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius, max); 
+            var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius, max);
             // * math.length(walker.direction)
 
             var force = float3.zero;
-            var multiMin = float.MaxValue;
 
             for (int i = 0; i < indexes.Length; i++)
             {
@@ -47,18 +46,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 if (index < 0) continue;
 
                 var density = densityMap[group + index];
-                var currentForce = indexes[i].position - translation.Value;
-                density -= (math.dot(math.normalizesafe(pathFindingData.Force(translation.Value, walker.direction)), 
-                    math.normalizesafe(currentForce)) + 1f) * 0.01f;
-
-                if (multiMin > density)
-                {
-                    multiMin = density;
-                    force = indexes[i].position - translation.Value;
-                }
+                if (density > 0)
+                    force += (translation.Value - indexes[i].position) * (density);
             }
 
-            walker.force = force; // decidedForce.force +
+            walker.force = math.normalizesafe(force) + math.normalizesafe(distance);
         }
     }
 }

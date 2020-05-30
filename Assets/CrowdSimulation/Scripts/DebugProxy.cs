@@ -16,6 +16,8 @@ public class DebugProxy : MonoBehaviour
     private readonly static Queue<Line> lines = new Queue<Line>();
     private readonly static Queue<string> cLines = new Queue<string>();
 
+    public bool QuadrantDebug = false;
+
     public static void Log(string line)
     {
         cLines.Enqueue(line);
@@ -52,11 +54,14 @@ public class DebugProxy : MonoBehaviour
 
     private void Start()
     {
-        var cS = QuadrantVariables.quadrandCellSize;
-        for (int i=-50; i< 50; i++)
+        if (QuadrantDebug)
         {
-            Debug.DrawLine(new Vector3(i * cS, 0, -50 * cS), new Vector3(i * cS, 0, 50 * cS), Color.blue, 1000f, false);
-            Debug.DrawLine(new Vector3(-50 * cS, 0, i * cS), new Vector3(50 * cS, 0, i * cS), Color.blue, 1000f, false);
+            var cS = QuadrantVariables.quadrandCellSize;
+            for (int i = -50; i < 50; i++)
+            {
+                Debug.DrawLine(new Vector3(i * cS, 0, -50 * cS), new Vector3(i * cS, 0, 50 * cS), Color.blue, 1000f, false);
+                Debug.DrawLine(new Vector3(-50 * cS, 0, i * cS), new Vector3(50 * cS, 0, i * cS), Color.blue, 1000f, false);
+            }
         }
     }
 
