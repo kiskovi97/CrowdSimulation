@@ -17,14 +17,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             var b3 = math.isnan(walker.force);
             if (!b3.x && !b3.y && !b3.z)
             {
-                if (math.length(walker.force) == 0f)
-                {
-                    walker.direction -= walker.direction * deltaTime * 4f;
-                }
-                else
-                {
-                    walker.direction += walker.force * deltaTime * 4f;
-                }
+                walker.direction += walker.force * deltaTime * 4f;
             }
 
             var speed = math.length(walker.direction);
