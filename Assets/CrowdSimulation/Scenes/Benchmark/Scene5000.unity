@@ -295,6 +295,7 @@ GameObject:
   - component: {fileID: 1987304907}
   - component: {fileID: 1987304906}
   - component: {fileID: 1987304909}
+  - component: {fileID: 1987304910}
   m_Layer: 0
   m_Name: Plane
   m_TagString: Untagged
@@ -382,6 +383,18 @@ MonoBehaviour:
   obstaclesNumber: 0
   InputMaxHeight: 100
   InputMaxWidth: 100
+--- !u!114 &1987304910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987304905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29f345120c7f5e24b8bda8d8eb800f17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3843779212145150755
 PrefabInstance:
   m_ObjectHideFlags: 0
