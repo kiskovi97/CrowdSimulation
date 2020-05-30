@@ -35,7 +35,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             var shortestPathJob = new ShortestPathReadJob()
             {
-                values = Map.Values
+                values = Map.Values,
+                matrix = ShortestPathSystem.densityMatrix
             };
             var shortestHandle = shortestPathJob.Schedule(this, densityHandle);
             shortestHandle.Complete();

@@ -10,6 +10,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     struct ShortestPathReadJob : IJobForEach<PathFindingData, Walker, Translation>
     {
         public MapValues values;
+        [ReadOnly] public NativeList<float> matrix;
         public void Execute([ReadOnly] ref PathFindingData pathFindingData, ref Walker walker, [ReadOnly] ref Translation translation)
         {
             if (pathFindingData.pathFindingMethod != PathFindingMethod.ShortesPath) return;
@@ -20,7 +21,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 return;
             }
 
-            var minvalue = ShortestPathSystem.GetMinValue(translation.Value, values, pathFindingData.decidedGoal);
+            var minvalue = ShortestPathSystem.GetMinValue(translation.Value, values, pathFindingData.decidedGoal, matrix);
 
             var distance = math.length(minvalue.goalPoint - pathFindingData.decidedGoal);
 
