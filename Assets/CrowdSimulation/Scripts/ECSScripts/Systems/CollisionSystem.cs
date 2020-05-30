@@ -17,6 +17,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             {
                 targetMap = EntitiesHashMap.quadrantHashMap,
                 colliders = CollidersHashMap.quadrantHashMap,
+                deltaTime = Time.DeltaTime
             };
             var collisionHandle = collisionForce.Schedule(this);
             collisionHandle.Complete();
