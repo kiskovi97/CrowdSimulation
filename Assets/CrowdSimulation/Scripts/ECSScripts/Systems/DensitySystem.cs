@@ -163,6 +163,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         {
             if (Map.AllPoints != densityMatrix.Length)
             {
+                densityMatrix.Dispose();
+                collidersDensity.Dispose();
                 densityMatrix = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
                 collidersDensity = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
             }
