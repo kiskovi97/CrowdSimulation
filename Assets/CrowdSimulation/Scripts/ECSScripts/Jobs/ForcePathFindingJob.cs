@@ -41,7 +41,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
             if (bros > 0)
             {
-                walker.force += convinientForce *= 1 / bros;
+                walker.force += convinientForce *= 1f / bros;
             }
         }
 
