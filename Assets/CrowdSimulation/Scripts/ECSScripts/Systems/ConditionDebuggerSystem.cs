@@ -6,7 +6,6 @@ using Unity.Transforms;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
-    [UpdateAfter(typeof(EndFrameLocalToParentSystem))]
     class ConditionDebuggerSystem : ComponentSystem
     {
         protected override void OnUpdate()
