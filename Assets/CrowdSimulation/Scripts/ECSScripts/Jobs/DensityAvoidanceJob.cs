@@ -49,7 +49,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 var density = densityMap[group + index];
                 var currentForce = indexes[i].position - translation.Value;
                 density -= (math.dot(math.normalizesafe(pathFindingData.Force(translation.Value, walker.direction)), 
-                    math.normalizesafe(currentForce)) + 1f) * 0.1f;
+                    math.normalizesafe(currentForce)) + 1f) * 0.01f;
 
                 if (multiMin > density)
                 {

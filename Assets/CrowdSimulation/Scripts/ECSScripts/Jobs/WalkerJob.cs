@@ -30,7 +30,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         {
             var speed = math.length(walker.direction);
 
-            if (speed > 0.1f)
+            if (speed > 0.01f)
             {
                 var toward = quaternion.LookRotationSafe(walker.direction, new float3(0, 1, 0));
                 rotation.Value = math.slerp(rotation.Value, toward, deltaTime * radiantperSecond);

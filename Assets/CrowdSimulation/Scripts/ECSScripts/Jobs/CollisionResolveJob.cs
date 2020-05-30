@@ -68,7 +68,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     {
                         var normal = math.mul(collider.data2.Rotation, hit.SurfaceNormal);
                         normal.y = 0;
-                        correction += math.normalizesafe(normal) * (collision.innerRadius * 2 - hit.Distance + 0.1f);
+                        correction += math.normalizesafe(normal) * (collision.innerRadius * 2 - hit.Distance + 0.01f);
                     }
                 }
             }
@@ -78,7 +78,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         {
             var direction = me.position - other.position;
             var length = math.length(direction);
-            if (length > 0.1f)
+            if (length > 0.01f)
             {
                 var distance = math.max(0f, me.radius + other.data.innerRadius - length);
                 avoidanceForce += distance * math.normalizesafe(direction);

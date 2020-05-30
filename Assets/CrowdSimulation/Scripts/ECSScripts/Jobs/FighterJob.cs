@@ -27,7 +27,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 pathFindingData.radius = fighter.attackRadius * 0.5f;
                 if (math.length(direction) < fighter.attackRadius)
                 {
-                    pathFindingData.decidedGoal = translation.Value + direction * 0.1f;
+                    pathFindingData.decidedGoal = translation.Value + direction * 0.01f;
                     RotateForward(direction, ref walker);
                     fighter.state = FightState.Fight;
                 } else
@@ -48,7 +48,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         {
             var speed = math.length(direction);
 
-            if (speed > 0.1f)
+            if (speed > 0.01f)
             {
                 var toward = quaternion.LookRotationSafe(direction, new float3(0, 1, 0));
                 rotation.Value = toward;

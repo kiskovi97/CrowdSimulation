@@ -30,7 +30,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 return;
             }
 
-            if (math.length(minvalue.offsetVector) < 0.1f)
+            if (math.length(minvalue.offsetVector) < 0.01f)
             {
                 walker.force = -walker.direction;
             } else

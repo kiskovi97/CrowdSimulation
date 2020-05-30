@@ -215,7 +215,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 do
                 {
                     if (food.data.hierarchieNumber >= hierarchie.hierarchieNumber) continue;
-                    if (math.length(food.position - me) < 0.1f) continue;
+                    if (math.length(food.position - me) < 0.01f) continue;
                     bool inRadius = IsInRadius(me, condition.viewRadius, condition.viewAngle, direction, food.position);
                     if (!inRadius) continue;
                     if (!found)
@@ -242,7 +242,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             var length = math.length(direction);
             if (length > radius) return false;
 
-            if (math.length(viewDirection) < 0.1f) return true;
+            if (math.length(viewDirection) < 0.01f) return true;
             var normalized = math.normalizesafe(viewDirection);
             var normalizedSearch = math.normalizesafe(direction);
 
