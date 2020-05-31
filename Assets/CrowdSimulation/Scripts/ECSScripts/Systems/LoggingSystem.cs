@@ -43,43 +43,23 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             Entities.ForEach((ref Walker walker, ref PathFindingData data, ref Translation tr, ref CollisionParameters collision) =>
             {
-                var length = math.length(data.decidedGoal - tr.Value);
                 result[0] += 1f / 3f;
-                var speed = math.length(walker.direction);
-                var direction = math.normalizesafe(walker.direction, math.normalizesafe(data.decidedGoal - tr.Value));
-                var dot = math.dot(direction, walker.force);
-
                 if (data.pathFindingMethod == PathFindingMethod.DensityGrid)
                 {
-                    result[1] += speed;
-                    result[4] += math.max(0f, length - data.radius);
-                    result[7] += collision.collided;
-                    result[10] += collision.nearOther;
-                    result[13] += collision.near;
-                    result[16] += dot;
+                    SetResult(walker, data, tr, collision, result, 1);
                 }
                 if (data.pathFindingMethod == PathFindingMethod.Forces)
                 {
-                    result[2] += speed;
-                    result[5] += math.max(0f, length - data.radius);
-                    result[8] += collision.collided;
-                    result[11] += collision.nearOther;
-                    result[14] += collision.near;
-                    result[17] += dot;
+                    SetResult(walker, data, tr, collision, result, 2);
                 }
                 if (data.pathFindingMethod == PathFindingMethod.No)
                 {
-                    result[3] += speed;
-                    result[6] += math.max(0f, length - data.radius);
-                    result[9] += collision.collided;
-                    result[12] += collision.nearOther;
-                    result[15] += collision.near;
-                    result[18] += dot;
+                    SetResult(walker, data, tr, collision, result, 3);
                 }
             });
             if (result[0] > 0)
             {
-                for (int i=1; i<maxResult; i++)
+                for (int i = 1; i < maxResult; i++)
                 {
                     Avarage[i] += (result[i] / result[0]) / period;
                 }
@@ -94,6 +74,20 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 }
             }
             result.Dispose();
+        }
+
+        static void SetResult(Walker walker, PathFindingData data, Translation tr, CollisionParameters collision, NativeArray<float> result, int index)
+        {
+            var length = math.length(data.decidedGoal - tr.Value);
+            var speed = math.length(walker.direction);
+            var direction = math.normalizesafe(walker.direction, math.normalizesafe(data.decidedGoal - tr.Value));
+            var dot = math.dot(direction, walker.force);
+            result[index] += speed;
+            result[index + 3] += math.max(0f, length - data.radius);
+            result[index + 6] += collision.collided;
+            result[index + 9] += collision.nearOther;
+            result[index + 12] += collision.near;
+            result[index + 15] += dot;
         }
 
         void Clear(NativeArray<float> array)
