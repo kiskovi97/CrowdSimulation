@@ -15,7 +15,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public float maxWidth;
         public float maxHeight;
 
-        public void Execute(ref Rotation rotation, ref Translation transform, [ReadOnly] ref Walker walker)
+        public void Execute(ref Rotation rotation, ref Translation transform, ref Walker walker)
         {
             walker.direction.y = 0;
 
