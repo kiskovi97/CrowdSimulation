@@ -24,18 +24,18 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 return;
             }
 
-            var distance = translation.Value - data.decidedGoal;
-            if (math.length(distance) < data.radius)
-            {
-                walker.force = data.decidedForce;
-                return;
-            }
-
             var avoidanceForce = float3.zero;
             var convinientForce = float3.zero;
             var bros = 0;
             ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
                 ref avoidanceForce, ref convinientForce, ref bros, collisionParameters.outerRadius);
+
+            var distance = translation.Value - data.decidedGoal;
+            if (math.length(distance) < data.radius)
+            {
+                walker.force = data.decidedForce + avoidanceForce * 0.2f;
+                return;
+            }
 
             walker.force = data.decidedForce + avoidanceForce;
 
@@ -70,11 +70,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     var direction = me.position - other.position;
                     var distance = math.length(direction);
 
-                    if (me.broId == other.data2.broId)
+                    if (me.broId == other.data2.broId && distance < 2 * radius)
                     {
                         convinientForce += other.data2.direction;
                         bros++;
-                        distance *= 3f;
+                        distance *= 2f;
                     }
 
                     var distanceNormalized = (radius - distance) / (radius);

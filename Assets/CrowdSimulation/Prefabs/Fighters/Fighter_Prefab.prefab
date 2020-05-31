@@ -167,6 +167,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   innerRadius: 0.5
   outerRadius: 2
+  collided: 0
+  near: 0
+  nearOther: 0
 --- !u!114 &5318790643383939231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -194,11 +197,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lifeLine: 60
   hunger: 0
+  eatingRadius: 0
   thirst: 0
   hurting: 0
   hurtingTime: 10
   maxLifeLine: 60
   healingSpeed: 2
+  viewAngle: 0
+  viewRadius: 0
   isSet: 0
 --- !u!33 &2339528920809516773
 MeshFilter:
@@ -344,13 +350,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa7a09776255c3946a08d77a8b4485bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathFindingMethod: 2
+  avoidMethod: 1
+  pathFindingMethod: 1
   decisionMethod: 1
+  lastMessage: 0
   decidedGoal:
     x: 0
     y: 0
     z: 0
   radius: 0
+  decidedForce:
+    x: 0
+    y: 0
+    z: 0
 --- !u!114 &-5033707049684536771
 MonoBehaviour:
   m_ObjectHideFlags: 0

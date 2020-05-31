@@ -46,11 +46,12 @@ MonoBehaviour:
   entityObject: {fileID: 2002152154697913493, guid: fe38362a22f0293439bd1c993e634954,
     type: 3}
   goalPoint: {fileID: 0}
-  pathFindingMethod: 0
+  CollisionAvoidanceMethod: 0
+  PathFindingMethod: 0
   decisionMethod: 0
   info: {fileID: 0}
   color: {fileID: 2100000, guid: 9f7d26166fcd90044a06f72b86bd8c1f, type: 2}
-  goalRadius: 4
+  goalRadius: 5
   sizeX: 10
   sizeZ: 10
   distance: 1
