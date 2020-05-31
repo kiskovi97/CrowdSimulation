@@ -19,7 +19,7 @@ namespace Assets.CrowdSimulation
 
         private static string[] Types =
         {
-            "velocity", "distance", "collided", "near others", "near all"
+            "velocity", "distance", "collided", "near others", "near all", "rotation"
         };
 
         public static void Log(string line)
