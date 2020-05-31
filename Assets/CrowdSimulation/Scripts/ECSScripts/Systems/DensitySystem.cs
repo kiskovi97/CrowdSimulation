@@ -134,14 +134,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 to[index] += from[index] * 6f;
             }
         }
-
+        private static bool hasDensityPresent = false;
         protected override void OnUpdate()
         {
-            bool hasDensityPresent = false;
-            Entities.ForEach((Entity entity, ref PathFindingData data) =>
+            if (First)
             {
-                if (data.avoidMethod == CollisionAvoidanceMethod.DensityGrid) hasDensityPresent = true;
-            });
+                Entities.ForEach((Entity entity, ref PathFindingData data) =>
+                {
+                    if (!hasDensityPresent && data.avoidMethod == CollisionAvoidanceMethod.DensityGrid) hasDensityPresent = true;
+                });
+            }
             if (!hasDensityPresent) return;
 
             MapChanged();
