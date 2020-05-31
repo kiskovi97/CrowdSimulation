@@ -54,7 +54,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
 
             walker.force = force + data.decidedForce;
-            walker.force += walker.direction * -1 * dens / 4f;
+            if (dens > 3f)
+            {
+                walker.direction *= 3f / dens;
+            }
         }
     }
 }
