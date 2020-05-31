@@ -50,7 +50,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     force += (translation.Value - indexes[i].position) * (density);
             }
 
-            walker.force = force * 0.5f + math.normalizesafe(distance);
+            walker.force = math.normalizesafe(force) + math.normalizesafe(distance);
         }
     }
 }
