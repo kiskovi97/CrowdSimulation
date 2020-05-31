@@ -41,22 +41,35 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             NativeArray<float> result = new NativeArray<float>(maxResult, Allocator.TempJob);
             Clear(result);
 
-            Entities.ForEach((ref Walker walker, ref PathFindingData data, ref Translation tr, ref CollisionParameters collision) =>
-            {
-                result[0] += 1f / 3f;
-                if (data.avoidMethod == CollisionAvoidanceMethod.DensityGrid)
-                {
-                    SetResult(walker, data, tr, collision, result, 1);
-                }
-                if (data.avoidMethod == CollisionAvoidanceMethod.Forces)
-                {
-                    SetResult(walker, data, tr, collision, result, 2);
-                }
-                if (data.avoidMethod == CollisionAvoidanceMethod.No)
-                {
-                    SetResult(walker, data, tr, collision, result, 3);
-                }
-            });
+            Entities.ForEach(
+                (ref Walker walker, ref PathFindingData data, ref Translation tr, ref CollisionParameters collision) =>
+             {
+                 result[0] += 1f / 3f;
+                 int index = 1;
+                 switch (data.avoidMethod)
+                 {
+                     case CollisionAvoidanceMethod.DensityGrid:
+                         index = 1;
+                         break;
+                     case CollisionAvoidanceMethod.Forces:
+                         index = 2;
+                         break;
+                     case CollisionAvoidanceMethod.No:
+                         index = 3;
+                         break;
+                 }
+
+                 var length = math.length(data.decidedGoal - tr.Value);
+                 var speed = math.length(walker.direction);
+                 var direction = math.normalizesafe(walker.direction, math.normalizesafe(data.decidedGoal - tr.Value));
+                 var dot = math.dot(direction, walker.force);
+                 result[index] += speed;
+                 result[index + 3] += math.max(0f, length - data.radius);
+                 result[index + 6] += collision.collided;
+                 result[index + 9] += collision.nearOther;
+                 result[index + 12] += collision.near;
+                 result[index + 15] += dot;
+             });
             if (result[0] > 0)
             {
                 for (int i = 1; i < maxResult; i++)
@@ -74,20 +87,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 }
             }
             result.Dispose();
-        }
-
-        static void SetResult(Walker walker, PathFindingData data, Translation tr, CollisionParameters collision, NativeArray<float> result, int index)
-        {
-            var length = math.length(data.decidedGoal - tr.Value);
-            var speed = math.length(walker.direction);
-            var direction = math.normalizesafe(walker.direction, math.normalizesafe(data.decidedGoal - tr.Value));
-            var dot = math.dot(direction, walker.force);
-            result[index] += speed;
-            result[index + 3] += math.max(0f, length - data.radius);
-            result[index + 6] += collision.collided;
-            result[index + 9] += collision.nearOther;
-            result[index + 12] += collision.near;
-            result[index + 15] += dot;
         }
 
         void Clear(NativeArray<float> array)
