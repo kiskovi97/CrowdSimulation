@@ -69,14 +69,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                     var direction = me.position - other.position;
                     var distance = math.length(direction);
-                    var distanceNormalized = (radius - distance) / (radius);
 
                     if (me.broId == other.data2.broId)
                     {
                         convinientForce += other.data2.direction;
                         bros++;
-                        continue;
+                        distance *= 3f;
                     }
+
+                    var distanceNormalized = (radius - distance) / (radius);
 
                     if (distanceNormalized > 0f && distanceNormalized < 1f)
                     {

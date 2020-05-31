@@ -13,15 +13,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         [ReadOnly] public NativeList<float> matrix;
         public void Execute(ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation)
         {
-            if (pathFindingData.pathFindingMethod != PathFindingMethod.AStar)
-            {
-                pathFindingData.decidedForce = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
-                return;
-            }
-
             if (math.length(pathFindingData.decidedGoal - translation.Value) < pathFindingData.radius)
             {
                 pathFindingData.decidedForce = -walker.direction;
+                return;
+            }
+
+            if (pathFindingData.pathFindingMethod != PathFindingMethod.AStar)
+            {
+                pathFindingData.decidedForce = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
                 return;
             }
 
