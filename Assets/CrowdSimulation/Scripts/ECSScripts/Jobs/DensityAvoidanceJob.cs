@@ -36,9 +36,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             var group = oneLayer * walker.broId;
 
             var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius, max);
-            // * math.length(walker.direction)
-
+            var center = DensitySystem.IndexFromPosition(translation.Value, float3.zero, max);
             var force = float3.zero;
+            var dens = densityMap[center.key];
 
             for (int i = 0; i < indexes.Length; i++)
             {
@@ -47,10 +47,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                 var density = densityMap[group + index];
                 if (density > 0)
-                    force += (translation.Value - indexes[i].position) * (density);
+                {
+                    var direction = (translation.Value - indexes[i].position) / collision.outerRadius;
+                    force += (math.normalizesafe(direction) - direction) * (density);
+                }
             }
 
-            walker.force = force * 0.5f + data.decidedForce;
+            walker.force = force + data.decidedForce;
+            walker.force += walker.direction * -1 * dens / 4f;
         }
     }
 }
