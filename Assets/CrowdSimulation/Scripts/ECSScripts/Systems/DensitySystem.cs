@@ -140,7 +140,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             bool hasDensityPresent = false;
             Entities.ForEach((Entity entity, ref PathFindingData data) =>
             {
-                if (data.pathFindingMethod == PathFindingMethod.DensityGrid) hasDensityPresent = true;
+                if (data.avoidMethod == CollisionAvoidanceMethod.DensityGrid) hasDensityPresent = true;
             });
             if (!hasDensityPresent) return;
 

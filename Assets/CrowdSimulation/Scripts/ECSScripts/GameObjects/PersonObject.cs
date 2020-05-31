@@ -13,7 +13,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         public PathFindingData pathFindingData = new PathFindingData()
         {
             decisionMethod = DecisionMethod.Max,
-            pathFindingMethod = PathFindingMethod.No
+            avoidMethod = CollisionAvoidanceMethod.No
         };
 
 

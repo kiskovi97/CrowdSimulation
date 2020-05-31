@@ -15,11 +15,20 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     {
         protected override void OnUpdate()
         {
+
+            var shortestPathJob = new ShortestPathReadJob()
+            {
+                values = Map.Values,
+                matrix = ShortestPathSystem.densityMatrix
+            };
+            var shortestHandle = shortestPathJob.Schedule(this);
+            shortestHandle.Complete();
+
             var avoidJob = new AvoidEverybody()
             {
                 targetMap = EntitiesHashMap.quadrantHashMap,
             };
-            var avoidHandle = avoidJob.Schedule(this);
+            var avoidHandle = avoidJob.Schedule(this, shortestHandle);
             var pathFindingJob = new ForcePathFindingJob()
             {
                 targetMap = EntitiesHashMap.quadrantHashMap,
@@ -31,15 +40,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 oneLayer = Map.OneLayer,
                 max = Map.Values
             };
-            var densityHandle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
-
-            var shortestPathJob = new ShortestPathReadJob()
-            {
-                values = Map.Values,
-                matrix = ShortestPathSystem.densityMatrix
-            };
-            var shortestHandle = shortestPathJob.Schedule(this, densityHandle);
-            shortestHandle.Complete();
+            var finalHandle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
+            finalHandle.Complete();
         }
     }
 }

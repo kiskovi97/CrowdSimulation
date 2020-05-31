@@ -48,9 +48,9 @@ namespace Assets.CrowdSimulation
             for (int i=0; i< Types.Length; i++)
             {
                 var type = Types[i];
-                builder.Append(PathFindingMethod.DensityGrid + " avarage " + type + ";");
-                builder.Append(PathFindingMethod.Forces + " avarage " + type + ";");
-                builder.Append(PathFindingMethod.No + " avarage " + type + ";");
+                builder.Append(CollisionAvoidanceMethod.DensityGrid + " avarage " + type + ";");
+                builder.Append(CollisionAvoidanceMethod.Forces + " avarage " + type + ";");
+                builder.Append(CollisionAvoidanceMethod.No + " avarage " + type + ";");
             }
 
             sw.WriteLine("Time;"+ builder.ToString());

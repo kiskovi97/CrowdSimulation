@@ -19,7 +19,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public void Execute([ReadOnly]ref PathFindingData data, [ReadOnly]ref CollisionParameters collisionParameters, 
             ref Walker walker, [ReadOnly]ref Translation translation)
         {
-            if (data.pathFindingMethod != PathFindingMethod.No)
+            if (data.avoidMethod != CollisionAvoidanceMethod.No)
             {
                 return;
             }
@@ -27,7 +27,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
                 ref avoidanceForce, collisionParameters.innerRadius * 2);
 
-            walker.force = data.Force(translation.Value, walker.direction) + avoidanceForce;
+            walker.force = data.decidedForce + avoidanceForce;
         }
 
         private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, float radius)

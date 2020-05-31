@@ -44,15 +44,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             Entities.ForEach((ref Walker walker, ref PathFindingData data, ref Translation tr, ref CollisionParameters collision) =>
             {
                 result[0] += 1f / 3f;
-                if (data.pathFindingMethod == PathFindingMethod.DensityGrid)
+                if (data.avoidMethod == CollisionAvoidanceMethod.DensityGrid)
                 {
                     SetResult(walker, data, tr, collision, result, 1);
                 }
-                if (data.pathFindingMethod == PathFindingMethod.Forces)
+                if (data.avoidMethod == CollisionAvoidanceMethod.Forces)
                 {
                     SetResult(walker, data, tr, collision, result, 2);
                 }
-                if (data.pathFindingMethod == PathFindingMethod.No)
+                if (data.avoidMethod == CollisionAvoidanceMethod.No)
                 {
                     SetResult(walker, data, tr, collision, result, 3);
                 }

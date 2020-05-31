@@ -18,18 +18,18 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public int oneLayer;
         public MapValues max;
 
-        public void Execute([ReadOnly] ref PathFindingData pathFindingData, [ReadOnly] ref CollisionParameters collision,
+        public void Execute([ReadOnly] ref PathFindingData data, [ReadOnly] ref CollisionParameters collision,
             ref Walker walker, [ReadOnly] ref Translation translation)
         {
-            if (!(pathFindingData.pathFindingMethod == PathFindingMethod.DensityGrid))
+            if (!(data.avoidMethod == CollisionAvoidanceMethod.DensityGrid))
             {
                 return;
             }
 
-            var distance = pathFindingData.decidedGoal - translation.Value;
-            if (math.length(distance) < pathFindingData.radius)
+            var distance = data.decidedGoal - translation.Value;
+            if (math.length(distance) < data.radius)
             {
-                walker.force = walker.direction * -1;
+                walker.force = data.decidedForce;
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     force += (translation.Value - indexes[i].position) * (density);
             }
 
-            walker.force = force * 0.5f + math.normalizesafe(distance);
+            walker.force = force * 0.5f + data.decidedForce;
         }
     }
 }
