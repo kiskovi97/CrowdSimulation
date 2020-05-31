@@ -18,7 +18,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         private int db = 0;
         private readonly float period = 30;
 
-        private static readonly int maxResult = 12;
+        private static readonly int maxResult = 16;
 
         NativeArray<float> Avarage;
 
@@ -41,7 +41,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             NativeArray<float> result = new NativeArray<float>(maxResult, Allocator.TempJob);
             Clear(result);
 
-            Entities.ForEach((ref Walker walker, ref PathFindingData data, ref Translation tr) =>
+            Entities.ForEach((ref Walker walker, ref PathFindingData data, ref Translation tr, ref CollisionParameters collision) =>
             {
                 var length = math.length(data.decidedGoal - tr.Value);
                 result[0] += 1f;
@@ -49,12 +49,26 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 if (data.pathFindingMethod == PathFindingMethod.DensityGrid)
                 {
                     result[1] += math.length(walker.direction);
-                    result[3] += math.max(0f, length - data.radius);
+                    result[4] += math.max(0f, length - data.radius);
+                    result[7] += collision.collided;
+                    result[10] += collision.nearOther;
+                    result[13] += collision.near;
                 }
                 if (data.pathFindingMethod == PathFindingMethod.Forces)
                 {
                     result[2] += math.length(walker.direction);
-                    result[4] += math.max(0f, length - data.radius);
+                    result[5] += math.max(0f, length - data.radius);
+                    result[8] += collision.collided;
+                    result[11] += collision.nearOther;
+                    result[14] += collision.near;
+                }
+                if (data.pathFindingMethod == PathFindingMethod.No)
+                {
+                    result[3] += math.length(walker.direction);
+                    result[6] += math.max(0f, length - data.radius);
+                    result[9] += collision.collided;
+                    result[12] += collision.nearOther;
+                    result[15] += collision.near;
                 }
             });
             if (result[0] > 0)

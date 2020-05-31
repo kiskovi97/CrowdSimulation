@@ -17,6 +17,11 @@ namespace Assets.CrowdSimulation
         private readonly static Queue<string> cLines = new Queue<string>();
         private static readonly object lockObj = new object();
 
+        private static string[] Types =
+        {
+            "velocity", "distance", "collided", "near others", "near all"
+        };
+
         public static void Log(string line)
         {
             lock (lockObj)
@@ -38,7 +43,17 @@ namespace Assets.CrowdSimulation
             EditorApplication.quitting += OnApplicationExit;
             EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
             //DensityGrid, Forces
-            sw.WriteLine("Time;DensityGrid avarage velocity;Forces avarage velocity;DensityGrid avarage distance;Forces avarage distance");
+
+            StringBuilder builder = new StringBuilder();
+            for (int i=0; i< Types.Length; i++)
+            {
+                var type = Types[i];
+                builder.Append(PathFindingMethod.DensityGrid + " avarage " + type + ";");
+                builder.Append(PathFindingMethod.Forces + " avarage " + type + ";");
+                builder.Append(PathFindingMethod.No + " avarage " + type + ";");
+            }
+
+            sw.WriteLine("Time;"+ builder.ToString());
         }
 
         private void EditorApplication_playModeStateChanged(PlayModeStateChange obj)

@@ -8,5 +8,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     {
         public float innerRadius;
         public float outerRadius;
+        public int collided;
+        public int near;
+        public int nearOther;
     }
 }
