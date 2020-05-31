@@ -35,7 +35,7 @@ public class Map : MonoBehaviour
     private static readonly float outerRadius = 0.6f;
     private static readonly float innerRadius = 0.2f;
 
-    public static int MaxGroup { get; set; } = 15;
+    public static int MaxGroup { get; set; } = 12;
 
     public static int HeightPoints { get => MaxHeight * density * 2; }
     public static int WidthPoints { get => MaxWidth * density * 2; }
