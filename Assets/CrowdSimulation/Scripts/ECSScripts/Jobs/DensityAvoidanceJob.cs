@@ -11,6 +11,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     [BurstCompile]
     public struct DensityAvoidanceJob : IJobForEach<PathFindingData, CollisionParameters, Walker, Translation>
     {
+        private static readonly int Angels = 10;
+
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeArray<float> densityMap;
@@ -29,26 +31,26 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             var distance = data.decidedGoal - translation.Value;
             if (math.length(distance) < data.radius)
             {
-                walker.force = data.decidedForce;
+                walker.force = data.decidedForce * 0.1f;
                 return;
             }
 
             var group = oneLayer * walker.broId;
 
-            var indexes = DensitySystem.IndexesFromPoisition(translation.Value, collision.outerRadius, max);
             var center = DensitySystem.IndexFromPosition(translation.Value, float3.zero, max);
             var force = float3.zero;
             var dens = densityMap[center.key];
 
-            for (int i = 0; i < indexes.Length; i++)
+            for (int i = 0; i < Angels; i++)
             {
-                var index = indexes[i].index;
-                if (index < 0) continue;
+                var vector = GetDirection(walker.direction, i * math.PI * 2f / Angels) * collision.innerRadius;
+                var index = DensitySystem.IndexFromPosition(translation.Value + vector, float3.zero, max);
+                if (index.key < 0) continue;
 
-                var density = densityMap[group + index];
+                var density = densityMap[group + index.key];
                 if (density > 0)
                 {
-                    var direction = (translation.Value - indexes[i].position) / collision.outerRadius;
+                    var direction = -vector / collision.outerRadius;
                     force += (math.normalizesafe(direction) - direction) * (density);
                 }
             }
@@ -58,6 +60,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             {
                 walker.direction *= 3f / dens;
             }
+        }
+
+        private float3 GetDirection(float3 direction, float radians)
+        {
+            var rotation = quaternion.RotateY(radians);
+            return math.rotate(rotation, math.normalizesafe(direction));
         }
     }
 }
