@@ -18,7 +18,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         private int db = 0;
         private readonly float period = 30;
 
-        private static readonly int maxResult = 4;
+        private static readonly int maxResult = 12;
 
         NativeArray<float> Avarage;
 
@@ -39,33 +39,49 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var deltaTime = Time.DeltaTime;
 
             NativeArray<float> result = new NativeArray<float>(maxResult, Allocator.TempJob);
-            result[0] = 0f;
-            result[1] = 0f;
-            result[2] = 0f;
+            Clear(result);
 
             Entities.ForEach((ref Walker walker, ref PathFindingData data, ref Translation tr) =>
             {
                 var length = math.length(data.decidedGoal - tr.Value);
                 result[0] += 1f;
-                result[1] += math.length(walker.direction);
-                result[2] += math.max(0f, length - data.radius);
+
+                if (data.pathFindingMethod == PathFindingMethod.DensityGrid)
+                {
+                    result[1] += math.length(walker.direction);
+                    result[3] += math.max(0f, length - data.radius);
+                }
+                if (data.pathFindingMethod == PathFindingMethod.Forces)
+                {
+                    result[2] += math.length(walker.direction);
+                    result[4] += math.max(0f, length - data.radius);
+                }
             });
             if (result[0] > 0)
             {
-                Avarage[1] += (result[1] / result[0]) / period;
-                Avarage[2] += (result[2] / result[0]) / period;
+                for (int i=1; i<maxResult; i++)
+                {
+                    Avarage[i] += (result[i] / result[0]) / period;
+                }
                 db++;
                 if (db % period == 0)
                 {
-                    Logger.Log(Avarage[1].ToString("N3"));
-                    Logger.Log(Avarage[2].ToString("N3"));
-                    for (int i = 0; i < maxResult; i++)
+                    for (int i = 1; i < maxResult; i++)
                     {
-                        Avarage[i] = 0f;
+                        Logger.Log(Avarage[i].ToString("N3"));
                     }
+                    Clear(Avarage);
                 }
             }
             result.Dispose();
+        }
+
+        void Clear(NativeArray<float> array)
+        {
+            for (int i = 0; i < maxResult; i++)
+            {
+                array[i] = 0f;
+            }
         }
     }
 }

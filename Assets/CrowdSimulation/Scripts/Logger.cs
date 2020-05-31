@@ -13,8 +13,6 @@ namespace Assets.CrowdSimulation
 {
     public class Logger : MonoBehaviour
     {
-        public PathFindingMethod method;
-
         static StreamWriter sw;
         private readonly static Queue<string> cLines = new Queue<string>();
         private static readonly object lockObj = new object();
@@ -30,7 +28,8 @@ namespace Assets.CrowdSimulation
         private void Awake()
         {
             var sceneName = SceneManager.GetActiveScene().name;
-            sw = new StreamWriter(new FileStream("c:/tmp/Log_" + sceneName + "_"  + method + "_" + DateTime.Now.Ticks + ".csv", FileMode.Create));
+            sw = new StreamWriter(new FileStream("c:/tmp/Log_" + sceneName + "_"  + DateTime.Now.Ticks + ".csv", FileMode.Create));
+            Application.targetFrameRate = 100;
         }
 
         private void Start()
@@ -38,6 +37,8 @@ namespace Assets.CrowdSimulation
             sw.AutoFlush = true;
             EditorApplication.quitting += OnApplicationExit;
             EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
+            //DensityGrid, Forces
+            sw.WriteLine("Time;DensityGrid avarage velocity;Forces avarage velocity;DensityGrid avarage distance;Forces avarage distance");
         }
 
         private void EditorApplication_playModeStateChanged(PlayModeStateChange obj)
