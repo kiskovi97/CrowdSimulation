@@ -58,48 +58,47 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             public float distance;
         }
 
-        public struct IndexAndPosition
+        public struct BilinearData
         {
-            public int index;
-            public float3 position;
+            public int Index0;
+            public int Index1;
+            public int Index2;
+            public int Index3;
+            public float percent0;
+            public float percent1;
+            public float percent2;
+            public float percent3;
         }
 
-        public static NativeArray<IndexAndPosition> IndexesFromPoisition(float3 position, float radius, MapValues max)
+        public static BilinearData BilinearInterpolation(float3 position, MapValues max)
         {
-            var width = (int)(radius * Map.density);
-            var array = new NativeArray<IndexAndPosition>(width * width * 4, Allocator.Temp);
+            var indexPosition = ConvertToLocal(position, max);
+            var iMin = math.clamp((int)math.floor(indexPosition.x), 0, max.widthPoints - 1);
+            var iMax = math.clamp((int)math.ceil(indexPosition.x), 0, max.widthPoints - 1);
+            var jMin = math.clamp((int)math.floor(indexPosition.z), 0, max.heightPoints - 1);
+            var jMax = math.clamp((int)math.ceil(indexPosition.z), 0, max.heightPoints - 1);
+            var ipercent = indexPosition.x - iMin;
+            var jpercent = indexPosition.z - jMin;
 
-            int arrayIndex = 0;
-
-            for (int i = -width; i < width && arrayIndex < array.Length; i++)
+            return new BilinearData()
             {
-                for (int j = -width; j < width && arrayIndex < array.Length; j++)
-                {
-                    var Index = IndexFromPosition(position + Up * i + Right * j, position, max);
-                    array[arrayIndex++] = new IndexAndPosition()
-                    {
-                        index = Index.key,
-                        position = position + Up * i + Right * j
-                    };
-                }
-            }
+                Index0 = Index(iMin, jMin, max),
+                Index1 = Index(iMax, jMin, max),
+                Index2 = Index(iMin, jMax, max),
+                Index3 = Index(iMax, jMax, max),
+                percent0 = (1f - ipercent) * (1f - jpercent),
+                percent1 = (ipercent) * (1f - jpercent),
+                percent2 = (1f - ipercent) * (jpercent),
+                percent3 = (ipercent) * (jpercent)
+            };
 
-            return array;
         }
 
         public static KeyDistance IndexFromPosition(float3 realWorldPosition, float3 prev, MapValues max)
         {
             var indexPosition = ConvertToLocal(realWorldPosition, max);
-            var i = (int)math.round(indexPosition.x);
-            var j = (int)math.round(indexPosition.z);
-
-            if (i < 0 || j < 0 || i >= max.widthPoints || j >= max.heightPoints)
-            {
-                return new KeyDistance()
-                {
-                    key = -1,
-                };
-            }
+            var i = math.clamp((int)math.round(indexPosition.x), 0, max.widthPoints - 1);
+            var j = math.clamp((int)math.round(indexPosition.z), 0, max.heightPoints - 1);
             return new KeyDistance()
             {
                 key = Index(i, j, max),

@@ -31,8 +31,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             var distance = data.decidedGoal - translation.Value;
             if (math.length(distance) < data.radius)
             {
-                walker.force = data.decidedForce * 0.1f;
-                return;
+                data.decidedForce *= 0.1f;
             }
 
             var group = oneLayer * walker.broId;
@@ -44,21 +43,37 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             for (int i = 0; i < Angels; i++)
             {
                 var vector = GetDirection(walker.direction, i * math.PI * 2f / Angels) * collision.innerRadius;
-                var index = DensitySystem.IndexFromPosition(translation.Value + vector, float3.zero, max);
-                if (index.key < 0) continue;
 
-                var density = densityMap[group + index.key];
+
+                var index = DensitySystem.BilinearInterpolation(translation.Value + vector, max);
+                
+                var density0 = densityMap[group + index.Index0] * index.percent0;
+                var density1 = densityMap[group + index.Index1] * index.percent1;
+                var density2 = densityMap[group + index.Index2] * index.percent2;
+                var density3 = densityMap[group + index.Index3] * index.percent3;
+                var density = density0 + density1 + density2 + density3;
+
+                density0 = densityMap[index.Index0] * index.percent0;
+                density1 = densityMap[index.Index1] * index.percent1;
+                density2 = densityMap[index.Index2] * index.percent2;
+                density3 = densityMap[index.Index3] * index.percent3;
+                var densityOwn = density0 + density1 + density2 + density3;
                 if (density > 0)
                 {
                     var direction = -vector / collision.outerRadius;
                     force += (math.normalizesafe(direction) - direction) * (density);
+                }
+                if (densityOwn > 2)
+                {
+                    var direction = -vector / collision.outerRadius;
+                    force += (math.normalizesafe(direction) - direction) * (density / 2f);
                 }
             }
 
             walker.force = force + data.decidedForce;
             if (dens > 3f)
             {
-                walker.direction *= 3f / dens;
+               // walker.direction *= 3f / dens;
             }
         }
 
