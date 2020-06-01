@@ -31,22 +31,18 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             var distance = data.decidedGoal - translation.Value;
             if (math.length(distance) < data.radius)
             {
-                data.decidedForce *= 0.1f;
+                data.decidedForce *= 0.5f;
             }
 
             var group = oneLayer * walker.broId;
 
-            var center = DensitySystem.IndexFromPosition(translation.Value, float3.zero, max);
             var force = float3.zero;
-            var dens = densityMap[center.key];
 
             for (int i = 0; i < Angels; i++)
             {
                 var vector = GetDirection(walker.direction, i * math.PI * 2f / Angels) * collision.innerRadius;
-
-
                 var index = DensitySystem.BilinearInterpolation(translation.Value + vector, max);
-                
+
                 var density0 = densityMap[group + index.Index0] * index.percent0;
                 var density1 = densityMap[group + index.Index1] * index.percent1;
                 var density2 = densityMap[group + index.Index2] * index.percent2;
@@ -63,18 +59,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     var direction = -vector / collision.outerRadius;
                     force += (math.normalizesafe(direction) - direction) * (density);
                 }
-                if (densityOwn > 2)
+                if (densityOwn > 3)
                 {
                     var direction = -vector / collision.outerRadius;
-                    force += (math.normalizesafe(direction) - direction) * (density / 2f);
+                    force += (math.normalizesafe(direction) - direction) * (densityOwn - 3f);
                 }
             }
 
             walker.force = force + data.decidedForce;
-            if (dens > 3f)
-            {
-               // walker.direction *= 3f / dens;
-            }
         }
 
         private float3 GetDirection(float3 direction, float radians)
