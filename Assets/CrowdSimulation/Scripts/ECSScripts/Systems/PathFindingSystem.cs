@@ -11,6 +11,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     [UpdateAfter(typeof(EntitiesHashMap))]
     [UpdateAfter(typeof(FighterSystem))]
     [UpdateAfter(typeof(ShortestPathSystem))]
+    [UpdateAfter(typeof(ProbabilitySystem))]
     public class PathFindingSystem : ComponentSystem
     {
         private static int iteration = 0;
@@ -54,7 +55,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 iteration = iteration,
             };
             var futureHandle = futureVoidanceJob.Schedule(this, finalHandle);
-            futureHandle.Complete();
+            var probabilityJob = new ProbabilityAvoidJob()
+            {
+                densityMap = DensitySystem.densityMatrix,
+                max = Map.Values
+            };
+            var probabilityHandle = probabilityJob.Schedule(this, futureHandle);
+            probabilityHandle.Complete();
         }
     }
 }

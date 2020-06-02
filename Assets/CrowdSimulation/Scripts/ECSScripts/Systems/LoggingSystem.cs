@@ -17,9 +17,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     {
         private int db = 0;
         private readonly float period = 30;
-        private readonly int maxIndex = 4;
+        private static readonly int maxIndex = 5;
 
-        private static readonly int maxResult = 25;
+        private static readonly int maxResult = maxIndex * 6 + 1;
 
         NativeArray<float> Avarage;
 
@@ -58,8 +58,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                      case CollisionAvoidanceMethod.FutureAvoidance:
                          index = 3;
                          break;
-                     case CollisionAvoidanceMethod.No:
+                     case CollisionAvoidanceMethod.Probability:
                          index = 4;
+                         break;
+                     case CollisionAvoidanceMethod.No:
+                         index = 5;
                          break;
                  }
 
