@@ -28,7 +28,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 for (int j = 0; j < heightPoints - 1; j++)
                     for (int i = 0; i < widthPoints - 1; i++)
                     {
-                        var point = DensitySystem.ConvertToWorld(new float3(i, 0, j), max);
+                        var point = QuadrantVariables.ConvertToWorld(new float3(i, 0, j), max);
                         var localPos = point - localToWorld.Position;
                         localPos = math.mul(math.inverse(localToWorld.Rotation), localPos);
                         if (aabb.Min.x - distance > localPos.x) continue;
@@ -44,7 +44,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                         }, out DistanceHit hit))
                         {
                             if (distance - hit.Distance > 0f)
-                                densityMatrix[group * oneLayer + DensitySystem.Index(i, j, max)] += math.max(0f, distance - hit.Distance);
+                                densityMatrix[group * oneLayer + QuadrantVariables.Index(i, j, max)] += math.max(0f, distance - hit.Distance);
                         }
                     }
         }

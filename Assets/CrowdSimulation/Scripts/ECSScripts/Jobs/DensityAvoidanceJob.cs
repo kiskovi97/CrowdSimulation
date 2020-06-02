@@ -41,7 +41,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             for (int i = 0; i < Angels; i++)
             {
                 var vector = GetDirection(walker.direction, i * math.PI * 2f / Angels) * collision.innerRadius;
-                var index = DensitySystem.BilinearInterpolation(translation.Value + vector, max);
+                var index = QuadrantVariables.BilinearInterpolation(translation.Value + vector, max);
 
                 var density0 = densityMap[group + index.Index0] * index.percent0;
                 var density1 = densityMap[group + index.Index1] * index.percent1;

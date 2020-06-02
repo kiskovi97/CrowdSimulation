@@ -42,75 +42,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             base.OnDestroy();
         }
 
-        private static float3 ConvertToLocal(float3 realWorldPosition, MapValues max)
-        {
-            return (realWorldPosition - max.offset + new float3(max.maxWidth, 0, max.maxHeight)) * Map.density;
-        }
-
-        public static float3 ConvertToWorld(float3 position, MapValues max)
-        {
-            return position * (1f / Map.density) - new float3(max.maxWidth, 0, max.maxHeight) + max.offset;
-        }
-
-        public struct KeyDistance
-        {
-            public int key;
-            public float distance;
-        }
-
-        public struct BilinearData
-        {
-            public int Index0;
-            public int Index1;
-            public int Index2;
-            public int Index3;
-            public float percent0;
-            public float percent1;
-            public float percent2;
-            public float percent3;
-        }
-
-        public static BilinearData BilinearInterpolation(float3 position, MapValues max)
-        {
-            var indexPosition = ConvertToLocal(position, max);
-            var iMin = math.clamp((int)math.floor(indexPosition.x), 0, max.widthPoints - 1);
-            var iMax = math.clamp((int)math.ceil(indexPosition.x), 0, max.widthPoints - 1);
-            var jMin = math.clamp((int)math.floor(indexPosition.z), 0, max.heightPoints - 1);
-            var jMax = math.clamp((int)math.ceil(indexPosition.z), 0, max.heightPoints - 1);
-            var ipercent = indexPosition.x - iMin;
-            var jpercent = indexPosition.z - jMin;
-
-            return new BilinearData()
-            {
-                Index0 = Index(iMin, jMin, max),
-                Index1 = Index(iMax, jMin, max),
-                Index2 = Index(iMin, jMax, max),
-                Index3 = Index(iMax, jMax, max),
-                percent0 = (1f - ipercent) * (1f - jpercent),
-                percent1 = (ipercent) * (1f - jpercent),
-                percent2 = (1f - ipercent) * (jpercent),
-                percent3 = (ipercent) * (jpercent)
-            };
-
-        }
-
-        public static KeyDistance IndexFromPosition(float3 realWorldPosition, float3 prev, MapValues max)
-        {
-            var indexPosition = ConvertToLocal(realWorldPosition, max);
-            var i = math.clamp((int)math.round(indexPosition.x), 0, max.widthPoints - 1);
-            var j = math.clamp((int)math.round(indexPosition.z), 0, max.heightPoints - 1);
-            return new KeyDistance()
-            {
-                key = Index(i, j, max),
-                distance = math.length(ConvertToLocal(prev, max) - math.round(indexPosition)),
-            };
-        }
-
-        public static int Index(int i, int j, MapValues max)
-        {
-            return (max.heightPoints * i) + j;
-        }
-
         [BurstCompile]
         struct ClearJob : IJobParallelFor
         {
@@ -198,12 +129,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             for (int j = 1; j < Map.HeightPoints - 1; j++)
                 for (int i = 1; i < Map.WidthPoints - 1; i++)
                 {
-                    float right = densityMatrix[Map.OneLayer * group + Index(i + 1, j, Map.Values)];
-                    float left = densityMatrix[Map.OneLayer * group + Index(i - 1, j, Map.Values)];
-                    float up = densityMatrix[Map.OneLayer * group + Index(i, j + 1, Map.Values)];
-                    float down = densityMatrix[Map.OneLayer * group + Index(i, j - 1, Map.Values)];
+                    float right = densityMatrix[Map.OneLayer * group + QuadrantVariables.Index(i + 1, j, Map.Values)];
+                    float left = densityMatrix[Map.OneLayer * group + QuadrantVariables.Index(i - 1, j, Map.Values)];
+                    float up = densityMatrix[Map.OneLayer * group + QuadrantVariables.Index(i, j + 1, Map.Values)];
+                    float down = densityMatrix[Map.OneLayer * group + QuadrantVariables.Index(i, j - 1, Map.Values)];
 
-                    var point = ConvertToWorld(new float3(i, 0, j), Map.Values);
+                    var point = QuadrantVariables.ConvertToWorld(new float3(i, 0, j), Map.Values);
                     if (right < left && right < up && right < down)
                     {
                         DebugProxy.DrawLine(point, point + new float3(0.2f, 0, 0), Color.red);

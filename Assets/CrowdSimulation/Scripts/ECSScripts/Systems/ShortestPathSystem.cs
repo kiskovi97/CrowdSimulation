@@ -77,7 +77,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         public static MinValue GetMinValue(float3 position, MapValues values, float3 goal, NativeList<float> matrix)
         {
-            var index = DensitySystem.IndexFromPosition(position, position, values);
+            var index = QuadrantVariables.IndexFromPosition(position, position, values);
             if (goalPoints.Length <= 0)
             {
                 return new MinValue()
@@ -260,7 +260,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             while (LastGoalPointCount < goalPoints.Length)
             {
-                var index = DensitySystem.IndexFromPosition(goalPoints[LastGoalPointCount], float3.zero, Map.Values);
+                var index = QuadrantVariables.IndexFromPosition(goalPoints[LastGoalPointCount], float3.zero, Map.Values);
                 densityMatrix[index.key + Map.OneLayer * LastGoalPointCount] = 0.5f;
                 tempMatrix[index.key + Map.OneLayer * LastGoalPointCount] = 0.5f;
                 LastGoalPointCount++;
@@ -277,7 +277,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 var small = index % values.LayerSize;
                 var height = small / values.heightPoints;
                 var width = small % values.heightPoints;
-                var point = DensitySystem.ConvertToWorld(new float3(height, 0, width), values);
+                var point = QuadrantVariables.ConvertToWorld(new float3(height, 0, width), values);
                 if (densityMatrix[index] > 0f)
                 {
                     var minValue = GetMinValue(index, Map.Values, groupId, ShortestPathSystem.densityMatrix);
