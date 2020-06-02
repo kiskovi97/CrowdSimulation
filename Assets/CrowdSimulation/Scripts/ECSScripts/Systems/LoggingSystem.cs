@@ -17,8 +17,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     {
         private int db = 0;
         private readonly float period = 30;
+        private readonly int maxIndex = 4;
 
-        private static readonly int maxResult = 22;
+        private static readonly int maxResult = 25;
 
         NativeArray<float> Avarage;
 
@@ -54,8 +55,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                      case CollisionAvoidanceMethod.Forces:
                          index = 2;
                          break;
-                     case CollisionAvoidanceMethod.No:
+                     case CollisionAvoidanceMethod.FutureAvoidance:
                          index = 3;
+                         break;
+                     case CollisionAvoidanceMethod.No:
+                         index = 4;
                          break;
                  }
 
@@ -64,11 +68,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                  var direction = math.normalizesafe(walker.direction, math.normalizesafe(data.decidedGoal - tr.Value));
                  var dot = math.dot(direction, walker.force);
                  result[index] += speed;
-                 result[index + 3] += math.max(0f, length - data.radius);
-                 result[index + 6] += collision.collided;
-                 result[index + 9] += collision.nearOther;
-                 result[index + 12] += collision.near;
-                 result[index + 15] += dot;
+                 result[index + maxIndex] += math.max(0f, length - data.radius);
+                 result[index + maxIndex * 2] += collision.collided;
+                 result[index + maxIndex * 3] += collision.nearOther;
+                 result[index + maxIndex * 4] += collision.near;
+                 result[index + maxIndex * 5] += dot;
              });
             if (result[0] > 0)
             {

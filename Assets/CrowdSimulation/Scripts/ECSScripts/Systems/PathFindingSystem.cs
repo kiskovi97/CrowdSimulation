@@ -13,9 +13,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     [UpdateAfter(typeof(ShortestPathSystem))]
     public class PathFindingSystem : ComponentSystem
     {
+        private static int iteration = 0;
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+        }
+
         protected override void OnUpdate()
         {
-
+            iteration++;
             var shortestPathJob = new ShortestPathReadJob()
             {
                 values = Map.Values,
@@ -41,7 +48,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 max = Map.Values
             };
             var finalHandle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
-            finalHandle.Complete();
+            var futureVoidanceJob = new FutureCollisionAvoidanceJob()
+            {
+                targetMap = EntitiesHashMap.quadrantHashMap,
+                iteration = iteration,
+            };
+            var futureHandle = futureVoidanceJob.Schedule(this, finalHandle);
+            futureHandle.Complete();
         }
     }
 }

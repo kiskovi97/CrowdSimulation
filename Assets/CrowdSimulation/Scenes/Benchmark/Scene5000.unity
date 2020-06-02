@@ -421,55 +421,120 @@ PrefabInstance:
       propertyPath: pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3990560391409817700, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6738819029099597091, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738819029099597091, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6738819029398403048, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6738819029398403048, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6738819029891854756, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738819029891854756, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6738819029987306297, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6738819029987306297, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738819029987306297, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d73fe2c9f3cb7b4091fd71aeb545318, type: 2}
     - target: {fileID: 6738819030025685504, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738819030025685504, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738819030025685504, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: color
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d73fe2c9f3cb7b4091fd71aeb545318, type: 2}
+    - target: {fileID: 6738819030178158313, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6738819030178158313, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
-      propertyPath: pathFindingMethod
-      value: 0
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6738819030345539123, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6738819030345539123, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6738819030598716848, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738819030598716848, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6738819031037807957, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6738819031037807957, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6738819031152065292, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6738819031152065292, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6907762269890167598, guid: 753dbf1aa48e8454bb919a7a1d7ac7ff,
         type: 3}

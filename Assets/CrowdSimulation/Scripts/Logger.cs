@@ -50,6 +50,7 @@ namespace Assets.CrowdSimulation
                 var type = Types[i];
                 builder.Append(CollisionAvoidanceMethod.DensityGrid + " avarage " + type + ";");
                 builder.Append(CollisionAvoidanceMethod.Forces + " avarage " + type + ";");
+                builder.Append(CollisionAvoidanceMethod.FutureAvoidance + " avarage " + type + ";");
                 builder.Append(CollisionAvoidanceMethod.No + " avarage " + type + ";");
             }
 

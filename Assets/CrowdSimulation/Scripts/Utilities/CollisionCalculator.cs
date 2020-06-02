@@ -6,14 +6,22 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
     {
         public struct Circle
         {
-            public float3 position;
+            public float2 position;
+            public float3 Position { get => new float3(position.x, 0, position.y); }
             public float radius;
-            public float3 velocity;
-            public Circle(float3 point, float radius, float3 velocity)
+            public float2 velocity;
+            public Circle(float2 point, float radius, float2 velocity)
             {
                 this.position = point;
                 this.radius = radius;
                 this.velocity = velocity;
+            }
+
+            public Circle(float3 point, float radius, float3 velocity)
+            {
+                this.position = point.xz;
+                this.radius = radius;
+                this.velocity = velocity.xz;
             }
         }
         public static float CalculateCirclesCollisionTime(Circle A, Circle B)
@@ -42,29 +50,28 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
         }
 
 
-        public static float3 CalculateCollisionAvoidance(Circle A, Circle B, float time, float maxTime)
+        public static float2 CalculateCollisionAvoidance(Circle A, Circle B, float time, float maxTime)
         {
             var v = CalculateCollisionVector(A , B, time);
             return CalculateAvoidance(v, A.velocity, time, maxTime);
         }
 
-        public static float3 CalculateCollisionVector(Circle A, Circle B, float time)
+        public static float2 CalculateCollisionVector(Circle A, Circle B, float time)
         {
             var pointA = A.position + time * A.velocity;
             var pointB = B.position + time * B.velocity;
             var vector = (pointB - pointA) * (A.radius / (A.radius + B.radius));
-
             return vector;
         }
 
-        public static float3 CalculateAvoidance(float3 vector, float3 velocity, float time, float maxTime)
+        public static float2 CalculateAvoidance(float2 vector, float2 velocity, float time, float maxTime)
         {
-            var x = vector.z;
+            var x = vector.y;
             var z = vector.x;
-            var dot = vector.x * -velocity.z + vector.z * velocity.x;
+            var dot = vector.x * -velocity.y + vector.y * velocity.x;
             if (dot > 0) z *= -1;
             else x *= -1;
-            return new float3(x,0,z) * (maxTime - time) / (maxTime);
+            return new float2(x,z) * (maxTime - time) / (maxTime);
         }
     }
 }

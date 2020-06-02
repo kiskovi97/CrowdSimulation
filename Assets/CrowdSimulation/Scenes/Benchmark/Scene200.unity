@@ -421,9 +421,54 @@ PrefabInstance:
       propertyPath: pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1001998078931032056, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1001998078931032056, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: distance
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1001998078931032057, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013078, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013078, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
       propertyPath: pathFindingMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: sizeX
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: distance
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6062406482938405307, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6062406484098030748, guid: 9903fb5a24efeed47910eb776bc5b346,
@@ -485,6 +530,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6062406484209279117, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6062406484209279117, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9903fb5a24efeed47910eb776bc5b346, type: 3}

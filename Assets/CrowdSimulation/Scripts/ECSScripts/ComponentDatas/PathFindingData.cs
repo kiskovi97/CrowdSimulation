@@ -33,6 +33,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     {
         DensityGrid,
         Forces,
+        FutureAvoidance,
         No
     }
 

@@ -3,6 +3,7 @@ using Unity.Jobs;
 using Unity.Collections;
 using Unity.Rendering;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
+using Unity.Mathematics;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
@@ -13,7 +14,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     {
         protected override void OnUpdate()
         {
-            var deltaTime = Time.DeltaTime;
+            var deltaTime = math.min(Time.DeltaTime, 0.05f);
 
             var forceJob = new ForceJob() { deltaTime = deltaTime };
             var forceHandle = forceJob.Schedule(this);
