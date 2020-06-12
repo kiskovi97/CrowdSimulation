@@ -20,11 +20,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         [ReadOnly]
         public NativeMultiHashMap<int, CollidersHashMap.MyData> colliders;
 
-        public void Execute(ref Translation translation, ref Walker walker, [ReadOnly] ref CollisionParameters collision)
+        public float deltaTime;
+
+        public void Execute(ref Translation translation, ref Walker walker, ref CollisionParameters collision)
         {
             float3 correction = float3.zero;
-            ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, radius = collision.innerRadius },
-                ref correction);
+            collision.near = 0;
+            collision.nearOther = 0;
+            collision.collided = 0;
+            ForeachAround(new EntitiesHashMap.MyData() { position = translation.Value, data = collision, data2 = walker },
+                ref correction, ref collision);
 
             ForeachAround2(collision, translation, ref correction);
 
@@ -39,7 +44,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
             if (math.length(correction) > 0.1f)
             {
-                walker.direction += correction * 0.1f;
+                walker.direction += correction * deltaTime;
             }
         }
 
@@ -68,46 +73,59 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                     {
                         var normal = math.mul(collider.data2.Rotation, hit.SurfaceNormal);
                         normal.y = 0;
-                        correction += math.normalizesafe(normal) * (collision.innerRadius * 2 - hit.Distance + 0.1f);
+                        correction += math.normalizesafe(normal) * (collision.innerRadius * 2 - hit.Distance + 0.01f);
                     }
                 }
             }
         }
 
-        private void InForeach(EntitiesHashMap.MyData other, QuadrantData me, ref float3 avoidanceForce)
+        private void InForeach(EntitiesHashMap.MyData other, EntitiesHashMap.MyData me, ref float3 avoidanceForce, ref CollisionParameters collision)
         {
             var direction = me.position - other.position;
             var length = math.length(direction);
-            if (length > 0.1f)
+            if (length > 0.01f)
             {
-                var distance = math.max(0f, me.radius + other.data.innerRadius - length);
-                avoidanceForce += distance * math.normalizesafe(direction);
+                var distance = math.max(0f, me.data.innerRadius + other.data.innerRadius - length);
+                var distanceOuter = math.max(0f, me.data.innerRadius + other.data.outerRadius - length);
+                if (distance > 0f)
+                {
+                    avoidanceForce += distance * math.normalizesafe(direction);
+                    collision.collided++;
+                }
+                if (distanceOuter > 0f)
+                {
+                    collision.near++;
+                    if (me.data2.broId != other.data2.broId)
+                    {
+                        collision.nearOther++;
+                    }
+                }
             }
         }
 
-        private void ForeachAround(QuadrantData me, ref float3 correction)
+        private void ForeachAround(EntitiesHashMap.MyData me, ref float3 correction, ref CollisionParameters collision )
         {
             var position = me.position;
             var key = QuadrantVariables.GetPositionHashMapKey(position);
-            Foreach(key, me, ref correction);
+            Foreach(key, me, ref correction, ref collision);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
-            Foreach(key, me, ref correction);
+            Foreach(key, me, ref correction, ref collision);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
-            Foreach(key, me, ref correction);
+            Foreach(key, me, ref correction, ref collision);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
-            Foreach(key, me, ref correction);
+            Foreach(key, me, ref correction, ref collision);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
-            Foreach(key, me, ref correction);
+            Foreach(key, me, ref correction, ref collision);
 
 
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 1));
-            Foreach(key, me, ref correction);
+            Foreach(key, me, ref correction, ref collision);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 1));
-            Foreach(key, me, ref correction);
+            Foreach(key, me, ref correction, ref collision);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, -1));
-            Foreach(key, me, ref correction);
+            Foreach(key, me, ref correction, ref collision);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, -1));
-            Foreach(key, me, ref correction);
+            Foreach(key, me, ref correction, ref collision);
         }
 
         private void ForeachAround2(CollisionParameters collision, Translation translation, ref float3 correction)
@@ -136,13 +154,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         }
 
 
-        private void Foreach(int key, QuadrantData me, ref float3 avoidanceForce)
+        private void Foreach(int key, EntitiesHashMap.MyData me, ref float3 avoidanceForce, ref CollisionParameters collision)
         {
             if (targetMap.TryGetFirstValue(key, out EntitiesHashMap.MyData other, out NativeMultiHashMapIterator<int> iterator))
             {
                 do
                 {
-                    InForeach(other, me, ref avoidanceForce);
+                    InForeach(other, me, ref avoidanceForce, ref collision);
                 } while (targetMap.TryGetNextValue(out other, ref iterator));
             }
         }

@@ -272,7 +272,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
+  serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
@@ -294,7 +294,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c99429c5b1b31af40a7679505263a46c, type: 2}
+  - {fileID: 670224309865224971, guid: b3ad2d37f2d1bf44ba0c8189272b9239, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -506,7 +506,7 @@ PrefabInstance:
     - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
@@ -542,7 +542,7 @@ PrefabInstance:
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
@@ -751,7 +751,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 33.85841
+  orthographic size: 17.3
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -775,7 +775,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 50.3, z: -9.8}
+  m_LocalPosition: {x: -19.6, y: 50.3, z: -0.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -926,7 +926,7 @@ PrefabInstance:
     - target: {fileID: 3032824728808921739, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
@@ -958,11 +958,11 @@ PrefabInstance:
         type: 3}
       propertyPath: color
       value: 
-      objectReference: {fileID: 2100000, guid: 3864e8118431e7a47b13a67b15d0be7f, type: 2}
+      objectReference: {fileID: 2100000, guid: c99429c5b1b31af40a7679505263a46c, type: 2}
     - target: {fileID: 3032824729261468629, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}
       propertyPath: data.pathFindingMethod
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4803896741180113344, guid: cd4e3a61a1f0b2d4ea0377976d2f5d56,
         type: 3}

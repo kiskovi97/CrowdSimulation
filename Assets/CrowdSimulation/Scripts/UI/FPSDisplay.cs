@@ -18,7 +18,6 @@ namespace Assets.CrowdSimulation.Scripts.UI
 
         private void Awake()
         {
-            //Application.targetFrameRate = 120;
             QualitySettings.vSyncCount = 0;
         }
 

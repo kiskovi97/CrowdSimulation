@@ -15,7 +15,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         public GameObject entityObject;
         public Transform goalPoint;
         [SerializeField]
-        public PathFindingData data;
+        public CollisionAvoidanceMethod CollisionAvoidanceMethod;
+        [SerializeField]
+        public PathFindingMethod PathFindingMethod = PathFindingMethod.No;
+        [SerializeField]
+        public DecisionMethod decisionMethod;
         public TextMeshProUGUI info;
         public Material color;
 
@@ -100,7 +104,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
                     var person = obj.GetComponent<PersonObject>();
                     if (person != null)
                     {
-                        person.ChangeGroup(cond, Id, data);
+                        person.ChangeGroup(cond, Id, new PathFindingData() { avoidMethod = CollisionAvoidanceMethod, decisionMethod = decisionMethod, pathFindingMethod = PathFindingMethod });
                         person.ConnectParent(this);
                     }
                 }
@@ -111,7 +115,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         {
             if (info != null)
             {
-                info.text = "PathFinding: " + data.pathFindingMethod.ToString() + ", Decision: " + data.decisionMethod.ToString();
+                info.text = "PathFinding: " + CollisionAvoidanceMethod.ToString() + ", Decision: " + decisionMethod.ToString();
                 info.color = color.color;
             }
 

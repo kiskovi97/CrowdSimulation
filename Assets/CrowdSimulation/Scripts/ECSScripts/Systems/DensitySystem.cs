@@ -42,76 +42,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             base.OnDestroy();
         }
 
-        private static float3 ConvertToLocal(float3 realWorldPosition, MapValues max)
-        {
-            return (realWorldPosition - max.offset + new float3(max.maxWidth, 0, max.maxHeight)) * Map.density;
-        }
-
-        public static float3 ConvertToWorld(float3 position, MapValues max)
-        {
-            return position * (1f / Map.density) - new float3(max.maxWidth, 0, max.maxHeight) + max.offset;
-        }
-
-        public struct KeyDistance
-        {
-            public int key;
-            public float distance;
-        }
-
-        public struct IndexAndPosition
-        {
-            public int index;
-            public float3 position;
-        }
-
-        public static NativeArray<IndexAndPosition> IndexesFromPoisition(float3 position, float radius, MapValues max)
-        {
-            var width = (int)(radius * Map.density);
-            var array = new NativeArray<IndexAndPosition>(width * width * 4, Allocator.Temp);
-
-            int arrayIndex = 0;
-
-            for (int i = -width; i < width && arrayIndex < array.Length; i++)
-            {
-                for (int j = -width; j < width && arrayIndex < array.Length; j++)
-                {
-                    var Index = IndexFromPosition(position + Up * i + Right * j, position, max);
-                    array[arrayIndex++] = new IndexAndPosition()
-                    {
-                        index = Index.key,
-                        position = position + Up * i + Right * j
-                    };
-                }
-            }
-
-            return array;
-        }
-
-        public static KeyDistance IndexFromPosition(float3 realWorldPosition, float3 prev, MapValues max)
-        {
-            var indexPosition = ConvertToLocal(realWorldPosition, max);
-            var i = (int)math.round(indexPosition.x);
-            var j = (int)math.round(indexPosition.z);
-
-            if (i < 0 || j < 0 || i >= max.widthPoints || j >= max.heightPoints)
-            {
-                return new KeyDistance()
-                {
-                    key = -1,
-                };
-            }
-            return new KeyDistance()
-            {
-                key = Index(i, j, max),
-                distance = math.length(ConvertToLocal(prev, max) - math.round(indexPosition)),
-            };
-        }
-
-        public static int Index(int i, int j, MapValues max)
-        {
-            return (max.heightPoints * i) + j;
-        }
-
         [BurstCompile]
         struct ClearJob : IJobParallelFor
         {
@@ -134,14 +64,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 to[index] += from[index] * 6f;
             }
         }
-
+        private static bool hasDensityPresent = false;
         protected override void OnUpdate()
         {
-            bool hasDensityPresent = false;
-            Entities.ForEach((Entity entity, ref PathFindingData data) =>
+            if (First)
             {
-                if (data.pathFindingMethod == PathFindingMethod.DensityGrid) hasDensityPresent = true;
-            });
+                Entities.ForEach((Entity entity, ref PathFindingData data) =>
+                {
+                    if (!hasDensityPresent && data.avoidMethod == CollisionAvoidanceMethod.DensityGrid) hasDensityPresent = true;
+                });
+            }
             if (!hasDensityPresent) return;
 
             MapChanged();
@@ -163,6 +95,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         {
             if (Map.AllPoints != densityMatrix.Length)
             {
+                densityMatrix.Dispose();
+                collidersDensity.Dispose();
                 densityMatrix = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
                 collidersDensity = new NativeArray<float>(Map.AllPoints, Allocator.Persistent);
             }
@@ -195,12 +129,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             for (int j = 1; j < Map.HeightPoints - 1; j++)
                 for (int i = 1; i < Map.WidthPoints - 1; i++)
                 {
-                    float right = densityMatrix[Map.OneLayer * group + Index(i + 1, j, Map.Values)];
-                    float left = densityMatrix[Map.OneLayer * group + Index(i - 1, j, Map.Values)];
-                    float up = densityMatrix[Map.OneLayer * group + Index(i, j + 1, Map.Values)];
-                    float down = densityMatrix[Map.OneLayer * group + Index(i, j - 1, Map.Values)];
+                    float right = densityMatrix[Map.OneLayer * group + QuadrantVariables.Index(i + 1, j, Map.Values)];
+                    float left = densityMatrix[Map.OneLayer * group + QuadrantVariables.Index(i - 1, j, Map.Values)];
+                    float up = densityMatrix[Map.OneLayer * group + QuadrantVariables.Index(i, j + 1, Map.Values)];
+                    float down = densityMatrix[Map.OneLayer * group + QuadrantVariables.Index(i, j - 1, Map.Values)];
 
-                    var point = ConvertToWorld(new float3(i, 0, j), Map.Values);
+                    var point = QuadrantVariables.ConvertToWorld(new float3(i, 0, j), Map.Values);
                     if (right < left && right < up && right < down)
                     {
                         DebugProxy.DrawLine(point, point + new float3(0.2f, 0, 0), Color.red);

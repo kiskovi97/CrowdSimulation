@@ -65,6 +65,15 @@ MonoBehaviour:
     y: 0
     z: 1
   maxSpeed: 1.5
+  pathFindingData:
+    pathFindingMethod: 3
+    decisionMethod: 0
+    lastMessage: 0
+    decidedGoal:
+      x: 0
+      y: 0
+      z: 0
+    radius: 0
 --- !u!114 &7485702805668398495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,10 +107,9 @@ MonoBehaviour:
   hurtingTime: 0
   maxLifeLine: 0
   healingSpeed: 0
-  goal:
-    x: 0
-    y: 0
-    z: 0
+  viewAngle: 180
+  viewRadius: 5
+  isSet: 0
 --- !u!114 &6905670702339336196
 MonoBehaviour:
   m_ObjectHideFlags: 0

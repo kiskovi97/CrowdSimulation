@@ -15,7 +15,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public float maxWidth;
         public float maxHeight;
 
-        public void Execute(ref Rotation rotation, ref Translation transform, [ReadOnly] ref Walker walker)
+        public void Execute(ref Rotation rotation, ref Translation transform, ref Walker walker)
         {
             walker.direction.y = 0;
 
@@ -30,7 +30,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         {
             var speed = math.length(walker.direction);
 
-            if (speed > 0.1f)
+            if (speed > 0.01f)
             {
                 var toward = quaternion.LookRotationSafe(walker.direction, new float3(0, 1, 0));
                 rotation.Value = math.slerp(rotation.Value, toward, deltaTime * radiantperSecond);

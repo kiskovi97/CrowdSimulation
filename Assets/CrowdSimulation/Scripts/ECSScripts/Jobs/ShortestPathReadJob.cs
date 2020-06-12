@@ -10,32 +10,37 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     struct ShortestPathReadJob : IJobForEach<PathFindingData, Walker, Translation>
     {
         public MapValues values;
-        public void Execute([ReadOnly] ref PathFindingData pathFindingData, ref Walker walker, [ReadOnly] ref Translation translation)
+        [ReadOnly] public NativeList<float> matrix;
+        public void Execute(ref PathFindingData pathFindingData, [ReadOnly] ref Walker walker, [ReadOnly] ref Translation translation)
         {
-            if (pathFindingData.pathFindingMethod != PathFindingMethod.ShortesPath) return;
-
             if (math.length(pathFindingData.decidedGoal - translation.Value) < pathFindingData.radius)
             {
-                walker.force = -walker.direction;
+                pathFindingData.decidedForce = -walker.direction;
                 return;
             }
 
-            var minvalue = ShortestPathSystem.GetMinValue(translation.Value, values, pathFindingData.decidedGoal);
+            if (pathFindingData.pathFindingMethod != PathFindingMethod.AStar)
+            {
+                pathFindingData.decidedForce = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
+                return;
+            }
+
+            var minvalue = ShortestPathSystem.GetMinValue(translation.Value, values, pathFindingData.decidedGoal, matrix);
 
             var distance = math.length(minvalue.goalPoint - pathFindingData.decidedGoal);
 
             if (math.length(pathFindingData.decidedGoal - translation.Value) < pathFindingData.radius + distance)
             {
-                walker.force = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
+                pathFindingData.decidedForce = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
                 return;
             }
 
-            if (math.length(minvalue.offsetVector) < 0.1f)
+            if (math.length(minvalue.offsetVector) < 0.01f)
             {
-                walker.force = -walker.direction;
+                pathFindingData.decidedForce = -walker.direction;
             } else
             {
-                walker.force = math.normalizesafe(minvalue.offsetVector);
+                pathFindingData.decidedForce = math.normalizesafe(minvalue.offsetVector);
             }
 
         }

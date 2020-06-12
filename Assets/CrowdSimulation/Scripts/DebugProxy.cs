@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class DebugProxy : MonoBehaviour
 {
     private readonly static Queue<Line> lines = new Queue<Line>();
     private readonly static Queue<string> cLines = new Queue<string>();
+
+    public bool QuadrantDebug = false;
 
     public static void Log(string line)
     {
@@ -47,6 +50,19 @@ public class DebugProxy : MonoBehaviour
             X0 = (x + y) * 0.5f - left * 0.3f,
             X1 = y,
         });
+    }
+
+    private void Start()
+    {
+        if (QuadrantDebug)
+        {
+            var cS = QuadrantVariables.quadrandCellSize;
+            for (int i = -50; i < 50; i++)
+            {
+                Debug.DrawLine(new Vector3(i * cS, 0, -50 * cS), new Vector3(i * cS, 0, 50 * cS), Color.blue, 1000f, false);
+                Debug.DrawLine(new Vector3(-50 * cS, 0, i * cS), new Vector3(50 * cS, 0, i * cS), Color.blue, 1000f, false);
+            }
+        }
     }
 
     // Update is called once per frame

@@ -3,25 +3,25 @@ using Unity.Jobs;
 using Unity.Collections;
 using Unity.Rendering;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
+using Unity.Mathematics;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
     [AlwaysSynchronizeSystem]
     [UpdateAfter(typeof(PathFindingSystem))]
     [UpdateAfter(typeof(CollisionSystem))]
-    public class WalkingSystem : JobComponentSystem
+    public class WalkingSystem : ComponentSystem
     {
-        protected override JobHandle OnUpdate(JobHandle inputDeps)
+        protected override void OnUpdate()
         {
-            var deltaTime = Time.DeltaTime;
+            var deltaTime = math.min(Time.DeltaTime, 0.05f);
 
             var forceJob = new ForceJob() { deltaTime = deltaTime };
-            var forceHandle = forceJob.Schedule(this, inputDeps);
+            var forceHandle = forceJob.Schedule(this);
 
-            var walker = new WalkerJob() { deltaTime = deltaTime, maxWidth = Map.MaxWidth, maxHeight = Map.MaxHeight };
-            var walkerHandle = walker.Schedule(this, forceHandle);
-
-            return walkerHandle;
+            var walkerJob = new WalkerJob() { deltaTime = deltaTime, maxWidth = Map.MaxWidth, maxHeight = Map.MaxHeight };
+            var walkerHandle = walkerJob.Schedule(this, forceHandle);
+            walkerHandle.Complete();
         }
     }
 }

@@ -6,7 +6,6 @@ using Unity.Transforms;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
-    [UpdateAfter(typeof(EndFrameLocalToParentSystem))]
     class ConditionDebuggerSystem : ComponentSystem
     {
         protected override void OnUpdate()
@@ -17,15 +16,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 var condition = EntityManager.GetComponentData<Condition>(parent.Value);
                 if (debugger.type == ConditionType.Hunger)
                 {
-                    if (condition.hunger > 1f)
-                        compositeScale.Value.y = condition.hunger * 0.01f;
+                    if (condition.hunger > 0.01f)
+                        compositeScale.Value.y = condition.hunger * 0.01f * debugger.sizeMultiplyer;
                     else
                         compositeScale.Value.y = 0f;
                 }
                 if (debugger.type == ConditionType.LifeLine)
                 {
                     var rendererMesh = EntityManager.GetSharedComponentData<RenderMesh>(entity);
-                    compositeScale.Value.y = condition.lifeLine * 0.01f;
+                    compositeScale.Value.y = condition.lifeLine * 0.01f * debugger.sizeMultiplyer;
                     var selectedMaterial = Materails.Instance.rest;
                     if (condition.lifeLine < condition.maxLifeLine)
                     {

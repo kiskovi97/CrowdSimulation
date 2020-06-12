@@ -9,6 +9,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     public struct ConditionDebugger : IComponentData
     {
         public ConditionType type;
+        public float sizeMultiplyer;
     }
 
     public enum ConditionType

@@ -75,9 +75,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             }
         }
 
-        public static MinValue GetMinValue(float3 position, MapValues values, float3 goal)
+        public static MinValue GetMinValue(float3 position, MapValues values, float3 goal, NativeList<float> matrix)
         {
-            var index = DensitySystem.IndexFromPosition(position, position, values);
+            var index = QuadrantVariables.IndexFromPosition(position, position, values);
             if (goalPoints.Length <= 0)
             {
                 return new MinValue()
@@ -99,35 +99,37 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     goalPoint = goal,
                 };
             }
-            return GetMinValue(index.key + min * values.LayerSize, values, min);
+            return GetMinValue(index.key + min * values.LayerSize, values, min, matrix);
         }
 
-        private static MinValue GetMinValue(int index, MapValues value, int goalIndex)
+        private static MinValue GetMinValue(int index, MapValues value, int goalIndex, NativeList<float> matrix)
         {
+            var density = matrix[index];
+
             MinValue tmp = new MinValue()
             {
                 index = 0,
-                value = densityMatrix[index],
+                value = density,
                 offsetVector = float3.zero,
                 goalPoint = goalPoints[goalIndex],
             };
-            SetMinValue(ref tmp, index - 1, value, new float3(0, 0, -1) / (float)value.density);
-            SetMinValue(ref tmp, index + 1, value, new float3(0, 0, 1) / (float)value.density);
-            SetMinValue(ref tmp, index - value.heightPoints, value, new float3(-1, 0, 0) / (float)value.density);
-            SetMinValue(ref tmp, index + value.heightPoints, value, new float3(1, 0, 0) / (float)value.density);
+            SetMinValue(ref tmp, index - 1, value, new float3(0, 0, -1) / (float)value.density, matrix);
+            SetMinValue(ref tmp, index + 1, value, new float3(0, 0, 1) / (float)value.density, matrix);
+            SetMinValue(ref tmp, index - value.heightPoints, value, new float3(-1, 0, 0) / (float)value.density, matrix);
+            SetMinValue(ref tmp, index + value.heightPoints, value, new float3(1, 0, 0) / (float)value.density, matrix);
 
-            SetMinValue(ref tmp, index - 1 + value.heightPoints, value, new float3(1, 0, -1) / (float)value.density);
-            SetMinValue(ref tmp, index + 1 + value.heightPoints, value, new float3(1, 0, 1) / (float)value.density);
-            SetMinValue(ref tmp, index - 1 - value.heightPoints, value, new float3(-1, 0, -1) / (float)value.density);
-            SetMinValue(ref tmp, index + 1 - value.heightPoints, value, new float3(-1, 0, 1) / (float)value.density);
+            SetMinValue(ref tmp, index - 1 + value.heightPoints, value, new float3(1, 0, -1) / (float)value.density, matrix);
+            SetMinValue(ref tmp, index + 1 + value.heightPoints, value, new float3(1, 0, 1) / (float)value.density, matrix);
+            SetMinValue(ref tmp, index - 1 - value.heightPoints, value, new float3(-1, 0, -1) / (float)value.density, matrix);
+            SetMinValue(ref tmp, index + 1 - value.heightPoints, value, new float3(-1, 0, 1) / (float)value.density, matrix);
             return tmp;
         }
 
-        private static void SetMinValue(ref MinValue tmp, int index, MapValues value, float3 offsetvector)
+        private static void SetMinValue(ref MinValue tmp, int index, MapValues value, float3 offsetvector, NativeList<float> matrix)
         {
             if (IsIn(index, value))
             {
-                var next = densityMatrix[index];
+                var next = matrix[index];
                 if (next >= 0f && next < tmp.value)
                 {
                     tmp.value = next;
@@ -214,7 +216,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             //Debug(Map.Values, goalPoints.Length - 3, Color.green);
             //Debug(Map.Values, goalPoints.Length - 2, Color.blue);
-            Debug(Map.Values, goalPoints.Length - 1, Color.black);
+            //Debug(Map.Values, goalPoints.Length - 1, Color.black);
         }
 
         private int colliderCount = 0;
@@ -258,7 +260,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             while (LastGoalPointCount < goalPoints.Length)
             {
-                var index = DensitySystem.IndexFromPosition(goalPoints[LastGoalPointCount], float3.zero, Map.Values);
+                var index = QuadrantVariables.IndexFromPosition(goalPoints[LastGoalPointCount], float3.zero, Map.Values);
                 densityMatrix[index.key + Map.OneLayer * LastGoalPointCount] = 0.5f;
                 tempMatrix[index.key + Map.OneLayer * LastGoalPointCount] = 0.5f;
                 LastGoalPointCount++;
@@ -267,16 +269,18 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         private void Debug(MapValues values, int groupId, Color color)
         {
+            DebugProxy.Log("Debug Draw Before");
             if (goalPoints.Length == 0 || groupId < 0) return;
+            DebugProxy.Log("Debug Draw");
             for (int index = values.LayerSize * groupId; index < values.LayerSize * (groupId + 1); index += 7)
             {
                 var small = index % values.LayerSize;
                 var height = small / values.heightPoints;
                 var width = small % values.heightPoints;
-                var point = DensitySystem.ConvertToWorld(new float3(height, 0, width), values);
+                var point = QuadrantVariables.ConvertToWorld(new float3(height, 0, width), values);
                 if (densityMatrix[index] > 0f)
                 {
-                    var minValue = GetMinValue(index, Map.Values, groupId);
+                    var minValue = GetMinValue(index, Map.Values, groupId, ShortestPathSystem.densityMatrix);
                     DebugProxy.DrawLine(point, point + minValue.offsetVector, color);
                 }
             }

@@ -33,7 +33,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
         private void Add(float3 position, float3 prev, float maxdistance, int gid)
         {
-            var keyDistance = DensitySystem.IndexFromPosition(position, prev, max);
+            var keyDistance = QuadrantVariables.IndexFromPosition(position, prev, max);
             if (keyDistance.key < 0)
             {
                 return;

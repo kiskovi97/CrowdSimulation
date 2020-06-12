@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: -1980776331931212350}
   - component: {fileID: 7485702805668398495}
   - component: {fileID: 2002152154697913497}
-  - component: {fileID: 1765546287408250412}
   m_Layer: 0
   m_Name: TriangleFull
   m_TagString: Untagged
@@ -98,8 +97,22 @@ MonoBehaviour:
   direction:
     x: 0
     y: 0
-    z: 1
+    z: 0
   maxSpeed: 1.5
+  pathFindingData:
+    avoidMethod: 2
+    pathFindingMethod: 3
+    decisionMethod: 0
+    lastMessage: 0
+    decidedGoal:
+      x: 0
+      y: 0
+      z: 0
+    radius: 0
+    decidedForce:
+      x: 0
+      y: 0
+      z: 0
 --- !u!114 &7485702805668398495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,6 +127,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   innerRadius: 0.5
   outerRadius: 2
+  collided: 0
+  near: 0
+  nearOther: 0
 --- !u!114 &2002152154697913497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,19 +143,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ConversionMode: 0
---- !u!114 &1765546287408250412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002152154697913493}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d4d9e19f3cbe1b498f7f0a3a102a8d4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  force:
-    x: 0
-    y: 0
-    z: 0

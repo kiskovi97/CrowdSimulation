@@ -19,21 +19,29 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public void Execute([ReadOnly]ref PathFindingData data, 
             [ReadOnly]ref CollisionParameters collisionParameters, ref Walker walker, [ReadOnly]ref Translation translation)
         {
-            if (!(data.pathFindingMethod == PathFindingMethod.Forces))
+            if (!(data.avoidMethod == CollisionAvoidanceMethod.Forces))
             {
                 return;
             }
+
             var avoidanceForce = float3.zero;
             var convinientForce = float3.zero;
             var bros = 0;
             ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
                 ref avoidanceForce, ref convinientForce, ref bros, collisionParameters.outerRadius);
 
-            walker.force = data.Force(translation.Value, walker.direction) + avoidanceForce;
+            var distance = translation.Value - data.decidedGoal;
+            if (math.length(distance) < data.radius)
+            {
+                walker.force = data.decidedForce + avoidanceForce * 0.2f;
+                return;
+            }
+
+            walker.force = data.decidedForce + avoidanceForce;
 
             if (bros > 0)
             {
-                walker.force += convinientForce *= 1 / bros;
+                walker.force += convinientForce *= 1f / bros;
             }
         }
 
@@ -61,14 +69,15 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
                     var direction = me.position - other.position;
                     var distance = math.length(direction);
-                    var distanceNormalized = (radius - distance) / (radius);
 
-                    if (me.broId == other.data2.broId)
+                    if (me.broId == other.data2.broId && distance < 2 * radius)
                     {
                         convinientForce += other.data2.direction;
                         bros++;
-                        continue;
+                        distance *= 2f;
                     }
+
+                    var distanceNormalized = (radius - distance) / (radius);
 
                     if (distanceNormalized > 0f && distanceNormalized < 1f)
                     {
