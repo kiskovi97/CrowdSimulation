@@ -39,13 +39,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             }
 
             var force = float3.zero;
-
+            var speed = math.length(walker.direction) + 1f;
             for (int i = 0; i < Angels; i++)
             {
-                var vector = GetDirection(walker.direction, i * math.PI * 2f / Angels) * collision.innerRadius;
+
+                var vector = GetDirection(walker.direction, i * math.PI * 2f / Angels) * collision.innerRadius * speed;
                 vector *= 1.0f;
-                
-                var density = GetDensity(collision.outerRadius, translation.Value, translation.Value + vector, walker.direction, 
+
+                var density = GetDensity(collision.outerRadius, translation.Value, translation.Value + vector, walker.direction,
                     data.avoidMethod == CollisionAvoidanceMethod.FutureAvoidance);
 
                 if (density > 0)
@@ -70,7 +71,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 var density3 = densityMap[index.Index3] * index.percent3;
                 //var ownDens = SetProbabilityJob.Value(radius, position, point, velocity);
                 return (density0 + density1 + density2 + density3);
-            } else
+            }
+            else
             {
                 var density0 = porbabilityMap[index.Index0] * index.percent0;
                 var density1 = porbabilityMap[index.Index1] * index.percent1;
@@ -79,7 +81,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 //var ownDens = SetProbabilityJob.Value(radius, position, point, velocity);
                 return (density0 + density1 + density2 + density3);
             }
-           
+
         }
 
         public static float3 GetDirection(float3 direction, float radians)
