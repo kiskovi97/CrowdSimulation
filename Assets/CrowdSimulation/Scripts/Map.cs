@@ -55,8 +55,8 @@ public class Map : MonoBehaviour
             maxWidth = MaxWidth,
             density = density,
             MaxGroup = MaxGroup,
-            heightPoints = MaxHeight * density * 2,
-            widthPoints = MaxWidth * density * 2,
+            heightPoints = HeightPoints,
+            widthPoints = WidthPoints,
             LayerSize = OneLayer,
             offset = Offset,
         };

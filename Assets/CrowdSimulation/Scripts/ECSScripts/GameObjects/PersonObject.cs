@@ -1,4 +1,5 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -7,6 +8,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 {
     public class PersonObject : MonoBehaviour, IConvertGameObjectToEntity
     {
+        private static bool First = true;
+
         public float3 direction;
         public float maxSpeed;
         private int broId;
@@ -50,6 +53,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 
             if (parent != null)
                 parent.AddEntity(entity);
+
+            if (First && pathFindingData.avoidMethod == CollisionAvoidanceMethod.Probability)
+            {
+                ProbabilitySystem.selected = entity;
+                First = false;
+            }
         }
     }
 }
