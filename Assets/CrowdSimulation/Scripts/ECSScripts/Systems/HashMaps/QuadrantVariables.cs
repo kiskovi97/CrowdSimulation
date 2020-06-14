@@ -23,6 +23,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         {
             public int key;
             public float distance;
+            public float3 roundedPosition;
         }
 
         public struct BilinearData
@@ -35,6 +36,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             public float percent1;
             public float percent2;
             public float percent3;
+            public float3 pos0;
+            public float3 pos1;
+            public float3 pos2;
+            public float3 pos3;
         }
 
         public static BilinearData BilinearInterpolation(float3 position, MapValues max)
@@ -56,7 +61,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 percent0 = (1f - ipercent) * (1f - jpercent),
                 percent1 = (ipercent) * (1f - jpercent),
                 percent2 = (1f - ipercent) * (jpercent),
-                percent3 = (ipercent) * (jpercent)
+                percent3 = (ipercent) * (jpercent),
+                pos0 = ConvertToWorld(new float3(iMin, 0, jMin), max),
+                pos1 = ConvertToWorld(new float3(iMax, 0, jMin), max),
+                pos2 = ConvertToWorld(new float3(iMin, 0, jMax), max),
+                pos3 = ConvertToWorld(new float3(iMax, 0, jMax), max),
             };
 
         }
@@ -70,6 +79,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             {
                 key = Index(i, j, max),
                 distance = math.length(ConvertToLocal(prev, max) - math.round(indexPosition)),
+                roundedPosition = ConvertToWorld(indexPosition, max),
             };
         }
 

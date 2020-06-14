@@ -57,7 +57,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var futureHandle = futureVoidanceJob.Schedule(this, finalHandle);
             var probabilityJob = new ProbabilityAvoidJob()
             {
-                densityMap = DensitySystem.densityMatrix,
+                densityMap = ProbabilitySystem.densityMatrix,
                 max = Map.Values
             };
             var probabilityHandle = probabilityJob.Schedule(this, futureHandle);
