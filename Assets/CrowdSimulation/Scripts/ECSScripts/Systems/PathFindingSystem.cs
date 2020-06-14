@@ -49,18 +49,19 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 max = Map.Values
             };
             var finalHandle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
-            var futureVoidanceJob = new FutureCollisionAvoidanceJob()
-            {
-                targetMap = EntitiesHashMap.quadrantHashMap,
-                iteration = iteration,
-            };
-            var futureHandle = futureVoidanceJob.Schedule(this, finalHandle);
+            //var futureVoidanceJob = new FutureCollisionAvoidanceJob()
+            //{
+            //    targetMap = EntitiesHashMap.quadrantHashMap,
+            //    iteration = iteration,
+            //};
+            //var futureHandle = futureVoidanceJob.Schedule(this, pathFindingHandle);
             var probabilityJob = new ProbabilityAvoidJob()
             {
-                densityMap = ProbabilitySystem.densityMatrix,
+                densityMap = DensitySystem.densityMatrix,
+                porbabilityMap = ProbabilitySystem.densityMatrix,
                 max = Map.Values
             };
-            var probabilityHandle = probabilityJob.Schedule(this, futureHandle);
+            var probabilityHandle = probabilityJob.Schedule(this, finalHandle);
             probabilityHandle.Complete();
         }
     }

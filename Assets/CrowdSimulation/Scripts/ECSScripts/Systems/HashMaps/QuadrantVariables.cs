@@ -73,13 +73,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         public static KeyDistance IndexFromPosition(float3 realWorldPosition, float3 prev, MapValues max)
         {
             var indexPosition = ConvertToLocal(realWorldPosition, max);
+            var rounded = math.round(indexPosition);
             var i = math.clamp((int)math.round(indexPosition.x), 0, max.widthPoints - 1);
             var j = math.clamp((int)math.round(indexPosition.z), 0, max.heightPoints - 1);
             return new KeyDistance()
             {
                 key = Index(i, j, max),
-                distance = math.length(ConvertToLocal(prev, max) - math.round(indexPosition)),
-                roundedPosition = ConvertToWorld(indexPosition, max),
+                distance = math.length(ConvertToLocal(prev, max) - rounded),
+                roundedPosition = ConvertToWorld(rounded, max),
             };
         }
 

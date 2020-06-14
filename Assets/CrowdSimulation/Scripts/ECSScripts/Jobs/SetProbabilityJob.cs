@@ -5,6 +5,7 @@ using Unity.Transforms;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Unity.Burst;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
+using static Assets.CrowdSimulation.Scripts.ECSScripts.Systems.QuadrantVariables;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
@@ -21,7 +22,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         {
             float3 pos = translation.Value;
             var step = math.length(DensitySystem.Up);
-            var max = collisionParameters.outerRadius * Map.density;
+            var speed = math.length(walker.direction);
+            var max = collisionParameters.outerRadius + speed;
 
             for (float i = -max; i < max; i += step)
                 for (float j = -max; j < max; j += step)
@@ -37,17 +39,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
             {
                 return;
             }
+            //math.max(0f, (maxdistance - keyDistance.distance) / maxdistance);
             quadrantHashMap[keyDistance.key] += Value(maxdistance, centerPos, keyDistance.roundedPosition, velocity);
         }
 
         public static float Value(float maxDistance, float3 center, float3 pos, float3 velocity)
         {
-            var direction = pos - center;
-            var dot = math.dot(math.normalizesafe(direction), math.normalizesafe(velocity));
-            var newPos = pos - math.pow(dot, 2f) * velocity * 0.3f;
-            var distance = math.length(pos - center);
+            var newPos = pos - velocity; // math.pow(dot, 2f) * 
+            var distance = math.length(newPos - center);
             var value = math.max(0f, (maxDistance - distance) / maxDistance);
-            return math.pow(value, 3f);
+            return value;
         }
     }
 }
