@@ -11,7 +11,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
     [BurstCompile]
     public struct ProbabilityAvoidJob : IJobForEach<PathFindingData, CollisionParameters, Walker, Translation>
     {
-        public static readonly int Angels = 10;
 
         [NativeDisableParallelForRestriction]
         [ReadOnly]
@@ -38,25 +37,45 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 data.decidedForce *= 0.5f;
             }
 
-            var force = float3.zero;
-            var speed = math.length(walker.direction) + 1f;
-            for (int i = 0; i < Angels; i++)
+            var force = data.decidedForce;
+            var densityB = GetDensity(collision.outerRadius, translation.Value, translation.Value + force, walker.direction, data.avoidMethod == CollisionAvoidanceMethod.FutureAvoidance);
+            //densityB *= 0.8f;
+            for (int i = 2; i < 4; i++)
             {
+                densityB *= 0.9f;
+                var multi = math.pow(0.5f, i);
+                var A = GetDirection(force, math.PI * multi);
+                var B = GetDirection(force, 0);
+                var C = GetDirection(force, -math.PI * multi);
 
-                var vector = GetDirection(walker.direction, i * math.PI * 2f / Angels) * collision.innerRadius * speed;
-                vector *= 1.0f;
+                var densityA = GetDensity(collision.outerRadius, translation.Value, translation.Value + A, walker.direction,
+                    data.avoidMethod == CollisionAvoidanceMethod.FutureAvoidance) * 0.5f;
 
-                var density = GetDensity(collision.outerRadius, translation.Value, translation.Value + vector, walker.direction,
-                    data.avoidMethod == CollisionAvoidanceMethod.FutureAvoidance);
+                var densityC = GetDensity(collision.outerRadius, translation.Value, translation.Value + C, walker.direction,
+                    data.avoidMethod == CollisionAvoidanceMethod.FutureAvoidance) * 0.5f;
 
-                if (density > 0)
+                if (densityA > densityC && densityB > densityC)
                 {
-                    var direction = -vector / collision.outerRadius;
-                    force += (math.normalizesafe(direction) - direction) * (density);
+                    force = C * 0.8f;
+                    densityB = densityC;
                 }
+                else
+                {
+                    if (densityB > densityA && densityC > densityA)
+                    {
+                        force = A * 0.8f;
+                        densityB = densityA;
+                    }
+                    else
+                    {
+                        force = B;
+                    }
+                }
+
+
             }
 
-            walker.force = force + data.decidedForce;
+            walker.force = force;
         }
 
         private float GetDensity(float radius, float3 position, float3 point, float3 velocity, bool dens)
@@ -70,7 +89,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 var density2 = densityMap[index.Index2] * index.percent2;
                 var density3 = densityMap[index.Index3] * index.percent3;
                 //var ownDens = SetProbabilityJob.Value(radius, position, point, velocity);
-                return (density0 + density1 + density2 + density3);
+                return (density0 + density1 + density2 + density3);// - ownDens);
             }
             else
             {
@@ -78,8 +97,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 var density1 = porbabilityMap[index.Index1] * index.percent1;
                 var density2 = porbabilityMap[index.Index2] * index.percent2;
                 var density3 = porbabilityMap[index.Index3] * index.percent3;
-                //var ownDens = SetProbabilityJob.Value(radius, position, point, velocity);
-                return (density0 + density1 + density2 + density3);
+                var ownDens = SetProbabilityJob.Value(radius, position, point, velocity);
+                return (density0 + density1 + density2 + density3 - ownDens);
             }
 
         }
@@ -87,7 +106,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public static float3 GetDirection(float3 direction, float radians)
         {
             var rotation = quaternion.RotateY(radians);
-            return math.rotate(rotation, math.normalizesafe(direction));
+            return math.rotate(rotation, direction);
         }
     }
 }

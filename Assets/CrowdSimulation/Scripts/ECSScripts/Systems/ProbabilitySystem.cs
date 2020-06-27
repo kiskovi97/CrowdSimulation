@@ -19,6 +19,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     [UpdateAfter(typeof(CollisionSystem))]
     class ProbabilitySystem : ComponentSystem
     {
+        public static readonly int Angels = 10;
         private static int batchSize = 64;
 
         public static NativeArray<float> densityMatrix;
@@ -92,7 +93,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var addJob = new AddArrayJob() { from = collidersDensity, to = densityMatrix };
             var addHandle = addJob.Schedule(densityMatrix.Length, batchSize, handle);
             addHandle.Complete();
-            //Debug();
+            Debug();
         }
 
         private void MapChanged()
@@ -131,25 +132,54 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         {
             if (selected  != Entity.Null)
             {
-                var pos = EntityManager.GetComponentData<Translation>(selected);
+                var translation = EntityManager.GetComponentData<Translation>(selected);
                 var walker = EntityManager.GetComponentData<Walker>(selected);
                 var collision = EntityManager.GetComponentData<CollisionParameters>(selected);
-                
-                for (int i = 0; i < ProbabilityAvoidJob.Angels; i++)
+
+                var force = walker.direction;
+
+                var densityB = GetDensity(collision.outerRadius, translation.Value, translation.Value + force, walker.direction);
+                var point = translation.Value + force;
+                DebugProxy.DrawLine(point - new float3(0, 0, 0.2f), point + new float3(0f, 0, 0.2f), new Color(0, densityB * 0.4f, 1f));
+                DebugProxy.DrawLine(point - new float3(0.2f, 0, 0), point + new float3(0.2f, 0, 0), new Color(0, densityB * 0.4f, 1f));
+                for (int i = 2; i < 4; i++)
                 {
-                    var vector = ProbabilityAvoidJob.GetDirection(walker.direction, i * math.PI * 2f / ProbabilityAvoidJob.Angels);
-                    vector *= 1.0f;
+                    densityB *= 0.9f;
+                    var multi = math.pow(0.5f, i);
+                    var A = ProbabilityAvoidJob.GetDirection(force, math.PI * multi);
+                    var B = ProbabilityAvoidJob.GetDirection(force, 0);
+                    var C = ProbabilityAvoidJob.GetDirection(force, -math.PI * multi);
 
-                    var dot = math.abs(i * 2 / (ProbabilityAvoidJob.Angels) - 0.5f);
-                    var point = pos.Value + vector;
-                    var density = GetDensity(collision.outerRadius, pos.Value, point, walker.direction) * dot;
+                    var densityA = GetDensity(collision.outerRadius, translation.Value, translation.Value + A, walker.direction);
 
-                    if (density > 0)
+                    var densityC = GetDensity(collision.outerRadius, translation.Value, translation.Value + C, walker.direction);
+
+                    point = translation.Value + A;
+                    DebugProxy.DrawLine(point - new float3(0, 0, 0.2f), point + new float3(0f, 0, 0.2f), new Color(0, densityA * 0.4f, 1f));
+                    DebugProxy.DrawLine(point - new float3(0.2f, 0,0), point + new float3(0.2f, 0, 0), new Color(0, densityA * 0.4f, 1f));
+                    point = translation.Value + C;
+                    DebugProxy.DrawLine(point - new float3(0, 0, 0.2f), point + new float3(0f, 0, 0.2f), new Color(0, densityC * 0.4f, 1f));
+                    DebugProxy.DrawLine(point - new float3(0.2f, 0, 0), point + new float3(0.2f, 0, 0), new Color(0, densityC * 0.4f, 1f));
+
+                    if (densityA > densityC && densityB > densityC)
                     {
-                        DebugProxy.DrawLine(point - new float3(0.2f, 0, 0), point + new float3(0.2f, 0, 0), new Color(0, density, 1f));
-                        DebugProxy.DrawLine(point - new float3(0, 0, 0.2f), point + new float3(0f, 0, 0.2f), new Color(0, density, 1f));
+                        force = C * 0.8f;
+                        densityB = densityC;
+                    }
+                    else
+                    {
+                        if (densityB > densityA && densityC > densityA)
+                        {
+                            force = A * 0.8f;
+                            densityB = densityA;
+                        }
+                        else
+                        {
+                            force = B;
+                        }
                     }
                 }
+               
             }
            
         }
@@ -163,7 +193,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var density2 = densityMatrix[index.Index2] * index.percent2;
             var density3 = densityMatrix[index.Index3] * index.percent3;
             var ownDens = SetProbabilityJob.Value(radius, position, point, velocity);
-            return (density0 + density1 + density2 + density3 - ownDens * 10f);
+            return (density0 + density1 + density2 + density3 - ownDens);
         }
     }
 }

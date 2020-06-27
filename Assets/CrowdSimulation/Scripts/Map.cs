@@ -43,7 +43,7 @@ public class Map : MonoBehaviour
     public static int OneLayer { get => HeightPoints * WidthPoints; }
     public static int AllPoints { get => OneLayer * MaxGroup; }
 
-    public static float3 Offset { get => Instance.transform.position; }
+    public static float3 Offset { get => Instance == null ? float3.zero : (float3)Instance.transform.position; }
 
     private static Map Instance;
 

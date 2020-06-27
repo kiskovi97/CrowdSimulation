@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 881426355797257679}
   - component: {fileID: 881426355797257680}
   - component: {fileID: 881426355797257677}
+  - component: {fileID: 6620325649548370046}
   m_Layer: 0
   m_Name: Fence
   m_TagString: Untagged
@@ -67,7 +68,7 @@ MonoBehaviour:
   m_PrimitiveSize:
     x: 7.9999995
     y: 1.471104
-    z: 0.95
+    z: 1
   m_PrimitiveOrientation:
     Value:
       x: -0
@@ -87,7 +88,7 @@ MonoBehaviour:
   m_MinimumSkinnedVertexWeight: 0.1
   m_ConvexHullGenerationParameters:
     m_SimplificationTolerance: 0.5999999
-    m_BevelRadius: 0.015229459
+    m_BevelRadius: 0
     m_MinimumAngle: 2.5000002
   m_CustomMesh: {fileID: 0}
   m_ForceUnique: 0
@@ -130,6 +131,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 547f4519515bd944a8022bd2893b584b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6620325649548370046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881426355797257681}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb28e53bc0b54a14685ecb7b211fcc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &9158801634066615930
