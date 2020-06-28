@@ -24,6 +24,20 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             public static explicit operator Point(float3 b) => new Point() { point = b };
         }
 
+        class Comperer : IComparer<float3>
+        {
+            float3 from;
+            public Comperer(float3 from)
+            {
+                this.from = from;
+            }
+
+            public int Compare(float3 x, float3 y)
+            {
+                return math.lengthsq(x - from).CompareTo(math.lengthsq(y - from));
+            }
+        }
+
         List<Point> points = new List<Point>();
 
         public List<List<float3>> GetShapes()
@@ -47,7 +61,8 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
                 circle[i].neighbours.Add(circle[next]);
                 circle[i].neighbours.Add(circle[prev]);
-                var inters = GetIntersections(circle[i].point, circle[next].point);
+                var intersections = GetIntersections(circle[i].point, circle[next].point);
+                intersections.Sort(new Comperer(circle[i].point));
             }
             points.AddRange(circle);
         }
