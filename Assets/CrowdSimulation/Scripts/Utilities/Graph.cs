@@ -10,10 +10,10 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 {
     public class Graph
     {
-        class Point : IComparable<Point>
+        class Point : IComparable<Point>, IEquatable<Point>
         {
             public float3 point;
-            public List<Point> neighbours = new List<Point>();
+            public HashSet<Point> neighbours = new HashSet<Point>();
 
             public int CompareTo(Point other)
             {
@@ -21,10 +21,44 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                 return point.x.CompareTo(other.point.x);
             }
 
+            public bool Equals(Point other)
+            {
+                if (other == null) return false;
+                return math.length(point - other.point) < 0.02f;
+            }
+
             public static explicit operator Point(float3 b) => new Point() { point = b };
+            public static explicit operator Point(Vector3 b) => new Point() { point = b };
+
+            public override bool Equals(object obj)
+            {
+                if (obj is Point other)
+                {
+                    return Equals(other);
+                }
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return 1595967545 + EqualityComparer<float3>.Default.GetHashCode(point);
+            }
         }
 
-        class Comperer : IComparer<float3>
+        class Intersection
+        {
+            public Point A;
+            public Point B;
+            public Point Center;
+            public Intersection(Point A, Point B, Point Center)
+            {
+                this.A = A;
+                this.B = B;
+                this.Center = Center;
+            }
+        }
+
+        class Comperer : IComparer<Intersection>
         {
             float3 from;
             public Comperer(float3 from)
@@ -32,9 +66,9 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                 this.from = from;
             }
 
-            public int Compare(float3 x, float3 y)
+            public int Compare(Intersection x, Intersection y)
             {
-                return math.lengthsq(x - from).CompareTo(math.lengthsq(y - from));
+                return math.lengthsq(x.Center.point - from).CompareTo(math.lengthsq(y.Center.point - from));
             }
         }
 
@@ -61,24 +95,70 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
                 circle[i].neighbours.Add(circle[next]);
                 circle[i].neighbours.Add(circle[prev]);
+            }
+            for (int i = 0; i < circle.Count; i++)
+            {
+                var next = i + 1;
+                if (next > circle.Count - 1) next = 0;
                 var intersections = GetIntersections(circle[i].point, circle[next].point);
                 intersections.Sort(new Comperer(circle[i].point));
+
+                if (intersections.Count > 0)
+                {
+                    circle[i].neighbours.Remove(circle[next]);
+                    circle[next].neighbours.Remove(circle[i]);
+                    for (int x = 0; x < intersections.Count; x++)
+                    {
+                        var inter = intersections[x];
+                        var C = circle[i];
+                        var D = circle[next];
+                        if (x > 0) C = intersections[x - 1].Center;
+                        if (x < intersections.Count - 1) D = intersections[x + 1].Center;
+
+                        Resolve(inter.A, inter.B, C, D, inter.Center);
+                    }
+                }
             }
             points.AddRange(circle);
+            ClearPoints();
         }
 
-        public List<float3> GetIntersections(float3 A, float3 B)
+        private void ClearPoints()
         {
-            List<float3> list = new List<float3>();
+            for (int i=0; i<points.Count; i++)
+            {
+                for (int j=i + 1; j<points.Count; j++)
+                {
+                    if (points[i].Equals(points[j]))
+                    {
+                        foreach (var neighbour in points[j].neighbours)
+                        {
+                            if (!neighbour.Equals(points[i]))
+                            {
+                                points[i].neighbours.Add(neighbour);
+                                neighbour.neighbours.Add(points[i]);
+                            }
+                        }
+                        points[i].neighbours.Remove(points[j]);
+                        points.RemoveAt(j);
+                        j--;
+                    }
+                }
+                points[i].neighbours.Remove(points[i]);
+            }
+        }
+
+        private List<Intersection> GetIntersections(float3 A, float3 B)
+        {
+            List<Intersection> list = new List<Intersection>();
             foreach (var C in points)
             {
                 foreach (var D in C.neighbours)
                 {
                     if (MyMath.DoIntersect(A, B, C.point, D.point))
                     {
-                        var intersection = MyMath.Intersect(A, B, C.point, D.point);
-                        list.Add(intersection);
-                        Debug.DrawLine(intersection, intersection + new Vector3(0, 1, 0), Color.blue, 100f);
+                        var intersection = (Point)MyMath.Intersect(A, B, C.point, D.point);
+                        list.Add(new Intersection(C, D, intersection));
                     } else
                     {
                         if (MyMath.Orientation(A, B, C.point) == 0 && MyMath.Orientation(A, B, D.point) == 0) {
@@ -99,15 +179,13 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             {
                 foreach (var B in A.neighbours)
                 {
-                    Debug.DrawLine(A.point, B.point * 0.4f + A.point * 0.6f, Color.green, 100f);
+                    Debug.DrawLine(A.point, B.point * 0.4f + A.point * 0.6f + new float3(0,1,0), Color.green, 100f);
                 }
             }
         }
 
-        private void Resolve(Point A, Point B, Point C, Point D)
+        private void Resolve(Point A, Point B, Point C, Point D, Point newPoint)
         {
-            var intersection = MyMath.Intersect(A.point, B.point, C.point, D.point);
-            var newPoint = (Point)(float3)intersection;
             newPoint.neighbours.Add(A);
             newPoint.neighbours.Add(B);
             newPoint.neighbours.Add(C);
@@ -117,6 +195,12 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             B.neighbours.Remove(A);
             C.neighbours.Remove(D);
             D.neighbours.Remove(C);
+
+
+            A.neighbours.Add(newPoint);
+            B.neighbours.Add(newPoint);
+            C.neighbours.Add(newPoint);
+            D.neighbours.Add(newPoint);
 
             points.Add(newPoint);
         }
