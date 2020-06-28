@@ -113,8 +113,8 @@ namespace Tests
         {
             // Arrange
             var pointA = new Vector3(0, 0, 1);
-            var pointB = new Vector3(0, 0, -1);
-            var pointC = new Vector3(1, 0, 0);
+            var pointB = new Vector3(0, 0, -3);
+            var pointC = new Vector3(2, 0, 0);
             var pointD = new Vector3(-1, 0, 0);
             // Act
             var intersect = MyMath.Intersect(pointA, pointB, pointC, pointD);

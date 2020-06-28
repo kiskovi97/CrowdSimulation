@@ -14,7 +14,7 @@ public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
 {
     Unity.Physics.Authoring.PhysicsShapeAuthoring physicsShape;
 
-    public static List<List<float3>> shapes = new List<List<float3>>();
+    public static Graph graph = new Graph();
     public static bool Changed = false;
 
     // Start is called before the first frame update
@@ -71,10 +71,8 @@ public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
         {
             A, B, C, D
         };
-        shapes.Add(added);
+        graph.AddPoints(added);
         Changed = true;
-
-
     }
 
     class Comperer : IComparer<float3>

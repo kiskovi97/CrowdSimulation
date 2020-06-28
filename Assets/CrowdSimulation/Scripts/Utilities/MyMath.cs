@@ -49,9 +49,13 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             float val = (q.y - p.y) * (r.x - q.x) -
                       (q.x - p.x) * (r.y - q.y);
 
-            if (math.abs(val) < 0.01f) return 0;  // colinear
+            if (math.abs(val) < 0.03f) return 0;  // colinear
 
             return (val > 0) ? 1 : -1; // clock or counterclock wise
+        }
+
+        public static int Orientation(float3 A, float3 B, float3 C) {
+            return Orientation(new Point(A.x, A.z), new Point(B.x, B.z), new Point(C.x, C.z));
         }
 
         // The main function that returns true if line segment 'p1q1'
@@ -115,9 +119,9 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
         public static Vector3 Intersect(Vector3 A, Vector3 B, Vector3 C, Vector3 D)
         {
             var P = A;
-            var V = (B - A).normalized;
+            var V = (B - A);
             var Q = C;
-            var U = (D - C).normalized;
+            var U = (D - C);
 
             V = To2D(V);
             U = To2D(U);
