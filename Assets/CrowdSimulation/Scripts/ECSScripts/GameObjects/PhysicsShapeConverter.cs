@@ -6,12 +6,15 @@ using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Entities;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using System.Linq;
+using Assets.CrowdSimulation.Scripts.Utilities;
+using System.Drawing;
 
 public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
 {
     Unity.Physics.Authoring.PhysicsShapeAuthoring physicsShape;
 
-    public static List<List<float3>> points = new List<List<float3>>();
+    public static List<List<float3>> shapes = new List<List<float3>>();
     public static bool Changed = false;
 
     // Start is called before the first frame update
@@ -24,7 +27,7 @@ public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
     {
         physicsShape.GetPlaneProperties(out float3 pCenter, out float2 pSize, out quaternion pOrientation);
         var orientation = math.mul(pOrientation, transform.rotation);
-        var scale = (float3)transform.lossyScale * new float3(pSize.x, 0 , pSize.y);
+        var scale = (float3)transform.lossyScale * new float3(pSize.x, 0, pSize.y);
         var center = pCenter + (float3)transform.position;
         center.y = 0;
         var A = center + math.mul(orientation, scale * new float3(1, 0, 1) * 0.5f + new float3(0.5f, 0, 0.5f));
@@ -64,11 +67,28 @@ public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
 
     private void AddPoints(float3 A, float3 B, float3 C, float3 D)
     {
-        points.Add(new List<float3>
+        var added = new List<float3>
         {
             A, B, C, D
-        });
+        };
+        shapes.Add(added);
         Changed = true;
+
+
+    }
+
+    class Comperer : IComparer<float3>
+    {
+        float3 from;
+        public Comperer(float3 from)
+        {
+            this.from = from;
+        }
+
+        public int Compare(float3 x, float3 y)
+        {
+            return (int)(math.length(x - from) - math.length(y - from));
+        }
     }
 
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)

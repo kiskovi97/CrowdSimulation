@@ -65,6 +65,8 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             int o3 = Orientation(p2, q2, p1);
             int o4 = Orientation(p2, q2, q1);
 
+            if (o1 == 0 || o2 == 0 || o3 == 0 || o4 == 0)
+                return false;
             // General case
             if (o1 != o2 && o3 != o4)
                 return true;
@@ -74,6 +76,10 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         public static bool DoIntersect(Vector3 pv1, Vector3 qv1, Vector3 pv2, Vector3 qv2)
         {
+            if (pv1 == qv1 || pv1 == pv2 || pv1 == qv2) return false;
+            if (qv1 == pv2 || qv1 == qv2) return false;
+            if (pv2 == qv2) return false;
+
             Point p1 = new Point(pv1.x, pv1.z);
             Point q1 = new Point(qv1.x, qv1.z);
             Point p2 = new Point(pv2.x, pv2.z);
@@ -84,17 +90,17 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         public static bool InnerPoint(float3 a, float3[] polygon)
         {
-            int kereszt = 0;
+            float kereszt = 0;
             for (int i = 0; i < polygon.Length; i++)
             {
                 if (a.Equals(polygon[i])) return false;
                 int j = i + 1;
                 if (j > polygon.Length - 1) j = 0;
-                if (a.Equals(polygon[j])) return false;
-                float3 intersect = Intersect(polygon[i], polygon[i] - polygon[j], a, new float3(0, 0, 1));
-                if (Between(polygon[i], polygon[j], intersect) && Between(a, a + new float3(0, 0, 100), intersect)) kereszt++;
+                if (Between(polygon[i], polygon[j], a)) return false;
+
+                kereszt += Vector3.SignedAngle(polygon[i] - a, polygon[j] - a, new float3(0, 1, 0));
             }
-            return kereszt % 2 == 1;
+            return math.abs(kereszt) > 0.1f;
         }
 
         public static bool Between(Vector3 one, Vector3 other, Vector3 middle)
@@ -106,12 +112,23 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             return (angle > 179.9f) && (angle < 180.1f);
         }
 
-        public static Vector3 Intersect(Vector3 P, Vector3 V, Vector3 Q, Vector3 U)
+        public static Vector3 Intersect(Vector3 A, Vector3 B, Vector3 C, Vector3 D)
         {
+            var P = A;
+            var V = (B - A).normalized;
+            var Q = C;
+            var U = (D - C).normalized;
+
             V = To2D(V);
             U = To2D(U);
             float div = (U.x * V.z - U.z * V.x);
-            if (Math.Abs(div) < 0.2f) return (P + Q) * 0.5f;
+            if (Math.Abs(div) < 0.01f)
+            {
+                var c = (A - C).magnitude + (B - C).magnitude;
+                var d = (A - D).magnitude + (B - D).magnitude;
+                if (c < d) return C;
+                return D;
+            }
             float t2 = (Q.z * V.x + P.x * V.z - P.z * V.x - Q.x * V.z) / div;
             return (Q + t2 * U);
         }
