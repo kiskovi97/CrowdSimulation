@@ -24,15 +24,6 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             public static explicit operator Point(float3 b) => new Point() { point = b };
         }
 
-        class Comperer : IComparer<Point>
-        {
-            public int Compare(Point x, Point y)
-            {
-                if (x.point.x == y.point.x) return x.point.z.CompareTo(y.point.z);
-                return x.point.x.CompareTo(y.point.x);
-            }
-        }
-
         List<Point> points = new List<Point>();
 
         public List<List<float3>> GetShapes()
