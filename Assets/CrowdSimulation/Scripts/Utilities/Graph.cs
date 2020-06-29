@@ -265,11 +265,35 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
             for (int cI = 0; cI < circles.Count; cI++)
             {
-                for (int i=1; i< circles[cI].Count; i++)
+                for (int i = 1; i < circles[cI].Count; i++)
                 {
                     circles[cI][i].neighbours.Add(circles[cI][i - 1]);
                     circles[cI][i - 1].neighbours.Add(circles[cI][i]);
                     points.Add(circles[cI][i]);
+                }
+            }
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                var point = points[i];
+                if (point.neighbours.Count == 2)
+                {
+                    var A = point.neighbours.First();
+                    var B = point.neighbours.Last();
+
+                    if (MyMath.Between(A.point, B.point, point.point))
+                    {
+
+                        A.neighbours.Remove(point);
+                        B.neighbours.Remove(point);
+                        point.neighbours.Clear();
+
+                        A.neighbours.Add(B);
+                        B.neighbours.Add(A);
+
+                        points.RemoveAt(i);
+                        i--;
+                    }
                 }
             }
         }
