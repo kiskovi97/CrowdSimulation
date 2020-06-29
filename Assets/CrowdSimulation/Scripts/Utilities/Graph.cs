@@ -43,7 +43,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
             public override int GetHashCode()
             {
-                return (math.round(point * 100f) / 100f ).GetHashCode();
+                return (math.round(point * 100f) / 100f).GetHashCode();
             }
 
             public override string ToString()
@@ -239,12 +239,8 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         public void Draw()
         {
-            var circle = GetCircle();
-            for (int i=1; i<circle.Count; i++)
-            {
-                Debug.DrawLine(circle[i - 1].point + new float3(0, i - 1, 0), circle[i].point + new float3(0, i, 0), Color.blue, 100f);
-                //circle[i].neighbours.Clear();
-            }
+            CreateCircles();
+
             foreach (var A in points)
             {
                 foreach (var B in A.neighbours)
@@ -252,6 +248,41 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                     Debug.DrawLine(A.point, B.point * 0.4f + A.point * 0.6f + new float3(0, 1, 0), Color.green, 100f);
                 }
             }
+        }
+
+        public void CreateCircles()
+        {
+            var circles = new List<List<Point>>();
+            while (points.Count > 0)
+            {
+                var circle = GetCircle();
+                for (int i = 1; i < circle.Count; i++)
+                {
+                    Remove(circle[i]);
+                }
+                circles.Add(circle);
+            }
+
+            for (int cI = 0; cI < circles.Count; cI++)
+            {
+                for (int i=1; i< circles[cI].Count; i++)
+                {
+                    circles[cI][i].neighbours.Add(circles[cI][i - 1]);
+                    circles[cI][i - 1].neighbours.Add(circles[cI][i]);
+                    points.Add(circles[cI][i]);
+                }
+            }
+        }
+
+        void Remove(Point point)
+        {
+            points.Remove(point);
+            foreach (var neighbour in point.neighbours)
+            {
+                if (points.Contains(neighbour))
+                    Remove(neighbour);
+            }
+            point.neighbours.Clear();
         }
 
         private List<Point> GetCircle()
@@ -262,7 +293,6 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             var first = prev;
             var current = NextNeighbour(prev, new float3(-1, 0, -1), prev);
             list.Add(current);
-            Debug.DrawLine(prev.point, current.point, Color.blue, 100f);
             int iteration = 0;
             while (iteration < 300 && !first.Equals(current))
             {
@@ -278,6 +308,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         public static Point NextNeighbour(Point current, float3 from, Point prev)
         {
+            if (current.neighbours.Count == 0) return current;
             var next = current.neighbours.First();
             foreach (var point in current.neighbours)
             {
