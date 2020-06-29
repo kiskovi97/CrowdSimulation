@@ -10,7 +10,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 {
     public class Graph
     {
-        class Point : IComparable<Point>, IEquatable<Point>
+        public class Point : IComparable<Point>, IEquatable<Point>
         {
             public float3 point;
             public HashSet<Point> neighbours = new HashSet<Point>();
@@ -45,7 +45,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             }
         }
 
-        class Intersection
+        public class Intersection
         {
             public Point A;
             public Point B;
@@ -55,6 +55,20 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                 this.A = A;
                 this.B = B;
                 this.Center = Center;
+            }
+        }
+
+        public class PointComperer : IComparer<Point>
+        {
+            public Point center;
+            public PointComperer(Point center)
+            {
+                this.center = center;
+            }
+
+            public int Compare(Point one, Point other)
+            {
+                return math.length(center.point - one.point).CompareTo(math.length(center.point - other.point));
             }
         }
 
@@ -118,6 +132,14 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                         Resolve(inter.A, inter.B, C, D, inter.Center);
                     }
                 }
+
+                var lines = GetLines(circle[i].point, circle[next].point);
+                if (lines.Count > 0)
+                {
+                    lines.Add(circle[i]);
+                    lines.Add(circle[next]);
+                    ResolveLine(lines);
+                }
             }
             points.AddRange(circle);
             ClearPoints();
@@ -125,9 +147,9 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         private void ClearPoints()
         {
-            for (int i=0; i<points.Count; i++)
+            for (int i = 0; i < points.Count; i++)
             {
-                for (int j=i + 1; j<points.Count; j++)
+                for (int j = i + 1; j < points.Count; j++)
                 {
                     if (points[i].Equals(points[j]))
                     {
@@ -159,9 +181,11 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                     {
                         var intersection = (Point)MyMath.Intersect(A, B, C.point, D.point);
                         list.Add(new Intersection(C, D, intersection));
-                    } else
+                    }
+                    else
                     {
-                        if (MyMath.Orientation(A, B, C.point) == 0 && MyMath.Orientation(A, B, D.point) == 0) {
+                        if (MyMath.Orientation(A, B, C.point) == 0 && MyMath.Orientation(A, B, D.point) == 0)
+                        {
                             var tmp = new List<Point>() { (Point)A, (Point)B, C, D };
                             tmp.Sort();
                             Debug.DrawLine(tmp[1].point, tmp[1].point + new float3(0, 1, 0), Color.red, 100f);
@@ -173,13 +197,31 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             return list;
         }
 
+        private List<Point> GetLines(float3 A, float3 B)
+        {
+            List<Point> list = new List<Point>();
+            foreach (var C in points)
+            {
+                foreach (var D in C.neighbours)
+                {
+                    if (MyMath.Orientation(A, B, C.point) == 0 && MyMath.Orientation(A, B, D.point) == 0)
+                    {
+                        var tmp = new List<Point>() { C, D };
+                        list.AddRange(tmp);
+                    }
+
+                }
+            }
+            return list;
+        }
+
         public void Draw()
         {
             foreach (var A in points)
             {
                 foreach (var B in A.neighbours)
                 {
-                    Debug.DrawLine(A.point, B.point * 0.4f + A.point * 0.6f + new float3(0,1,0), Color.green, 100f);
+                    Debug.DrawLine(A.point, B.point * 0.4f + A.point * 0.6f + new float3(0, 1, 0), Color.green, 100f);
                 }
             }
         }
@@ -203,6 +245,36 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             D.neighbours.Add(newPoint);
 
             points.Add(newPoint);
+        }
+        private void ResolveLine(List<Point> line)
+        {
+            var point = line.Min();
+            line.Sort(new PointComperer(point));
+
+            for (int i = 0; i < line.Count; i++)
+            {
+                for (int j = 0; j < line.Count; j++)
+                {
+                    line[i].neighbours.Remove(line[j]);
+                }
+            }
+
+            for (int i = 0; i < line.Count; i++)
+            {
+                if (i > 0)
+                {
+                    //Debug.DrawLine(line[i - 1].point + new float3(0, i - 1, 0), line[i].point + new float3(0, i, 0), Color.magenta, 100f);
+                    line[i].neighbours.Add(line[i - 1]);
+                    line[i - 1].neighbours.Add(line[i]);
+
+                }
+
+                if (i < line.Count - 1)
+                {
+                    line[i].neighbours.Add(line[i + 1]);
+                    line[i + 1].neighbours.Add(line[i]);
+                }
+            }
         }
     }
 }
