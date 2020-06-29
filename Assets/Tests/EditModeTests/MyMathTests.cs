@@ -181,7 +181,7 @@ namespace Tests
         public void Sort_AlignZ_Sorted()
         {
             // Arrange
-            var pointA = (Point)new Vector3(0, 0, 0);
+            var pointA = (Point)new Vector3(-3, 0, 0);
             var pointB = (Point)new Vector3(1, 0, 0);
             var pointC = (Point)new Vector3(2, 0, 0);
             var pointD = (Point)new Vector3(3, 0, 0);
@@ -191,6 +191,32 @@ namespace Tests
                 pointB,
                 pointD,
                 pointC,
+                pointA,
+            };
+
+            // Act
+            list.Sort(new PointComperer(pointA));
+            // Assert
+            Assert.AreEqual(pointA, list[0]);
+            Assert.AreEqual(pointB, list[1]);
+            Assert.AreEqual(pointC, list[2]);
+            Assert.AreEqual(pointD, list[3]);
+        }
+
+        [Test]
+        public void Sort_Complex_Sorted()
+        {
+            // Arrange
+            var pointA = (Point)new Vector3(-3, 0, 0);
+            var pointB = (Point)new Vector3(1, 1, 0);
+            var pointC = (Point)new Vector3(1, 2, 0);
+            var pointD = (Point)new Vector3(3, 0, 0);
+
+            var list = new List<Point>()
+            {
+                pointC,
+                pointD,
+                pointB,
                 pointA,
             };
 

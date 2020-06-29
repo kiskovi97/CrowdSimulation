@@ -204,15 +204,30 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             {
                 foreach (var D in C.neighbours)
                 {
-                    if (MyMath.Orientation(A, B, C.point) == 0 && MyMath.Orientation(A, B, D.point) == 0)
+                    if (AreInLine(A, B, C.point, D.point))
                     {
-                        var tmp = new List<Point>() { C, D };
-                        list.AddRange(tmp);
+                        if (AreIntersect(A, B, C.point, D.point))
+                        {
+                            var tmp = new List<Point>() { C, D };
+                            list.AddRange(tmp);
+                        }
                     }
 
                 }
             }
             return list;
+        }
+
+        private bool AreInLine(float3 A, float3 B, float3 C, float3 D)
+        {
+            return MyMath.Orientation(A, B, C) == 0 && MyMath.Orientation(A, B, D) == 0;
+        }
+
+        private bool AreIntersect(float3 A, float3 B, float3 C, float3 D)
+        {
+            return MyMath.Between(A, B, C)
+                || MyMath.Between(A, B, D)
+                || MyMath.Between(C, D, A);
         }
 
         public void Draw()
