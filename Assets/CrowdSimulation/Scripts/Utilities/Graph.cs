@@ -150,6 +150,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             }
             points.AddRange(circle);
             ClearPoints();
+            //CreateCircles();
         }
 
         private void ClearPoints()
@@ -239,7 +240,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         public void Draw()
         {
-            CreateCircles();
+            //CreateCircles();
 
             foreach (var A in points)
             {
@@ -318,7 +319,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             var current = NextNeighbour(prev, new float3(-1, 0, -1), prev);
             list.Add(current);
             int iteration = 0;
-            while (iteration < 300 && !first.Equals(current))
+            while (iteration < points.Count && !first.Equals(current))
             {
                 iteration++;
                 var from = prev.point - current.point;
