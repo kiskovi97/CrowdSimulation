@@ -228,5 +228,64 @@ namespace Tests
             Assert.AreEqual(pointC, list[2]);
             Assert.AreEqual(pointD, list[3]);
         }
+
+        [Test]
+        public void GetAngle_180_Sorted()
+        {
+            // Arrange
+            var v1 = new float3(1, 0, 0);
+            var v2 = new float3(-1, 0, 0);
+
+            // Act
+            var angle = Graph.GetAngle(v1, v2);
+            // Assert
+            Assert.AreEqual(180f, angle);
+        }
+
+        [Test]
+        public void GetAngle_90_Sorted()
+        {
+            // Arrange
+            var v1 = new float3(1, 0, 0);
+            var v2 = new float3(0, 0, -1);
+
+            // Act
+            var angle = Graph.GetAngle(v1, v2);
+            // Assert
+            Assert.AreEqual(90f, angle);
+        }
+
+        [Test]
+        public void GetAngle_270_Sorted()
+        {
+            // Arrange
+            var v1 = new float3(1, 0, 0);
+            var v2 = new float3(0, 0, 1);
+
+            // Act
+            var angle = Graph.GetAngle(v1, v2);
+            // Assert
+            Assert.AreEqual(270f, angle);
+        }
+
+        [Test]
+        public void NextNeighbour_270_Sorted()
+        {
+            // Arrange
+            var pointA = (Point)new Vector3(1, 0, 0);
+            var pointB = (Point)new Vector3(-1, 0, 0);
+            var pointC = (Point)new Vector3(0, 0, 1);
+            var pointD = (Point)new Vector3(0, 0, -1);
+            var current = (Point)new Vector3(0, 0, 0);
+            current.neighbours.Add(pointA);
+            current.neighbours.Add(pointB);
+            current.neighbours.Add(pointC);
+            current.neighbours.Add(pointD);
+
+            // Act
+            var next = Graph.NextNeighbour(current, pointD.point - current.point, pointD);
+            // Assert
+            Assert.AreEqual(pointB, next);
+        }
     }
 }

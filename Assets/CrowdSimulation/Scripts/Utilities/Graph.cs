@@ -39,9 +39,16 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                 return false;
             }
 
+            public int HashCode => GetHashCode();
+
             public override int GetHashCode()
             {
-                return 1595967545 + EqualityComparer<float3>.Default.GetHashCode(point);
+                return (math.round(point * 100f) / 100f ).GetHashCode();
+            }
+
+            public override string ToString()
+            {
+                return point.ToString();
             }
         }
 
@@ -232,6 +239,12 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         public void Draw()
         {
+            var circle = GetCircle();
+            for (int i=1; i<circle.Count; i++)
+            {
+                Debug.DrawLine(circle[i - 1].point + new float3(0, i - 1, 0), circle[i].point + new float3(0, i, 0), Color.blue, 100f);
+                //circle[i].neighbours.Clear();
+            }
             foreach (var A in points)
             {
                 foreach (var B in A.neighbours)
@@ -239,6 +252,50 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                     Debug.DrawLine(A.point, B.point * 0.4f + A.point * 0.6f + new float3(0, 1, 0), Color.green, 100f);
                 }
             }
+        }
+
+        private List<Point> GetCircle()
+        {
+            var list = new List<Point>();
+            var prev = points.Min();
+            list.Add(prev);
+            var first = prev;
+            var current = NextNeighbour(prev, new float3(-1, 0, -1), prev);
+            list.Add(current);
+            Debug.DrawLine(prev.point, current.point, Color.blue, 100f);
+            int iteration = 0;
+            while (iteration < 300 && !first.Equals(current))
+            {
+                iteration++;
+                var from = prev.point - current.point;
+                var next = NextNeighbour(current, from, prev);
+                prev = current;
+                current = next;
+                list.Add(current);
+            }
+            return list;
+        }
+
+        public static Point NextNeighbour(Point current, float3 from, Point prev)
+        {
+            var next = current.neighbours.First();
+            foreach (var point in current.neighbours)
+            {
+                if (point.Equals(prev)) continue;
+                if (GetAngle(from, next.point - current.point) > GetAngle(from, point.point - current.point))
+                {
+                    next = point;
+                }
+            }
+            return next;
+        }
+
+        public static float GetAngle(float3 from, float3 to, bool right = true)
+        {
+            var angle = Vector3.SignedAngle(math.normalize(from), math.normalize(to), new float3(0, 1, 0));
+            if (math.abs(angle) < 0.2f) return 360;
+            if (angle < 0f) angle += 360f;
+            return right ? angle * -1f : angle;
         }
 
         private void Resolve(Point A, Point B, Point C, Point D, Point newPoint)
@@ -261,6 +318,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
             points.Add(newPoint);
         }
+
         private void ResolveLine(List<Point> line)
         {
             var point = line.Min();
