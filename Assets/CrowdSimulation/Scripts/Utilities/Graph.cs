@@ -68,14 +68,18 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
         public class PointComperer : IComparer<Point>
         {
             public Point center;
-            public PointComperer(Point center)
+            public float3 direction;
+            public PointComperer(Point center, float3 direction)
             {
                 this.center = center;
+                this.direction = math.normalize(direction);
             }
 
             public int Compare(Point one, Point other)
             {
-                return math.length(center.point - one.point).CompareTo(math.length(center.point - other.point));
+                var valueOne = math.dot(center.point - one.point, direction); 
+                var valueOther = math.dot(center.point - other.point, direction); 
+                return valueOne.CompareTo(valueOther);
             }
         }
 
@@ -121,7 +125,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             {
                 var next = i + 1;
                 if (next > circle.Count - 1) next = 0;
-                var intersections = GetIntersections(circle[i].point, circle[next].point);
+                var intersections = GetIntersections(circle[i], circle[next]);
                 intersections.Sort(new Comperer(circle[i].point));
 
                 if (intersections.Count > 0)
@@ -139,7 +143,11 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                         Resolve(inter.A, inter.B, C, D, inter.Center);
                     }
                 }
-
+            }
+            for (int i = 0; i < circle.Count; i++)
+            {
+                var next = i + 1;
+                if (next > circle.Count - 1) next = 0;
                 var lines = GetLines(circle[i].point, circle[next].point);
                 if (lines.Count > 0)
                 {
@@ -178,23 +186,23 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             }
         }
 
-        private List<Intersection> GetIntersections(float3 A, float3 B)
+        private List<Intersection> GetIntersections(Point A, Point B)
         {
             List<Intersection> list = new List<Intersection>();
             foreach (var C in points)
             {
                 foreach (var D in C.neighbours)
                 {
-                    if (MyMath.DoIntersect(A, B, C.point, D.point))
+                    if (MyMath.DoIntersect(A.point, B.point, C.point, D.point))
                     {
-                        var intersection = (Point)MyMath.Intersect(A, B, C.point, D.point);
+                        var intersection = (Point)MyMath.Intersect(A.point, B.point, C.point, D.point);
                         list.Add(new Intersection(C, D, intersection));
                     }
                     else
                     {
-                        if (MyMath.Orientation(A, B, C.point) == 0 && MyMath.Orientation(A, B, D.point) == 0)
+                        if (MyMath.Orientation(A.point, B.point, C.point) == 0 && MyMath.Orientation(A.point, B.point, D.point) == 0)
                         {
-                            var tmp = new List<Point>() { (Point)A, (Point)B, C, D };
+                            var tmp = new List<Point>() { A, B, C, D };
                             tmp.Sort();
                             Debug.DrawLine(tmp[1].point, tmp[1].point + new float3(0, 1, 0), Color.red, 100f);
                             Debug.DrawLine(tmp[2].point, tmp[2].point + new float3(0, 1, 0), Color.red, 100f);
@@ -235,7 +243,8 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
         {
             return MyMath.Between(A, B, C)
                 || MyMath.Between(A, B, D)
-                || MyMath.Between(C, D, A);
+                || MyMath.Between(C, D, A)
+                || MyMath.Between(C, D, B);
         }
 
         public void Draw()
@@ -377,8 +386,10 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         private void ResolveLine(List<Point> line)
         {
-            var point = line.Min();
-            line.Sort(new PointComperer(point));
+            var point = line[0];
+            var vector = line[0].point - line[1].point;
+
+            line.Sort(new PointComperer(point, vector));
 
             for (int i = 0; i < line.Count; i++)
             {

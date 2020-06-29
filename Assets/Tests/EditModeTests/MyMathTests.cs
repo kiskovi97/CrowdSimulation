@@ -169,7 +169,7 @@ namespace Tests
             };
 
             // Act
-            list.Sort(new PointComperer(pointA));
+            list.Sort(new PointComperer(pointA, pointA.point - pointB.point));
             // Assert
             Assert.AreEqual(pointA, list[0]);
             Assert.AreEqual(pointB, list[1]);
@@ -195,7 +195,7 @@ namespace Tests
             };
 
             // Act
-            list.Sort(new PointComperer(pointA));
+            list.Sort(new PointComperer(pointA, pointA.point - pointB.point));
             // Assert
             Assert.AreEqual(pointA, list[0]);
             Assert.AreEqual(pointB, list[1]);
@@ -221,7 +221,7 @@ namespace Tests
             };
 
             // Act
-            list.Sort(new PointComperer(pointA));
+            list.Sort(new PointComperer(pointA, pointA.point - pointB.point));
             // Assert
             Assert.AreEqual(pointA, list[0]);
             Assert.AreEqual(pointB, list[1]);
