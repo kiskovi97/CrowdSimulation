@@ -62,25 +62,6 @@ public class NavMeshObject : MonoBehaviour
                 {
                     Debug.DrawLine(me, lPoint, Color.black, 100f);
                 }
-
-                //var otherIndex = 0;
-                //for (int sJ = 0; sJ < shapes.Count; sJ++)
-                //{
-                //    if (sI == sJ)
-                //    {
-                //        otherIndex += shape.Count;
-                //        continue;
-                //    }
-                //    var otherShape = shapes[sJ];
-                //    for (int j = 0; j < otherShape.Count; j++)
-                //    {
-                //        var point = otherShape[j];
-                //        //if (IsNotBetween(lPoint - me, rPoint - me, point - me))
-                //        if (IsNotCrossing(me, point))
-                //            AddGraphEdge(meIndex + i, otherIndex + j);
-                //    }
-                //    otherIndex += otherShape.Count;
-                //}
             }
             meIndex += shape.Count;
         }
@@ -99,14 +80,14 @@ public class NavMeshObject : MonoBehaviour
         }
 
 
-                for (int i = 0; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             for (int j = 0; j < count; j++)
             {
                 if (i == j) continue;
                 if (graph[Index(i, j)])
                 {
-                    Debug.DrawLine(positions[i], positions[j], Color.green, 100f);
+                    Debug.DrawLine(positions[i], positions[j] + new float3(0,1,0), Color.green, 100f);
                 }
             }
         }
@@ -122,7 +103,18 @@ public class NavMeshObject : MonoBehaviour
                 if (left < 0) left = shape.Count - 1;
                 var other1 = shape[left];
                 var other2 = shape[i];
-                if (other1.Equals(point) || other1.Equals(me) || other2.Equals(point) || other2.Equals(me)) continue;
+                if ((other1.Equals(point) && other2.Equals(me)) || (other1.Equals(me) && other2.Equals(point)))
+                {
+                    continue;
+                }
+                if (MyMath.AreInLine(me, point, other1, other2))
+                {
+                    if (MyMath.AreIntersect(me, point, other1, other2))
+                    {
+                        return false;
+                    }
+                    continue;
+                }
                 if (MyMath.DoIntersect(me, point, other1, other2))
                 {
                     return false;

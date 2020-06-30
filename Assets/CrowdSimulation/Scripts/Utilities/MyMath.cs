@@ -143,5 +143,18 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             ki.y = 0;
             return ki.normalized;
         }
+
+        public static bool AreInLine(float3 A, float3 B, float3 C, float3 D)
+        {
+            return MyMath.Orientation(A, B, C) == 0 && MyMath.Orientation(A, B, D) == 0;
+        }
+
+        public static bool AreIntersect(float3 A, float3 B, float3 C, float3 D)
+        {
+            return MyMath.Between(A, B, C)
+                || MyMath.Between(A, B, D)
+                || MyMath.Between(C, D, A)
+                || MyMath.Between(C, D, B);
+        }
     }
 }
