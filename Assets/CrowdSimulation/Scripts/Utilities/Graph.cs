@@ -101,7 +101,31 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         public List<List<float3>> GetShapes()
         {
-            return new List<List<float3>>();
+            var circles = new List<List<float3>>();
+
+            var circlePoints = new List<List<Point>>();
+            while (points.Count > 0)
+            {
+                var circle = GetCircle();
+                for (int i = 1; i < circle.Count; i++)
+                {
+                    Remove(circle[i]);
+                }
+                circlePoints.Add(circle);
+                circles.Add(circle.Select((one) => one.point).ToList());
+            }
+
+            for (int cI = 0; cI < circlePoints.Count; cI++)
+            {
+                for (int i = 1; i < circlePoints[cI].Count; i++)
+                {
+                    circlePoints[cI][i].neighbours.Add(circlePoints[cI][i - 1]);
+                    circlePoints[cI][i - 1].neighbours.Add(circlePoints[cI][i]);
+                    points.Add(circlePoints[cI][i]);
+                }
+            }
+
+            return circles;
         }
 
         public void AddPoints(List<float3> input)
@@ -160,7 +184,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             }
             points.AddRange(circle);
             ClearPoints();
-            //CreateCircles();
+            CreateCircles();
         }
 
         private void ClearPoints()
@@ -175,6 +199,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                         {
                             if (!neighbour.Equals(points[i]))
                             {
+                                neighbour.neighbours.Remove(points[j]);
                                 points[i].neighbours.Add(neighbour);
                                 neighbour.neighbours.Add(points[i]);
                             }

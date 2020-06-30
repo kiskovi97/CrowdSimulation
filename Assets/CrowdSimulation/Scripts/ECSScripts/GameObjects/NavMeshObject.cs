@@ -23,7 +23,8 @@ public class NavMeshObject : MonoBehaviour
         if (PhysicsShapeConverter.Changed)
         {
             PhysicsShapeConverter.Changed = false;
-            PhysicsShapeConverter.graph.Draw();
+            //PhysicsShapeConverter.graph.Draw();
+            ReCalculate();
         }
     }
 
@@ -65,24 +66,24 @@ public class NavMeshObject : MonoBehaviour
                     Debug.DrawLine(me, lPoint, Color.black, 100f);
                 }
 
-                //var otherIndex = 0;
-                //for (int sJ = 0; sJ < PhysicsShapeConverter.shapes.Count; sJ++)
-                //{
-                //    if (sI == sJ)
-                //    {
-                //        otherIndex += shape.Count;
-                //        continue;
-                //    }
-                //    var otherShape = PhysicsShapeConverter.shapes[sJ];
-                //    for (int j = 0; j < otherShape.Count; j++)
-                //    {
-                //        var point = otherShape[j];
-                //        //if (IsNotBetween(lPoint - me, rPoint - me, point - me))
-                //            if (IsNotCrossing(me, point))
-                //                AddGraphEdge(meIndex + i, otherIndex + j);
-                //    }
-                //    otherIndex += otherShape.Count;
-                //}
+                var otherIndex = 0;
+                for (int sJ = 0; sJ < shapes.Count; sJ++)
+                {
+                    if (sI == sJ)
+                    {
+                        otherIndex += shape.Count;
+                        continue;
+                    }
+                    var otherShape = shapes[sJ];
+                    for (int j = 0; j < otherShape.Count; j++)
+                    {
+                        var point = otherShape[j];
+                        //if (IsNotBetween(lPoint - me, rPoint - me, point - me))
+                        if (IsNotCrossing(me, point))
+                            AddGraphEdge(meIndex + i, otherIndex + j);
+                    }
+                    otherIndex += otherShape.Count;
+                }
             }
             meIndex += shape.Count;
         }
