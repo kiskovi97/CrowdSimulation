@@ -63,28 +63,43 @@ public class NavMeshObject : MonoBehaviour
                     Debug.DrawLine(me, lPoint, Color.black, 100f);
                 }
 
-                var otherIndex = 0;
-                for (int sJ = 0; sJ < shapes.Count; sJ++)
-                {
-                    if (sI == sJ)
-                    {
-                        otherIndex += shape.Count;
-                        continue;
-                    }
-                    var otherShape = shapes[sJ];
-                    for (int j = 0; j < otherShape.Count; j++)
-                    {
-                        var point = otherShape[j];
-                        //if (IsNotBetween(lPoint - me, rPoint - me, point - me))
-                        if (IsNotCrossing(me, point))
-                            AddGraphEdge(meIndex + i, otherIndex + j);
-                    }
-                    otherIndex += otherShape.Count;
-                }
+                //var otherIndex = 0;
+                //for (int sJ = 0; sJ < shapes.Count; sJ++)
+                //{
+                //    if (sI == sJ)
+                //    {
+                //        otherIndex += shape.Count;
+                //        continue;
+                //    }
+                //    var otherShape = shapes[sJ];
+                //    for (int j = 0; j < otherShape.Count; j++)
+                //    {
+                //        var point = otherShape[j];
+                //        //if (IsNotBetween(lPoint - me, rPoint - me, point - me))
+                //        if (IsNotCrossing(me, point))
+                //            AddGraphEdge(meIndex + i, otherIndex + j);
+                //    }
+                //    otherIndex += otherShape.Count;
+                //}
             }
             meIndex += shape.Count;
         }
         for (int i = 0; i < count; i++)
+        {
+            for (int j = 0; j < count; j++)
+            {
+                if (!graph[Index(i, j)])
+                {
+                    if (IsNotCrossing(positions[i], positions[j]))
+                    {
+                        graph[Index(i, j)] = true;
+                    }
+                }
+            }
+        }
+
+
+                for (int i = 0; i < count; i++)
         {
             for (int j = 0; j < count; j++)
             {
