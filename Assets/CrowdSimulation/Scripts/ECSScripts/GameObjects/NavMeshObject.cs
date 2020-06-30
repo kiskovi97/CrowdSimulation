@@ -50,9 +50,6 @@ public class NavMeshObject : MonoBehaviour
                 var left = i - 1;
                 if (left < 0) left = shape.Count - 1;
                 var lPoint = shape[left];
-                //var right = i + 1;
-                //if (right > shape.Count - 1) right = 0;
-                //var rPoint = shape[right];
                 var me = shape[i];
 
                 positions[meIndex + i] = me;
