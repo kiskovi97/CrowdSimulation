@@ -77,8 +77,8 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
             public int Compare(Point one, Point other)
             {
-                var valueOne = math.dot(center.point - one.point, direction); 
-                var valueOther = math.dot(center.point - other.point, direction); 
+                var valueOne = math.dot(center.point - one.point, direction);
+                var valueOther = math.dot(center.point - other.point, direction);
                 return valueOne.CompareTo(valueOther);
             }
         }
@@ -142,6 +142,8 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
                         Resolve(inter.A, inter.B, C, D, inter.Center);
                     }
+                    circle.InsertRange(i + 1, intersections.Select((one) => one.Center));
+                    i += intersections.Count;
                 }
             }
             for (int i = 0; i < circle.Count; i++)
@@ -189,14 +191,16 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
         private List<Intersection> GetIntersections(Point A, Point B)
         {
             List<Intersection> list = new List<Intersection>();
-            foreach (var C in points)
+            for (int i = 0; i < points.Count; i++)
             {
+                var C = points[i];
                 foreach (var D in C.neighbours)
                 {
                     if (MyMath.DoIntersect(A.point, B.point, C.point, D.point))
                     {
                         var intersection = (Point)MyMath.Intersect(A.point, B.point, C.point, D.point);
                         list.Add(new Intersection(C, D, intersection));
+                        points.Add(intersection);
                     }
                     else
                     {
@@ -204,8 +208,6 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                         {
                             var tmp = new List<Point>() { A, B, C, D };
                             tmp.Sort();
-                            Debug.DrawLine(tmp[1].point, tmp[1].point + new float3(0, 1, 0), Color.red, 100f);
-                            Debug.DrawLine(tmp[2].point, tmp[2].point + new float3(0, 1, 0), Color.red, 100f);
                         }
                     }
                 }
@@ -380,8 +382,6 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             B.neighbours.Add(newPoint);
             C.neighbours.Add(newPoint);
             D.neighbours.Add(newPoint);
-
-            points.Add(newPoint);
         }
 
         private void ResolveLine(List<Point> line)
