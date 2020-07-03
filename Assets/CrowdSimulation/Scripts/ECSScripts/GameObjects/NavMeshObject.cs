@@ -10,11 +10,21 @@ public class NavMeshObject : MonoBehaviour
     private NativeArray<bool> graph;
     List<List<float3>> shapes;
 
-    private int count;
+    private Dijsktra dijsktra;
 
-    int Index(int from, int to)
+    public Transform A;
+    public Transform B;
+
+    private static int count;
+
+    public static int Index(int from, int to)
     {
         return from * count + to;
+    }
+
+    private void Start()
+    {
+        dijsktra = new Dijsktra(positions, graph);
     }
 
     // Update is called once per frame
@@ -25,8 +35,51 @@ public class NavMeshObject : MonoBehaviour
             PhysicsShapeConverter.Changed = false;
             //PhysicsShapeConverter.graph.Draw();
             ReCalculate();
+            if (dijsktra != null) dijsktra.Dispose();
+            dijsktra = new Dijsktra(positions, graph);
         }
+
+        var pointA = A.position;
+        var pointB = B.position;
+
+        var list = CalculatePath(pointA, pointB);
+
+        for (int i = 0; i < list.Count - 1; i++)
+        {
+            Debug.DrawLine(list[i], list[i + 1], Color.blue);
+        }
+
     }
+
+    List<float3> CalculatePath(float3 pointA, float3 pointB)
+    {
+
+        if (IsNotCrossing(pointA, pointB))
+        {
+            return new List<float3>()
+            {
+                pointA, pointB
+            };
+        }
+
+        var nodeListA = new List<int>();
+        var nodeListB = new List<int>();
+
+        for (int i = 0; i < positions.Length; i++)
+        {
+            if (IsNotCrossing(pointA, positions[i]))
+            {
+                nodeListA.Add(i);
+            }
+            if (IsNotCrossing(pointB, positions[i]))
+            {
+                nodeListB.Add(i);
+            }
+        }
+        dijsktra.CalculatePaths(pointB, nodeListB);
+        return dijsktra.CalculatePath(pointA, nodeListA);
+    }
+
 
     void ReCalculate()
     {
@@ -80,17 +133,17 @@ public class NavMeshObject : MonoBehaviour
         }
 
 
-        for (int i = 0; i < count; i++)
-        {
-            for (int j = 0; j < count; j++)
-            {
-                if (i == j) continue;
-                if (graph[Index(i, j)])
-                {
-                    Debug.DrawLine(positions[i], positions[j] + new float3(0,1,0), Color.green, 100f);
-                }
-            }
-        }
+        //for (int i = 0; i < count; i++)
+        //{
+        //    for (int j = 0; j < count; j++)
+        //    {
+        //        if (i == j) continue;
+        //        if (graph[Index(i, j)])
+        //        {
+        //            Debug.DrawLine(positions[i], positions[j] + new float3(0, 1, 0), Color.green, 100f);
+        //        }
+        //    }
+        //}
     }
 
     public bool IsNotCrossing(float3 me, float3 point)
