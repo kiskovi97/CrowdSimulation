@@ -39,6 +39,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
         [ReadOnly]
         public NativeList<float3> goalPoints;
 
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeArray<float3> graphPoints;
+
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeArray<float> shortestPath;
+
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
             var walkers = chunk.GetNativeArray(WalkerType);
@@ -101,7 +109,30 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
         public void ExecuteDijstkra(ref PathFindingData data, Walker walker, Translation translation)
         {
+            var offset = ClosestGoalPoint(data.decidedGoal) * graphPoints.Length;
+            var min = 0;
+            var minDistance = shortestPath[offset] + math.length(graphPoints[0] - translation.Value);
+            for (int i=0; i<graphPoints.Length; i++)
+            {
+                if (shortestPath[offset + i] < 0) continue;
 
+                var distance = shortestPath[offset + i] + math.length(graphPoints[i] - translation.Value);
+                if (distance < minDistance)
+                {
+                    minDistance = distance;
+                    min = i;
+                }
+            }
+            if (shortestPath[offset + min] < 0)
+            {
+                data.decidedForce = walker.direction * -1;
+            }
+            else
+            {
+                var goalPoint = graphPoints[min];
+                data.decidedForce = goalPoint - translation.Value;
+            }
+            
         }
 
         public void ExecuteAStar(ref PathFindingData pathFindingData, Walker walker, Translation translation)
