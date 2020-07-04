@@ -9,17 +9,24 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     struct PathFindingJob : IJobChunk
     {
+        private static readonly int Angels = 10;
+
         public ArchetypeChunkComponentType<PathFindingData> PathFindingType;
         public ArchetypeChunkComponentType<Walker> WalkerType;
         [ReadOnly] public ArchetypeChunkComponentType<Translation> TranslationType;
         [ReadOnly] public ArchetypeChunkComponentType<CollisionParameters> CollisionType;
         
         public MapValues values;
+
         [ReadOnly] public NativeList<float> AStarMatrix;
 
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeMultiHashMap<int, EntitiesHashMap.MyData> entitiesHashMap;
+
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeArray<float> densityMap;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
@@ -55,6 +62,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                     switch (pathFindingData.avoidMethod)
                     {
                         case CollisionAvoidanceMethod.DensityGrid:
+                            ExecuteDensityGrid(pathFindingData, collision, ref walker, translation);
                             break;
                         case CollisionAvoidanceMethod.Forces:
                             ExecuteForceJob(pathFindingData, collision, ref walker, translation);
@@ -126,6 +134,55 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             {
                 walker.force += convinientForce *= 1f / bros;
             }
+        }
+
+        public void ExecuteDensityGrid(PathFindingData data, CollisionParameters collision, ref Walker walker, Translation translation)
+        {
+            var distance = data.decidedGoal - translation.Value;
+            if (math.length(distance) < data.radius)
+            {
+                data.decidedForce *= 0.5f;
+            }
+
+            var group = values.LayerSize * walker.broId;
+
+            var force = float3.zero;
+
+            for (int i = 0; i < Angels; i++)
+            {
+                var vector = GetDirection(walker.direction, i * math.PI * 2f / Angels) * collision.innerRadius;
+                var index = QuadrantVariables.BilinearInterpolation(translation.Value + vector, values);
+
+                var density0 = densityMap[group + index.Index0] * index.percent0;
+                var density1 = densityMap[group + index.Index1] * index.percent1;
+                var density2 = densityMap[group + index.Index2] * index.percent2;
+                var density3 = densityMap[group + index.Index3] * index.percent3;
+                var density = density0 + density1 + density2 + density3;
+
+                density0 = densityMap[index.Index0] * index.percent0;
+                density1 = densityMap[index.Index1] * index.percent1;
+                density2 = densityMap[index.Index2] * index.percent2;
+                density3 = densityMap[index.Index3] * index.percent3;
+                var densityOwn = density0 + density1 + density2 + density3;
+                if (density > 0)
+                {
+                    var direction = -vector / collision.outerRadius;
+                    force += (math.normalizesafe(direction) - direction) * (density);
+                }
+                if (densityOwn > 3)
+                {
+                    var direction = -vector / collision.outerRadius;
+                    force += (math.normalizesafe(direction) - direction) * (densityOwn - 3f);
+                }
+            }
+
+            walker.force = force + data.decidedForce;
+        }
+
+        private float3 GetDirection(float3 direction, float radians)
+        {
+            var rotation = quaternion.RotateY(radians);
+            return math.rotate(rotation, math.normalizesafe(direction));
         }
 
         private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, float radius)
