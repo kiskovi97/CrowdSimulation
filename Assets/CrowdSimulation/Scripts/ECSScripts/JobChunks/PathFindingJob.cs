@@ -69,8 +69,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                     }
                 }
 
-                
-
                 pathFindings[i] = pathFindingData;
                 walkers[i] = walker;
             }
@@ -98,7 +96,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
         }
 
-
         public void ExecuteAvoidEverybody(PathFindingData data, CollisionParameters collisionParameters, ref Walker walker, Translation translation)
         {
             var avoidanceForce = float3.zero;
@@ -106,39 +103,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                 ref avoidanceForce, collisionParameters.innerRadius * 2);
 
             walker.force = data.decidedForce + avoidanceForce;
-        }
-
-        private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, float radius)
-        {
-            var position = me.position;
-            var key = QuadrantVariables.GetPositionHashMapKey(position);
-            Foreach(key, me, ref avoidanceForce, radius);
-            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
-            Foreach(key, me, ref avoidanceForce, radius);
-            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
-            Foreach(key, me, ref avoidanceForce, radius);
-            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
-            Foreach(key, me, ref avoidanceForce, radius);
-            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
-            Foreach(key, me, ref avoidanceForce, radius);
-        }
-
-        private void Foreach(int key, QuadrantData me, ref float3 avoidanceForce, float radius)
-        {
-            if (entitiesHashMap.TryGetFirstValue(key, out EntitiesHashMap.MyData other, out NativeMultiHashMapIterator<int> iterator))
-            {
-                do
-                {
-                    var direction = me.position - other.position;
-                    var distance = math.length(direction);
-                    var distanceNormalized = (radius - distance) / (radius);
-                    if (distanceNormalized > 0f && distanceNormalized < 1f)
-                    {
-                        avoidanceForce += direction / radius;
-                    }
-
-                } while (entitiesHashMap.TryGetNextValue(out other, ref iterator));
-            }
         }
 
         public void ExecuteForceJob(PathFindingData data, CollisionParameters collisionParameters, ref Walker walker, Translation translation)
@@ -164,6 +128,21 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             }
         }
 
+        private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, float radius)
+        {
+            var position = me.position;
+            var key = QuadrantVariables.GetPositionHashMapKey(position);
+            Foreach(key, me, ref avoidanceForce, radius);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
+            Foreach(key, me, ref avoidanceForce, radius);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
+            Foreach(key, me, ref avoidanceForce, radius);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
+            Foreach(key, me, ref avoidanceForce, radius);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
+            Foreach(key, me, ref avoidanceForce, radius);
+        }
+
         private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, ref float3 convinientForce, ref int bros, float radius)
         {
             var position = me.position;
@@ -177,6 +156,24 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
             key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
             Foreach(key, me, ref avoidanceForce, ref convinientForce, ref bros, radius);
+        }
+
+        private void Foreach(int key, QuadrantData me, ref float3 avoidanceForce, float radius)
+        {
+            if (entitiesHashMap.TryGetFirstValue(key, out EntitiesHashMap.MyData other, out NativeMultiHashMapIterator<int> iterator))
+            {
+                do
+                {
+                    var direction = me.position - other.position;
+                    var distance = math.length(direction);
+                    var distanceNormalized = (radius - distance) / (radius);
+                    if (distanceNormalized > 0f && distanceNormalized < 1f)
+                    {
+                        avoidanceForce += direction / radius;
+                    }
+
+                } while (entitiesHashMap.TryGetNextValue(out other, ref iterator));
+            }
         }
 
         private void Foreach(int key, QuadrantData me, ref float3 avoidanceForce, ref float3 convinientForce, ref int bros, float radius)
