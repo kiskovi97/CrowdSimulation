@@ -47,18 +47,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var pathfindingHandle = pathFindingJ.Schedule(pathfindingGroup);
             pathfindingHandle.Complete();
 
-            var pathFindingJob = new ForcePathFindingJob()
-            {
-                targetMap = EntitiesHashMap.quadrantHashMap,
-            };
-            var pathFindingHandle = pathFindingJob.Schedule(this, pathfindingHandle);
             var denistyAvoidanceJob = new DensityAvoidanceJob()
             {
                 densityMap = DensitySystem.densityMatrix,
                 oneLayer = Map.OneLayer,
                 max = Map.Values
             };
-            var finalHandle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
+            var finalHandle = denistyAvoidanceJob.Schedule(this, pathfindingHandle);
             var probabilityJob = new ProbabilityAvoidJob()
             {
                 densityMap = DensitySystem.densityMatrix,
