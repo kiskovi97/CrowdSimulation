@@ -37,6 +37,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 entitiesHashMap = EntitiesHashMap.quadrantHashMap,
                 densityMap = DensitySystem.densityMatrix,
                 porbabilityMap = ProbabilitySystem.densityMatrix,
+                goalPoints = ShortestPathSystem.goalPoints,
                 PathFindingType = GetArchetypeChunkComponentType<PathFindingData>(),
                 TranslationType = GetArchetypeChunkComponentType<Translation>(),
                 WalkerType = GetArchetypeChunkComponentType<Walker>(),

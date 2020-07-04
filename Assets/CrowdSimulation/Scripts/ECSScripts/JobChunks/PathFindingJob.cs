@@ -1,6 +1,7 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
+using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -8,6 +9,7 @@ using Unity.Transforms;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
+    [BurstCompile]
     struct PathFindingJob : IJobChunk
     {
         private static readonly int Angels = 10;
@@ -16,7 +18,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
         public ArchetypeChunkComponentType<Walker> WalkerType;
         [ReadOnly] public ArchetypeChunkComponentType<Translation> TranslationType;
         [ReadOnly] public ArchetypeChunkComponentType<CollisionParameters> CollisionType;
-        
+
         public MapValues values;
 
         [ReadOnly] public NativeList<float> AStarMatrix;
@@ -32,6 +34,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeArray<float> porbabilityMap;
+
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeList<float3> goalPoints;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
@@ -62,44 +68,51 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                         case PathFindingMethod.No:
                             pathFindingData.decidedForce = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
                             break;
+                        case PathFindingMethod.Dijkstra:
+                            ExecuteDijstkra(ref pathFindingData, walker, translation);
+                            break;
                     }
+                }
 
-                    switch (pathFindingData.avoidMethod)
-                    {
-                        case CollisionAvoidanceMethod.DensityGrid:
-                            ExecuteDensityGrid(pathFindingData, collision, ref walker, translation);
-                            break;
-                        case CollisionAvoidanceMethod.Forces:
-                            ExecuteForceJob(pathFindingData, collision, ref walker, translation);
-                            break;
-                        case CollisionAvoidanceMethod.FutureAvoidance:
-                            ExecuteProbability(pathFindingData, collision, ref walker, translation);
-                            break;
-                        case CollisionAvoidanceMethod.Probability:
-                            ExecuteProbability(pathFindingData, collision, ref walker, translation);
-                            break;
-                        case CollisionAvoidanceMethod.No:
-                            ExecuteAvoidEverybody(pathFindingData, collision, ref walker, translation);
-                            break;
-                    }
+                switch (pathFindingData.avoidMethod)
+                {
+                    case CollisionAvoidanceMethod.DensityGrid:
+                        ExecuteDensityGrid(pathFindingData, collision, ref walker, translation);
+                        break;
+                    case CollisionAvoidanceMethod.Forces:
+                        ExecuteForceJob(pathFindingData, collision, ref walker, translation);
+                        break;
+                    case CollisionAvoidanceMethod.FutureAvoidance:
+                        ExecuteProbability(pathFindingData, collision, ref walker, translation);
+                        break;
+                    case CollisionAvoidanceMethod.Probability:
+                        ExecuteProbability(pathFindingData, collision, ref walker, translation);
+                        break;
+                    case CollisionAvoidanceMethod.No:
+                        ExecuteAvoidEverybody(pathFindingData, collision, ref walker, translation);
+                        break;
                 }
 
                 pathFindings[i] = pathFindingData;
                 walkers[i] = walker;
             }
         }
+
+
+        public void ExecuteDijstkra(ref PathFindingData data, Walker walker, Translation translation)
+        {
+
+        }
+
         public void ExecuteAStar(ref PathFindingData pathFindingData, Walker walker, Translation translation)
         {
-            var minvalue = ShortestPathSystem.GetMinValue(translation.Value, values, pathFindingData.decidedGoal, AStarMatrix);
-
+            var minvalue = GetMinValue(translation.Value, values, pathFindingData.decidedGoal, AStarMatrix);
             var distance = math.length(minvalue.goalPoint - pathFindingData.decidedGoal);
-
             if (math.length(pathFindingData.decidedGoal - translation.Value) < pathFindingData.radius + distance)
             {
                 pathFindingData.decidedForce = math.normalizesafe(pathFindingData.decidedGoal - translation.Value);
                 return;
             }
-
             if (math.length(minvalue.offsetVector) < 0.01f)
             {
                 pathFindingData.decidedForce = -walker.direction;
@@ -108,7 +121,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             {
                 pathFindingData.decidedForce = math.normalizesafe(minvalue.offsetVector);
             }
-
         }
 
         public void ExecuteAvoidEverybody(PathFindingData data, CollisionParameters collisionParameters, ref Walker walker, Translation translation)
@@ -347,6 +359,46 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
                 } while (entitiesHashMap.TryGetNextValue(out other, ref iterator));
             }
+        }
+
+        public ShortestPathSystem.MinValue GetMinValue(float3 position, MapValues values, float3 goal, NativeList<float> matrix)
+        {
+            var index = QuadrantVariables.IndexFromPosition(position, position, values);
+            if (goalPoints.Length <= 0)
+            {
+                return new ShortestPathSystem.MinValue()
+                {
+                    index = index.key,
+                    offsetVector = new float3(0, 0, 0),
+                    value = 0f,
+                    goalPoint = goal,
+                };
+            }
+            var min = ClosestGoalPoint(goal);
+            if (index.key < 0)
+            {
+                return new ShortestPathSystem.MinValue()
+                {
+                    index = index.key,
+                    offsetVector = new float3(0, 0, 0),
+                    value = 0f,
+                    goalPoint = goal,
+                };
+            }
+            return GetMinValue(index.key + min * values.LayerSize, values, min, matrix);
+        }
+
+        private int ClosestGoalPoint(float3 point)
+        {
+            var min = 0;
+            for (int i = 1; i < goalPoints.Length; i++)
+            {
+                if (math.lengthsq(goalPoints[min] - point) > math.lengthsq(goalPoints[i] - point))
+                {
+                    min = i;
+                }
+            }
+            return min;
         }
     }
 }

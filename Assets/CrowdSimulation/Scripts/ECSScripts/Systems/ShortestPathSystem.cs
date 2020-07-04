@@ -75,33 +75,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             }
         }
 
-        public static MinValue GetMinValue(float3 position, MapValues values, float3 goal, NativeList<float> matrix)
-        {
-            var index = QuadrantVariables.IndexFromPosition(position, position, values);
-            if (goalPoints.Length <= 0)
-            {
-                return new MinValue()
-                {
-                    index = index.key,
-                    offsetVector = new float3(0, 0, 0),
-                    value = 0f,
-                    goalPoint = goal,
-                };
-            }
-            var min = ClosestGoalPoint(goal);
-            if (index.key < 0)
-            {
-                return new MinValue()
-                {
-                    index = index.key,
-                    offsetVector = new float3(0, 0, 0),
-                    value = 0f,
-                    goalPoint = goal,
-                };
-            }
-            return GetMinValue(index.key + min * values.LayerSize, values, min, matrix);
-        }
-
         private static MinValue GetMinValue(int index, MapValues value, int goalIndex, NativeList<float> matrix)
         {
             var density = matrix[index];

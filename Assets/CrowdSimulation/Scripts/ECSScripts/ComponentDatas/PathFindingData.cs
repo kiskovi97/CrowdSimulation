@@ -27,6 +27,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas
     {
         No,
         AStar,
+        Dijkstra,
     }
 
     public enum CollisionAvoidanceMethod
