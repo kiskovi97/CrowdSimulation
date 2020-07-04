@@ -9,7 +9,7 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 {
     [BurstCompile]
-    public struct AvoidEverybody : IJobForEach<PathFindingData, CollisionParameters, Walker, Translation>
+    public struct AvoidEverybodyJob : IJobForEach<PathFindingData, CollisionParameters, Walker, Translation>
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]

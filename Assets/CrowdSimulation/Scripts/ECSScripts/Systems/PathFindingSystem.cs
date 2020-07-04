@@ -2,6 +2,9 @@
 using Unity.Jobs;
 using Unity.Collections;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
+using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
+using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Unity.Transforms;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
@@ -16,27 +19,37 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     {
         private static int iteration = 0;
 
+        private EntityQuery pathfindingGroup;
+
         protected override void OnCreate()
         {
+            var pathFindingQuery = new EntityQueryDesc
+            {
+                All = new ComponentType[] { typeof(PathFindingData), ComponentType.ReadOnly<Translation>(), typeof(Walker) },
+            };
+            pathfindingGroup = GetEntityQuery(pathFindingQuery);
             base.OnCreate();
         }
 
         protected override void OnUpdate()
         {
             iteration++;
-            var shortestPathJob = new ShortestPathReadJob()
+            var pathFindingJ = new PathFindingJob()
             {
                 values = Map.Values,
-                matrix = ShortestPathSystem.densityMatrix
+                AStarMatrix = ShortestPathSystem.densityMatrix,
+                PathFindingType = GetArchetypeChunkComponentType<PathFindingData>(),
+                TranslationType = GetArchetypeChunkComponentType<Translation>(),
+                WalkerType = GetArchetypeChunkComponentType<Walker>(),
             };
-            var shortestHandle = shortestPathJob.Schedule(this);
-            shortestHandle.Complete();
+            var pathfindingHandle = pathFindingJ.Schedule(pathfindingGroup);
+            pathfindingHandle.Complete();
 
-            var avoidJob = new AvoidEverybody()
+            var avoidJob = new AvoidEverybodyJob()
             {
                 targetMap = EntitiesHashMap.quadrantHashMap,
             };
-            var avoidHandle = avoidJob.Schedule(this, shortestHandle);
+            var avoidHandle = avoidJob.Schedule(this, pathfindingHandle);
             var pathFindingJob = new ForcePathFindingJob()
             {
                 targetMap = EntitiesHashMap.quadrantHashMap,
@@ -49,12 +62,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 max = Map.Values
             };
             var finalHandle = denistyAvoidanceJob.Schedule(this, pathFindingHandle);
-            //var futureVoidanceJob = new FutureCollisionAvoidanceJob()
-            //{
-            //    targetMap = EntitiesHashMap.quadrantHashMap,
-            //    iteration = iteration,
-            //};
-            //var futureHandle = futureVoidanceJob.Schedule(this, pathFindingHandle);
             var probabilityJob = new ProbabilityAvoidJob()
             {
                 densityMap = DensitySystem.densityMatrix,
