@@ -1,7 +1,6 @@
 ﻿using Unity.Entities;
 using Unity.Jobs;
 using Unity.Collections;
-using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Unity.Transforms;
@@ -17,8 +16,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     [UpdateAfter(typeof(ProbabilitySystem))]
     public class PathFindingSystem : ComponentSystem
     {
-        private static int iteration = 0;
-
         private EntityQuery pathfindingGroup;
 
         protected override void OnCreate()
@@ -33,7 +30,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         protected override void OnUpdate()
         {
-            iteration++;
             var pathFindingJ = new PathFindingJob()
             {
                 values = Map.Values,

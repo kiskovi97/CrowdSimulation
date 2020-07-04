@@ -1,9 +1,10 @@
 ﻿using Unity.Entities;
 using Unity.Jobs;
 using Unity.Collections;
-using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
+using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
 using Unity.Transforms;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {

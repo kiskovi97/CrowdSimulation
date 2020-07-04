@@ -5,7 +5,7 @@ using Unity.Collections;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Unity.Transforms;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
     public struct DecisionJobChunk : IJobChunk
