@@ -1,4 +1,5 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 using Unity.Collections;
 using Unity.Entities;
@@ -27,6 +28,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeArray<float> densityMap;
+
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeArray<float> porbabilityMap;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
@@ -68,8 +73,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                             ExecuteForceJob(pathFindingData, collision, ref walker, translation);
                             break;
                         case CollisionAvoidanceMethod.FutureAvoidance:
+                            ExecuteProbability(pathFindingData, collision, ref walker, translation);
                             break;
                         case CollisionAvoidanceMethod.Probability:
+                            ExecuteProbability(pathFindingData, collision, ref walker, translation);
                             break;
                         case CollisionAvoidanceMethod.No:
                             ExecuteAvoidEverybody(pathFindingData, collision, ref walker, translation);
@@ -179,10 +186,82 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             walker.force = force + data.decidedForce;
         }
 
-        private float3 GetDirection(float3 direction, float radians)
+        public void ExecuteProbability(PathFindingData data, CollisionParameters collision, ref Walker walker, Translation translation)
+        {
+            var distance = data.decidedGoal - translation.Value;
+            if (math.length(distance) < data.radius)
+            {
+                data.decidedForce *= 0.5f;
+            }
+
+            var force = data.decidedForce;
+            var densityB = GetDensity(collision.outerRadius, translation.Value, translation.Value + force, walker.direction, data.avoidMethod == CollisionAvoidanceMethod.FutureAvoidance);
+
+            for (int i = 2; i < 4; i++)
+            {
+                densityB *= 0.9f;
+                var multi = math.pow(0.5f, i);
+                var A = GetDirection(force, math.PI * multi);
+                var B = GetDirection(force, 0);
+                var C = GetDirection(force, -math.PI * multi);
+
+                var densityA = GetDensity(collision.outerRadius, translation.Value, translation.Value + A, walker.direction,
+                    data.avoidMethod == CollisionAvoidanceMethod.FutureAvoidance) * 0.5f;
+
+                var densityC = GetDensity(collision.outerRadius, translation.Value, translation.Value + C, walker.direction,
+                    data.avoidMethod == CollisionAvoidanceMethod.FutureAvoidance) * 0.5f;
+
+                if (densityA > densityC && densityB > densityC)
+                {
+                    force = C * 0.8f;
+                    densityB = densityC;
+                }
+                else
+                {
+                    if (densityB > densityA && densityC > densityA)
+                    {
+                        force = A * 0.8f;
+                        densityB = densityA;
+                    }
+                    else
+                    {
+                        force = B;
+                    }
+                }
+            }
+
+            walker.force = force;
+        }
+
+        private float GetDensity(float radius, float3 position, float3 point, float3 velocity, bool dens)
+        {
+            var index = QuadrantVariables.BilinearInterpolation(point, values);
+
+            if (dens)
+            {
+                var density0 = densityMap[index.Index0] * index.percent0;
+                var density1 = densityMap[index.Index1] * index.percent1;
+                var density2 = densityMap[index.Index2] * index.percent2;
+                var density3 = densityMap[index.Index3] * index.percent3;
+                //var ownDens = SetProbabilityJob.Value(radius, position, point, velocity);
+                return (density0 + density1 + density2 + density3);// - ownDens);
+            }
+            else
+            {
+                var density0 = porbabilityMap[index.Index0] * index.percent0;
+                var density1 = porbabilityMap[index.Index1] * index.percent1;
+                var density2 = porbabilityMap[index.Index2] * index.percent2;
+                var density3 = porbabilityMap[index.Index3] * index.percent3;
+                var ownDens = SetProbabilityJob.Value(radius, position, point, velocity);
+                return (density0 + density1 + density2 + density3 - ownDens);
+            }
+
+        }
+
+        public static float3 GetDirection(float3 direction, float radians)
         {
             var rotation = quaternion.RotateY(radians);
-            return math.rotate(rotation, math.normalizesafe(direction));
+            return math.rotate(rotation, direction);
         }
 
         private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, float radius)

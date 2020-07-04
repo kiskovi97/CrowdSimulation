@@ -40,6 +40,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 AStarMatrix = ShortestPathSystem.densityMatrix,
                 entitiesHashMap = EntitiesHashMap.quadrantHashMap,
                 densityMap = DensitySystem.densityMatrix,
+                porbabilityMap = ProbabilitySystem.densityMatrix,
                 PathFindingType = GetArchetypeChunkComponentType<PathFindingData>(),
                 TranslationType = GetArchetypeChunkComponentType<Translation>(),
                 WalkerType = GetArchetypeChunkComponentType<Walker>(),
@@ -47,15 +48,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             };
             var pathfindingHandle = pathFindingJ.Schedule(pathfindingGroup);
             pathfindingHandle.Complete();
-
-            var probabilityJob = new ProbabilityAvoidJob()
-            {
-                densityMap = DensitySystem.densityMatrix,
-                porbabilityMap = ProbabilitySystem.densityMatrix,
-                max = Map.Values
-            };
-            var probabilityHandle = probabilityJob.Schedule(this, pathfindingHandle);
-            probabilityHandle.Complete();
         }
     }
 }
