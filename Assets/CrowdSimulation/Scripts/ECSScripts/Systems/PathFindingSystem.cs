@@ -33,7 +33,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var pathFindingJ = new PathFindingJob()
             {
                 values = Map.Values,
-                AStarMatrix = ShortestPathSystem.densityMatrix,
+                AStarMatrix = AStarMatrixSystem.densityMatrix,
                 entitiesHashMap = EntitiesHashMap.quadrantHashMap,
                 densityMap = DensitySystem.densityMatrix,
                 porbabilityMap = ProbabilitySystem.densityMatrix,

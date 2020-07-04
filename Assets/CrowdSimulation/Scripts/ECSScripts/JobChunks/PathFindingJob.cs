@@ -392,12 +392,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             }
         }
 
-        public ShortestPathSystem.MinValue GetMinValue(float3 position, MapValues values, float3 goal, NativeList<float> matrix)
+        public AStarMatrixSystem.MinValue GetMinValue(float3 position, MapValues values, float3 goal, NativeList<float> matrix)
         {
             var index = QuadrantVariables.IndexFromPosition(position, position, values);
             if (goalPoints.Length <= 0)
             {
-                return new ShortestPathSystem.MinValue()
+                return new AStarMatrixSystem.MinValue()
                 {
                     index = index.key,
                     offsetVector = new float3(0, 0, 0),
@@ -408,7 +408,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             var min = ClosestGoalPoint(goal);
             if (index.key < 0)
             {
-                return new ShortestPathSystem.MinValue()
+                return new AStarMatrixSystem.MinValue()
                 {
                     index = index.key,
                     offsetVector = new float3(0, 0, 0),
