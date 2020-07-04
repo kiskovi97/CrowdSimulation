@@ -1,4 +1,5 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using System;
 using Unity.Burst;
@@ -146,9 +147,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 {
                     densityB *= 0.9f;
                     var multi = math.pow(0.5f, i);
-                    var A = ProbabilityAvoidJob.GetDirection(force, math.PI * multi);
-                    var B = ProbabilityAvoidJob.GetDirection(force, 0);
-                    var C = ProbabilityAvoidJob.GetDirection(force, -math.PI * multi);
+                    var A = PathFindingJob.GetDirection(force, math.PI * multi);
+                    var B = PathFindingJob.GetDirection(force, 0);
+                    var C = PathFindingJob.GetDirection(force, -math.PI * multi);
 
                     var densityA = GetDensity(collision.outerRadius, translation.Value, translation.Value + A, walker.direction);
 
