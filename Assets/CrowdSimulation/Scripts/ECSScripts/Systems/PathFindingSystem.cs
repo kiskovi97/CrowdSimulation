@@ -38,23 +38,20 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             {
                 values = Map.Values,
                 AStarMatrix = ShortestPathSystem.densityMatrix,
+                entitiesHashMap = EntitiesHashMap.quadrantHashMap,
                 PathFindingType = GetArchetypeChunkComponentType<PathFindingData>(),
                 TranslationType = GetArchetypeChunkComponentType<Translation>(),
                 WalkerType = GetArchetypeChunkComponentType<Walker>(),
+                CollisionType = GetArchetypeChunkComponentType<CollisionParameters>(),
             };
             var pathfindingHandle = pathFindingJ.Schedule(pathfindingGroup);
             pathfindingHandle.Complete();
 
-            var avoidJob = new AvoidEverybodyJob()
-            {
-                targetMap = EntitiesHashMap.quadrantHashMap,
-            };
-            var avoidHandle = avoidJob.Schedule(this, pathfindingHandle);
             var pathFindingJob = new ForcePathFindingJob()
             {
                 targetMap = EntitiesHashMap.quadrantHashMap,
             };
-            var pathFindingHandle = pathFindingJob.Schedule(this, avoidHandle);
+            var pathFindingHandle = pathFindingJob.Schedule(this, pathfindingHandle);
             var denistyAvoidanceJob = new DensityAvoidanceJob()
             {
                 densityMap = DensitySystem.densityMatrix,

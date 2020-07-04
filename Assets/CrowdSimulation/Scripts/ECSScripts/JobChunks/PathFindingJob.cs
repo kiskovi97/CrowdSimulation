@@ -1,10 +1,5 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -17,21 +12,28 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
         public ArchetypeChunkComponentType<PathFindingData> PathFindingType;
         public ArchetypeChunkComponentType<Walker> WalkerType;
         [ReadOnly] public ArchetypeChunkComponentType<Translation> TranslationType;
+        [ReadOnly] public ArchetypeChunkComponentType<CollisionParameters> CollisionType;
         
         public MapValues values;
         [ReadOnly] public NativeList<float> AStarMatrix;
+
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeMultiHashMap<int, EntitiesHashMap.MyData> entitiesHashMap;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
             var walkers = chunk.GetNativeArray(WalkerType);
             var pathFindings = chunk.GetNativeArray(PathFindingType);
             var translations = chunk.GetNativeArray(TranslationType);
+            var collisions = chunk.GetNativeArray(CollisionType);
 
             for (var i = 0; i < chunk.Count; i++)
             {
                 var walker = walkers[i];
                 var pathFindingData = pathFindings[i];
                 var translation = translations[i];
+                var collision = collisions[i];
 
 
                 if (math.length(pathFindingData.decidedGoal - translation.Value) < pathFindingData.radius)
@@ -61,6 +63,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                         case CollisionAvoidanceMethod.Probability:
                             break;
                         case CollisionAvoidanceMethod.No:
+                            ExecuteAvoidEverybody(pathFindingData, collision, ref walker, translation);
                             break;
                     }
                 }
@@ -92,6 +95,49 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                 pathFindingData.decidedForce = math.normalizesafe(minvalue.offsetVector);
             }
 
+        }
+
+
+        public void ExecuteAvoidEverybody(PathFindingData data, CollisionParameters collisionParameters, ref Walker walker, Translation translation)
+        {
+            var avoidanceForce = float3.zero;
+            ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
+                ref avoidanceForce, collisionParameters.innerRadius * 2);
+
+            walker.force = data.decidedForce + avoidanceForce;
+        }
+
+        private void ForeachAround(QuadrantData me, ref float3 avoidanceForce, float radius)
+        {
+            var position = me.position;
+            var key = QuadrantVariables.GetPositionHashMapKey(position);
+            Foreach(key, me, ref avoidanceForce, radius);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(1, 0, 0));
+            Foreach(key, me, ref avoidanceForce, radius);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(-1, 0, 0));
+            Foreach(key, me, ref avoidanceForce, radius);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, 1));
+            Foreach(key, me, ref avoidanceForce, radius);
+            key = QuadrantVariables.GetPositionHashMapKey(position, new float3(0, 0, -1));
+            Foreach(key, me, ref avoidanceForce, radius);
+        }
+
+        private void Foreach(int key, QuadrantData me, ref float3 avoidanceForce, float radius)
+        {
+            if (entitiesHashMap.TryGetFirstValue(key, out EntitiesHashMap.MyData other, out NativeMultiHashMapIterator<int> iterator))
+            {
+                do
+                {
+                    var direction = me.position - other.position;
+                    var distance = math.length(direction);
+                    var distanceNormalized = (radius - distance) / (radius);
+                    if (distanceNormalized > 0f && distanceNormalized < 1f)
+                    {
+                        avoidanceForce += direction / radius;
+                    }
+
+                } while (entitiesHashMap.TryGetNextValue(out other, ref iterator));
+            }
         }
     }
 }
