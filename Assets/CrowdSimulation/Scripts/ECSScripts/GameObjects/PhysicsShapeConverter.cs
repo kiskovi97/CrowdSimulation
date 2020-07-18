@@ -9,6 +9,7 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using System.Linq;
 using Assets.CrowdSimulation.Scripts.Utilities;
 using System.Drawing;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
 public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
 {
@@ -73,6 +74,7 @@ public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
         };
         graph.AddPoints(added);
         Changed = true;
+        GraphSystem.UpdateGraph();
     }
 
     class Comperer : IComparer<float3>

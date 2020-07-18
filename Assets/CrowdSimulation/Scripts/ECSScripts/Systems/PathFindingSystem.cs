@@ -14,6 +14,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     [UpdateAfter(typeof(FighterSystem))]
     [UpdateAfter(typeof(ShortestPathSystem))]
     [UpdateAfter(typeof(ProbabilitySystem))]
+    [UpdateAfter(typeof(DijsktraSystem))]
     public class PathFindingSystem : ComponentSystem
     {
         private EntityQuery pathfindingGroup;
@@ -38,6 +39,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 densityMap = DensitySystem.densityMatrix,
                 porbabilityMap = ProbabilitySystem.densityMatrix,
                 goalPoints = ShortestPathSystem.goalPoints,
+                graphPoints = GraphSystem.graphPoints,
+                shortestPath = DijsktraSystem.shortestPath,
+                shapeGraph = GraphSystem.shapeGraph,
                 PathFindingType = GetArchetypeChunkComponentType<PathFindingData>(),
                 TranslationType = GetArchetypeChunkComponentType<Translation>(),
                 WalkerType = GetArchetypeChunkComponentType<Walker>(),

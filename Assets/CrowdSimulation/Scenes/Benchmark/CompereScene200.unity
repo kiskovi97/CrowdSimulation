@@ -240,7 +240,12 @@ PrefabInstance:
     - target: {fileID: 1001998078931032056, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
       propertyPath: CollisionAvoidanceMethod
-      value: 3
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1001998078931032056, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: PathFindingMethod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3996854967887251094, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
@@ -275,7 +280,12 @@ PrefabInstance:
     - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
       propertyPath: CollisionAvoidanceMethod
-      value: 3
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: PathFindingMethod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6062406484098030748, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}

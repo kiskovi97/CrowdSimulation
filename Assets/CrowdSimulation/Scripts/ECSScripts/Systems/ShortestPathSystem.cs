@@ -1,13 +1,6 @@
-﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
-using Unity.Burst;
-using Unity.Collections;
+﻿using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
-using Unity.Physics;
-using Unity.Transforms;
-using UnityEngine;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
@@ -40,6 +33,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             goalPoints.Add(goalPoint);
 
+            DijsktraSystem.AddGoalPoint(goalPoint);
             AStarMatrixSystem.AddGoalPoint(goalPoint);
 
             DebugProxy.Log(goalPoint + " / " + goalPoints.Length);

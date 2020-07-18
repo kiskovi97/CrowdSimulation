@@ -7,7 +7,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 {
     public class MyMath
     {
-        class Point
+        struct Point
         {
             public Point(float a, float b)
             {

@@ -45,7 +45,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
         [NativeDisableParallelForRestriction]
         [ReadOnly]
-        public NativeArray<float> shortestPath;
+        public NativeList<float> shortestPath;
+
+        [NativeDisableParallelForRestriction]
+        [ReadOnly]
+        public NativeArray<bool> shapeGraph;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {
@@ -109,11 +113,26 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
         public void ExecuteDijstkra(ref PathFindingData data, Walker walker, Translation translation)
         {
+            var straightPath = GraphSystem.IsNotCrossing(translation.Value, data.decidedGoal, graphPoints, shapeGraph);
+
+            if (straightPath)
+            {
+                data.decidedForce = data.decidedGoal - translation.Value;
+                return;
+            }
+
             var offset = ClosestGoalPoint(data.decidedGoal) * graphPoints.Length;
             var min = 0;
             var minDistance = shortestPath[offset] + math.length(graphPoints[0] - translation.Value);
             for (int i=0; i<graphPoints.Length; i++)
             {
+                var isNotCrossing = GraphSystem.IsNotCrossing(translation.Value, graphPoints[i], graphPoints, shapeGraph);
+
+                if (!isNotCrossing)
+                {
+                    continue;
+                }
+
                 if (shortestPath[offset + i] < 0) continue;
 
                 var distance = shortestPath[offset + i] + math.length(graphPoints[i] - translation.Value);
