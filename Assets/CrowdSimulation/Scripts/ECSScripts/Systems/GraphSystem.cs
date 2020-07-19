@@ -12,12 +12,37 @@ using UnityEngine;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
     [AlwaysSynchronizeSystem]
-    class GraphSystem : ComponentSystem
+    public class GraphSystem : ComponentSystem
     {
-        public static NativeArray<float3> graphPoints;
+        public static NativeArray<GraphPoint> graphPoints;
         public static NativeArray<bool> graph;
         internal static NativeArray<bool> shapeGraph;
 
+        public struct GraphPoint
+        {
+            public GraphPoint(float3 inner, float3 outer)
+            {
+                posInner = inner;
+                posOuter = outer;
+            }
+
+            public float3 posInner;
+            public float3 posOuter;
+
+            public override bool Equals(object obj)
+            {
+                if (obj is GraphPoint point)
+                {
+                    return posInner.Equals(point.posInner);
+                }
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                return -595007949 + EqualityComparer<float3>.Default.GetHashCode(posInner);
+            }
+        }
 
         public static void UpdateGraph()
         {
@@ -26,7 +51,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         protected override void OnCreate()
         {
-            graphPoints = new NativeArray<float3>(0,Allocator.Persistent);
+            graphPoints = new NativeArray<GraphPoint>(0,Allocator.Persistent);
             graph = new NativeArray<bool>(0, Allocator.Persistent);
             shapeGraph = new NativeArray<bool>(0, Allocator.Persistent);
             base.OnCreate();
@@ -52,7 +77,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 {
                     if (graph[Index(i,j)])
                     {
-                        DebugProxy.DrawLine(graphPoints[i], graphPoints[j], Color.blue);
+                        DebugProxy.DrawLine(graphPoints[i].posOuter, graphPoints[j].posOuter, Color.green);
+                    }
+                }
+
+            for (int i = 0; i < graphPoints.Length; i++)
+                for (int j = 0; j < graphPoints.Length; j++)
+                {
+                    if (shapeGraph[Index(i, j)])
+                    {
+                        DebugProxy.DrawLine(graphPoints[i].posInner, graphPoints[j].posInner, Color.blue);
                     }
                 }
         }
@@ -79,7 +113,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             if (graphPoints.IsCreated) graphPoints.Dispose();
             if (shapeGraph.IsCreated) shapeGraph.Dispose();
             graph = new NativeArray<bool>(count * count, Allocator.Persistent);
-            graphPoints = new NativeArray<float3>(count, Allocator.Persistent);
+            graphPoints = new NativeArray<GraphPoint>(count, Allocator.Persistent);
             shapeGraph = new NativeArray<bool>(count * count, Allocator.Persistent);
 
 
@@ -96,7 +130,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
                     graphPoints[meIndex + i] = me;
 
-                    if (IsNotCrossing(me, lPoint))
+                    if (IsNotCrossing(me.posOuter, lPoint.posOuter))
                     {
                         graph[Index(meIndex + left, meIndex + i)] = true;
                         graph[Index(meIndex + i, meIndex + left)] = true;
@@ -114,7 +148,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 {
                     if (!graph[Index(i, j)])
                     {
-                        if (IsNotCrossing(graphPoints[i], graphPoints[j]) && NotInside(graphPoints[i], graphPoints[j], shapes))
+                        if (IsNotCrossing(graphPoints[i].posOuter, graphPoints[j].posOuter) && NotInside(graphPoints[i].posOuter, graphPoints[j].posOuter, shapes))
                         {
                             graph[Index(i, j)] = true;
                         }
@@ -130,7 +164,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             for (int i = 0; i < graphPoints.Length; i++)
             {
-                if (IsNotCrossing(goalPoint, graphPoints[i]))
+                if (IsNotCrossing(goalPoint, graphPoints[i].posOuter))
                 {
                     nodeListA.Add(i);
                 }
@@ -143,7 +177,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             return IsNotCrossing(me, other, graphPoints, shapeGraph);
         }
 
-        public static bool IsNotCrossing(float3 me, float3 point, NativeArray<float3> graphPoints, NativeArray<bool> shapeGraph)
+        public static bool IsNotCrossing(float3 me, float3 point, NativeArray<GraphPoint> graphPoints, NativeArray<bool> shapeGraph)
         {
             for (int i = 0; i < graphPoints.Length; i++)
                 for (int j = 0; j < graphPoints.Length; j++)
@@ -152,19 +186,19 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     if (!shapeGraph[Index(i, j, graphPoints.Length)]) continue;
                     var other1 = graphPoints[i];
                     var other2 = graphPoints[j];
-                    if ((other1.Equals(point) && other2.Equals(me)) || (other1.Equals(me) && other2.Equals(point)))
+                    if ((other1.posInner.Equals(point) && other2.posInner.Equals(me)) || (other1.posInner.Equals(me) && other2.posInner.Equals(point)))
                     {
                         continue;
                     }
-                    if (MyMath.AreInLine(me, point, other1, other2))
+                    if (MyMath.AreInLine(me, point, other1.posInner, other2.posInner))
                     {
-                        if (MyMath.AreIntersect(me, point, other1, other2))
+                        if (MyMath.AreIntersect(me, point, other1.posInner, other2.posInner))
                         {
                             return false;
                         }
                         continue;
                     }
-                    if (MyMath.DoIntersect(me, point, other1, other2))
+                    if (MyMath.DoIntersect(me, point, other1.posInner, other2.posInner))
                     {
                         return false;
                     }
@@ -172,11 +206,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             return true;
         }
 
-        public static bool NotInside(float3 me, float3 point, List<List<float3>> shapes)
+        public static bool NotInside(float3 me, float3 point, List<List<GraphPoint>> shapes)
         {
             foreach (var shape in shapes)
             {
-                if (MyMath.InnerPoint((point + me) / 2f, shape.ToArray()))
+                if (MyMath.InnerPoint((point + me) / 2f, shape.Select((p) => p.posInner).ToArray()))
                 {
                     return false;
                 }

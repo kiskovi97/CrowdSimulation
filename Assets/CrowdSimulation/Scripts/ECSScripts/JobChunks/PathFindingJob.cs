@@ -41,7 +41,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
         [NativeDisableParallelForRestriction]
         [ReadOnly]
-        public NativeArray<float3> graphPoints;
+        public NativeArray<GraphSystem.GraphPoint> graphPoints;
 
         [NativeDisableParallelForRestriction]
         [ReadOnly]
@@ -123,10 +123,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
             var offset = ClosestGoalPoint(data.decidedGoal) * graphPoints.Length;
             var min = 0;
-            var minDistance = shortestPath[offset] + math.length(graphPoints[0] - translation.Value);
+            var minDistance = shortestPath[offset] + math.length(graphPoints[0].posOuter - translation.Value);
             for (int i=0; i<graphPoints.Length; i++)
             {
-                var isNotCrossing = GraphSystem.IsNotCrossing(translation.Value, graphPoints[i], graphPoints, shapeGraph);
+                var isNotCrossing = GraphSystem.IsNotCrossing(translation.Value, graphPoints[i].posOuter, graphPoints, shapeGraph);
 
                 if (!isNotCrossing)
                 {
@@ -135,7 +135,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
                 if (shortestPath[offset + i] < 0) continue;
 
-                var distance = shortestPath[offset + i] + math.length(graphPoints[i] - translation.Value);
+                var distance = shortestPath[offset + i] + math.length(graphPoints[i].posOuter - translation.Value);
                 if (distance < minDistance)
                 {
                     minDistance = distance;
@@ -149,7 +149,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             else
             {
                 var goalPoint = graphPoints[min];
-                data.decidedForce = goalPoint - translation.Value;
+                data.decidedForce = goalPoint.posOuter - translation.Value;
             }
             
         }

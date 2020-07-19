@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,8 +13,15 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
     {
         public class Point : IComparable<Point>, IEquatable<Point>
         {
-            public float3 point;
+            public float3 point { get; }
+            public float3 outerPoint { get; }
             public HashSet<Point> neighbours = new HashSet<Point>();
+
+            public Point(float3 real, float3 offset)
+            {
+                point = real;
+                outerPoint = offset;
+            }
 
             public int CompareTo(Point other)
             {
@@ -26,10 +34,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                 if (other == null) return false;
                 return math.length(point - other.point) < 0.02f;
             }
-
-            public static explicit operator Point(float3 b) => new Point() { point = b };
-            public static explicit operator Point(Vector3 b) => new Point() { point = b };
-
+            
             public override bool Equals(object obj)
             {
                 if (obj is Point other)
@@ -99,9 +104,9 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
 
         List<Point> points = new List<Point>();
 
-        public List<List<float3>> GetShapes()
+        public List<List<GraphSystem.GraphPoint>> GetShapes()
         {
-            var circles = new List<List<float3>>();
+            var circles = new List<List<GraphSystem.GraphPoint>>();
 
             var circlePoints = new List<List<Point>>();
             while (points.Count > 0)
@@ -112,7 +117,7 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                     Remove(circle[i]);
                 }
                 circlePoints.Add(circle);
-                circles.Add(circle.Select((one) => one.point).ToList());
+                circles.Add(circle.Select((one) => new GraphSystem.GraphPoint(one.point, one.outerPoint)).ToList());
             }
 
             for (int cI = 0; cI < circlePoints.Count; cI++)
@@ -128,12 +133,12 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
             return circles;
         }
 
-        public void AddPoints(List<float3> input)
+        public void AddPoints(List<float3> input, List<float3> offsets)
         {
             List<Point> circle = new List<Point>();
             for (int i = 0; i < input.Count; i++)
             {
-                circle.Add((Point)input[i]);
+                circle.Add(new Point(input[i], offsets[i]));
             }
             for (int i = 0; i < circle.Count; i++)
             {
@@ -223,7 +228,9 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                 {
                     if (MyMath.DoIntersect(A.point, B.point, C.point, D.point))
                     {
-                        var intersection = (Point)MyMath.Intersect(A.point, B.point, C.point, D.point);
+                        var point = MyMath.Intersect(A.point, B.point, C.point, D.point);
+                        var pointOffset = MyMath.Intersect(A.outerPoint, B.outerPoint, C.outerPoint, D.outerPoint);
+                        var intersection = new Point(point, pointOffset);
                         list.Add(new Intersection(C, D, intersection));
                         points.Add(intersection);
                     }
@@ -270,6 +277,14 @@ namespace Assets.CrowdSimulation.Scripts.Utilities
                 foreach (var B in A.neighbours)
                 {
                     Debug.DrawLine(A.point, B.point * 0.4f + A.point * 0.6f + new float3(0, 1, 0), Color.green, 100f);
+                }
+            }
+
+            foreach (var A in points)
+            {
+                foreach (var B in A.neighbours)
+                {
+                    Debug.DrawLine(A.outerPoint, B.outerPoint * 0.4f + A.outerPoint * 0.6f + new float3(0, 1, 0), Color.green, 100f);
                 }
             }
         }

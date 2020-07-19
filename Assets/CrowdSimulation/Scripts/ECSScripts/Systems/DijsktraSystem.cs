@@ -52,19 +52,19 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 {
                     if (previousPoint[i] == -1)
                     {
-                        DebugProxy.DrawLine(GraphSystem.graphPoints[i % oneLayer], goalPoints[goalPoint], Color.black);
+                        DebugProxy.DrawLine(GraphSystem.graphPoints[i % oneLayer].posOuter, goalPoints[goalPoint], Color.black);
 
                     }
                     else
                     {
-                        var goal = GraphSystem.graphPoints[previousPoint[i]];
-                        var from = GraphSystem.graphPoints[i % oneLayer];
+                        var goal = GraphSystem.graphPoints[previousPoint[i]].posOuter;
+                        var from = GraphSystem.graphPoints[i % oneLayer].posOuter;
                         DebugProxy.DrawLine(from,  (from+ goal * 4f) /5f, Color.green);
                     }
                 }
                 else
                 {
-                    DebugProxy.DrawLine(GraphSystem.graphPoints[i % oneLayer], goalPoints[goalPoint], Color.red);
+                    DebugProxy.DrawLine(GraphSystem.graphPoints[i % oneLayer].posOuter, goalPoints[goalPoint], Color.red);
                 }
             }
         }
@@ -176,7 +176,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 var isRoad = GraphSystem.graph[GraphSystem.Index(min, i)];
                 if (isRoad)
                 {
-                    var length = math.length(GraphSystem.graphPoints[i] - GraphSystem.graphPoints[min]);
+                    var length = math.length(GraphSystem.graphPoints[i].posOuter - GraphSystem.graphPoints[min].posOuter);
                     if (shortestPath[i + offset] == -1 || shortestPath[i + offset] > minValue + length)
                     {
                         shortestPath[i + offset] = minValue + length;

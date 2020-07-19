@@ -15,6 +15,8 @@ public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
 {
     Unity.Physics.Authoring.PhysicsShapeAuthoring physicsShape;
 
+    private static float offset = 1.4f;
+
     public static Graph graph = new Graph();
     public static bool Changed = false;
 
@@ -31,11 +33,7 @@ public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
         var scale = (float3)transform.lossyScale * new float3(pSize.x, 0, pSize.y);
         var center = pCenter + (float3)transform.position;
         center.y = 0;
-        var A = center + math.mul(orientation, scale * new float3(1, 0, 1) * 0.5f + new float3(0.5f, 0, 0.5f));
-        var B = center + math.mul(orientation, scale * new float3(-1, 0, 1) * 0.5f + new float3(-0.5f, 0, 0.5f));
-        var C = center + math.mul(orientation, scale * new float3(-1, 0, -1) * 0.5f + new float3(-0.5f, 0, -0.5f));
-        var D = center + math.mul(orientation, scale * new float3(1, 0, -1) * 0.5f + new float3(0.5f, 0, -0.5f));
-        AddPoints(A, B, C, D);
+        AddPoints(center, orientation, scale);
     }
 
     private void GetSphere()
@@ -45,11 +43,7 @@ public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
         var scale = transform.lossyScale * props.Radius;
         var center = props.Center + (float3)transform.position;
         center.y = 0;
-        var A = center + math.mul(orientation, scale * new float3(1, 0, 1) * 0.5f + new float3(0.5f, 0, 0.5f));
-        var B = center + math.mul(orientation, scale * new float3(-1, 0, 1) * 0.5f + new float3(-0.5f, 0, 0.5f));
-        var C = center + math.mul(orientation, scale * new float3(-1, 0, -1) * 0.5f + new float3(-0.5f, 0, -0.5f));
-        var D = center + math.mul(orientation, scale * new float3(1, 0, -1) * 0.5f + new float3(0.5f, 0, -0.5f));
-        AddPoints(A, B, C, D);
+        AddPoints(center, orientation, scale);
     }
 
     private void GetBox()
@@ -59,20 +53,32 @@ public class PhysicsShapeConverter : MonoBehaviour, IConvertGameObjectToEntity
         var scale = transform.lossyScale * props.Size;
         var center = props.Center + (float3)transform.position;
         center.y = 0;
-        var A = center + math.mul(orientation, scale * new float3(1, 0, 1) * 0.5f + new float3(0.5f, 0, 0.5f));
-        var B = center + math.mul(orientation, scale * new float3(-1, 0, 1) * 0.5f + new float3(-0.5f, 0, 0.5f));
-        var C = center + math.mul(orientation, scale * new float3(-1, 0, -1) * 0.5f + new float3(-0.5f, 0, -0.5f));
-        var D = center + math.mul(orientation, scale * new float3(1, 0, -1) * 0.5f + new float3(0.5f, 0, -0.5f));
-        AddPoints(A, B, C, D);
+        AddPoints(center, orientation, scale);
     }
 
-    private void AddPoints(float3 A, float3 B, float3 C, float3 D)
+    private void AddPoints(float3 center, quaternion orientation, float3 scale)
     {
+
+        var A = center + math.mul(orientation, scale * new float3(1, 0, 1) * 0.5f);
+        var B = center + math.mul(orientation, scale * new float3(-1, 0, 1) * 0.5f);
+        var C = center + math.mul(orientation, scale * new float3(-1, 0, -1) * 0.5f);
+        var D = center + math.mul(orientation, scale * new float3(1, 0, -1) * 0.5f);
+
+        var AOffset = center + math.mul(orientation, scale * new float3(1, 0, 1) * 0.5f + new float3(offset, 0, offset));
+        var BOffset = center + math.mul(orientation, scale * new float3(-1, 0, 1) * 0.5f + new float3(-offset, 0, offset));
+        var COffset = center + math.mul(orientation, scale * new float3(-1, 0, -1) * 0.5f + new float3(-offset, 0, -offset));
+        var DOffset = center + math.mul(orientation, scale * new float3(1, 0, -1) * 0.5f + new float3(offset, 0, -offset));
+
         var added = new List<float3>
         {
             A, B, C, D
         };
-        graph.AddPoints(added);
+        var addedWOffset = new List<float3>
+        {
+            AOffset, BOffset, COffset, DOffset
+        };
+
+        graph.AddPoints(added, addedWOffset);
         Changed = true;
         GraphSystem.UpdateGraph();
     }
