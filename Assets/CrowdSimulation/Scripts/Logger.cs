@@ -74,7 +74,7 @@ namespace Assets.CrowdSimulation
             if (hasData)
             {
                 TimeSpan time = TimeSpan.FromSeconds(Time.time);
-                sw?.Write(time.ToString() + ";");
+                sw?.Write(time.ToString().Replace('.',',') + ";");
                 while (cLines.Count > 0)
                 {
                     sw?.Write(cLines.Dequeue() + ";");
