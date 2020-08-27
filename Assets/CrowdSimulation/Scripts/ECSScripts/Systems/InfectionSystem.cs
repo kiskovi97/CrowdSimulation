@@ -1,6 +1,6 @@
 ﻿
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
+using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -13,6 +13,18 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     [UpdateAfter(typeof(InfectionHashMap))]
     public class InfectionSystem : ComponentSystem
     {
+        private EntityQuery infectionEntities;
+        protected override void OnCreate()
+        {
+            var infectionQuery = new EntityQueryDesc
+            {
+                All = new ComponentType[] { typeof(Infection), typeof(Translation) },
+            };
+            infectionEntities = GetEntityQuery(infectionQuery);
+
+            base.OnCreate();
+        }
+
         protected override void OnUpdate()
         {
             var random = new Random((uint)UnityEngine.Random.Range(1, 100000));
@@ -22,8 +34,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 targetMap = InfectionHashMap.quadrantHashMap,
                 deltaTime = Time.DeltaTime,
                 random = random,
+                TranslationHandle = GetComponentTypeHandle<Translation>(true),
+                InfectionHandle = GetComponentTypeHandle<Infection>(),
             };
-            var handle = job.Schedule(this);
+            var handle = job.Schedule(infectionEntities);
             handle.Complete();
 
             Entities.ForEach((Entity entity, ref Infection infection) =>

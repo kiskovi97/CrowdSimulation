@@ -6,10 +6,10 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Unity.Burst;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
-    public struct InfectionJob : IJobForEach<Infection, Translation>
+    public struct InfectionJob : IJobChunk
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
@@ -17,6 +17,25 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
         public float deltaTime;
         public Random random;
+
+        public ComponentTypeHandle<Infection> InfectionHandle;
+        [ReadOnly] public ComponentTypeHandle<Translation> TranslationHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var infections = chunk.GetNativeArray(InfectionHandle);
+            var translations = chunk.GetNativeArray(TranslationHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var rotation = infections[i];
+                var translation = translations[i];
+
+                Execute(ref rotation, ref translation);
+
+                infections[i] = rotation;
+            }
+        }
 
         public void Execute(ref Infection infection, [ReadOnly] ref Translation translation)
         {
