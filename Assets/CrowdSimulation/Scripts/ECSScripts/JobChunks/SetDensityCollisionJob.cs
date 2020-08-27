@@ -6,10 +6,10 @@ using Unity.Mathematics;
 using Unity.Burst;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
-    public struct SetDensityCollisionJob : IJobForEach<PhysicsCollider, LocalToWorld>
+    public struct SetDensityCollisionJob : IJobChunk
     {
         private static readonly float distance = 3f;
         [NativeDisableParallelForRestriction]
@@ -20,6 +20,26 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public int heightPoints;
         public int maxGroup;
         public MapValues max;
+
+        public ComponentTypeHandle<PhysicsCollider> PhysicsCollidertHandle;
+        public ComponentTypeHandle<LocalToWorld> LocalToWorldHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var colliders = chunk.GetNativeArray(PhysicsCollidertHandle);
+            var localtToWorlds = chunk.GetNativeArray(LocalToWorldHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var collider = colliders[i];
+                var localToWorld = localtToWorlds[i];
+
+                Execute(ref collider,ref localToWorld);
+
+                colliders[i] = collider;
+                localtToWorlds[i] = localToWorld;
+            }
+        }
 
         public void Execute(ref PhysicsCollider collider, ref LocalToWorld localToWorld)
         {

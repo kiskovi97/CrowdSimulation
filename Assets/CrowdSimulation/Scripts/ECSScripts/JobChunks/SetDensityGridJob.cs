@@ -6,11 +6,12 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Unity.Burst;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
-    public struct SetDensityGridJob : IJobForEach<Translation, Walker, CollisionParameters>
+    public struct SetDensityGridJob : IJobChunk
     {
+
         [NativeDisableParallelForRestriction]
         public NativeArray<float> quadrantHashMap;
 
@@ -18,7 +19,27 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public int maxGroup;
         public MapValues max;
 
-        public void Execute([ReadOnly]ref Translation translation, [ReadOnly] ref Walker walker, [ReadOnly] ref CollisionParameters collisionParameters)
+        [ReadOnly] public ComponentTypeHandle<Walker> WalkerHandle;
+        [ReadOnly] public ComponentTypeHandle<CollisionParameters> CollisionParametersHandle;
+        [ReadOnly] public ComponentTypeHandle<Translation> TranslationHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var walkers = chunk.GetNativeArray(WalkerHandle);
+            var collisions = chunk.GetNativeArray(CollisionParametersHandle);
+            var translations = chunk.GetNativeArray(TranslationHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var walker = walkers[i];
+                var collision = collisions[i];
+                var translation = translations[i];
+
+                Execute(ref translation, ref walker, ref collision);
+            }
+        }
+
+        public void Execute([ReadOnly] ref Translation translation, [ReadOnly] ref Walker walker, [ReadOnly] ref CollisionParameters collisionParameters)
         {
             float3 pos = translation.Value;
             var step = math.length(DensitySystem.Up);

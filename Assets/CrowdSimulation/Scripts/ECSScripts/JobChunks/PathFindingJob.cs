@@ -1,5 +1,4 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 using Unity.Burst;
 using Unity.Collections;

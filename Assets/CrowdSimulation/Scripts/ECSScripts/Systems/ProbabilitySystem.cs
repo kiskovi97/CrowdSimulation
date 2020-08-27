@@ -32,10 +32,19 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         public static Entity selected = Entity.Null;
 
+        private EntityQuery entityQuery;
         protected override void OnCreate()
         {
+            var tempQuery = new EntityQueryDesc
+            {
+                All = new ComponentType[] { typeof(Walker), typeof(Rotation), typeof(Translation) },
+            };
+            entityQuery = GetEntityQuery(tempQuery);
+
             densityMatrix = new NativeArray<float>(Map.OneLayer, Allocator.Persistent);
             collidersDensity = new NativeArray<float>(Map.OneLayer, Allocator.Persistent);
+
+
             base.OnCreate();
         }
 
@@ -82,14 +91,20 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             MapChanged();
 
-            EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Walker), typeof(CollisionParameters));
-
             var clearJob = new ClearJob() { array = densityMatrix };
             var clearHandle = clearJob.Schedule(densityMatrix.Length, batchSize);
 
-            var job = new SetProbabilityJob() { quadrantHashMap = densityMatrix, oneLayer = Map.OneLayer, max = Map.Values };
+            var job = new SetProbabilityJob() { 
+                quadrantHashMap = densityMatrix, 
+                oneLayer = Map.OneLayer, 
+                max = Map.Values ,
+                WalkerHandle = GetComponentTypeHandle<Walker>(true),
+                TranslationHandle = GetComponentTypeHandle<Translation>(true),
+                CollisionParametersHandle = GetComponentTypeHandle<CollisionParameters>(true),
+            };
 
-            var handle = JobForEachExtensions.Schedule(job, entityQuery, clearHandle);
+            var handle = job.Schedule(entityQuery, clearHandle);
+
             ForeachColliders();
             var addJob = new AddArrayJob() { from = collidersDensity, to = densityMatrix };
             var addHandle = addJob.Schedule(densityMatrix.Length, batchSize, handle);
@@ -121,9 +136,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                     widthPoints = Map.WidthPoints,
                     heightPoints = Map.HeightPoints,
                     maxGroup = Map.MaxGroup,
-                    max = Map.Values
+                    max = Map.Values,
+                    LocalToWorldHandle = GetComponentTypeHandle<LocalToWorld>(false),
+                    PhysicsCollidertHandle = GetComponentTypeHandle<PhysicsCollider>(false)
                 };
-                var handle = JobForEachExtensions.Schedule(job, entityQuery);
+                var handle = job.Schedule(entityQuery);
                 handle.Complete();
             }
             First = false;
