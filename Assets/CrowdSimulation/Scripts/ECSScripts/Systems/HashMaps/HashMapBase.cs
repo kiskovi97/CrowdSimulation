@@ -17,11 +17,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             public float3 position;
         }
 
-        private static int GetEntityCountInHashMap(NativeMultiHashMap<int, MyData> map, int key)
-        {
-            return map.CountValuesForKey(key);
-        }
-
         protected override void OnCreate()
         {
             quadrantHashMap = new NativeMultiHashMap<int, MyData>(0, Allocator.Persistent);
@@ -34,23 +29,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             base.OnDestroy();
         }
 
-        [BurstCompile]
-        public struct SetHashMapJob : IJobForEachWithEntity<Translation, Tdata>
-        {
-            public NativeMultiHashMap<int, MyData>.ParallelWriter quadrantHashMap;
-
-            public void Execute(Entity entity, int index, [ReadOnly]ref Translation translation, [ReadOnly]ref Tdata data)
-            {
-                int key = QuadrantVariables.GetPositionHashMapKey(translation.Value);
-                quadrantHashMap.Add(key, new MyData()
-                {
-                    entity = entity,
-                    position = translation.Value,
-                    data = data
-                });
-            }
-        }
-
         protected override void OnUpdate()
         {
             EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Tdata));
@@ -60,13 +38,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 quadrantHashMap.Capacity = entityQuery.CalculateEntityCount();
             }
 
-            var job = new SetHashMapJob()
+            Entities.ForEach((Entity entity, ref Translation translation, ref Tdata data) =>
             {
-                quadrantHashMap = quadrantHashMap.AsParallelWriter(),
-            };
-
-            var handle = JobForEachExtensions.Schedule(job, entityQuery);
-            handle.Complete();
+                int key = QuadrantVariables.GetPositionHashMapKey(translation.Value);
+                quadrantHashMap.Add(key, new MyData()
+                {
+                    entity = entity,
+                    position = translation.Value,
+                    data = data
+                });
+            });
         }
     }
 
@@ -83,11 +64,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             public float3 position;
         }
 
-        private static int GetEntityCountInHashMap(NativeMultiHashMap<int, MyData> map, int key)
-        {
-            return map.CountValuesForKey(key);
-        }
-
         protected override void OnCreate()
         {
             quadrantHashMap = new NativeMultiHashMap<int, MyData>(0, Allocator.Persistent);
@@ -100,23 +76,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             base.OnDestroy();
         }
 
-        [BurstCompile]
-        public struct SetHashMapJob : IJobForEach<Translation, Tdata, Tdata2>
-        {
-            public NativeMultiHashMap<int, MyData>.ParallelWriter quadrantHashMap;
-
-            public void Execute([ReadOnly]ref Translation translation, [ReadOnly]ref Tdata data, [ReadOnly]ref Tdata2 data2)
-            {
-                int key = QuadrantVariables.GetPositionHashMapKey(translation.Value);
-                quadrantHashMap.Add(key, new MyData()
-                {
-                    position = translation.Value,
-                    data = data,
-                    data2 = data2,
-                });
-            }
-        }
-
         protected override void OnUpdate()
         {
             EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Tdata), typeof(Tdata2));
@@ -126,13 +85,16 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 quadrantHashMap.Capacity = entityQuery.CalculateEntityCount();
             }
 
-            var job = new SetHashMapJob()
+            Entities.ForEach((ref Translation translation, ref Tdata data, ref Tdata2 data2) =>
             {
-                quadrantHashMap = quadrantHashMap.AsParallelWriter(),
-            };
-
-            var handle = JobForEachExtensions.Schedule(job, entityQuery);
-            handle.Complete();
+                int key = QuadrantVariables.GetPositionHashMapKey(translation.Value);
+                quadrantHashMap.Add(key, new MyData()
+                {
+                    position = translation.Value,
+                    data = data,
+                    data2 = data2,
+                });
+            });
         }
     }
 
@@ -151,11 +113,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             public float3 position;
         }
 
-        private static int GetEntityCountInHashMap(NativeMultiHashMap<int, MyData> map, int key)
-        {
-            return map.CountValuesForKey(key);
-        }
-
         protected override void OnCreate()
         {
             quadrantHashMap = new NativeMultiHashMap<int, MyData>(0, Allocator.Persistent);
@@ -168,24 +125,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             base.OnDestroy();
         }
 
-        [BurstCompile]
-        public struct SetHashMapJob : IJobForEach<Translation, Tdata, Tdata2, Tdata3>
-        {
-            public NativeMultiHashMap<int, MyData>.ParallelWriter quadrantHashMap;
-
-            public void Execute([ReadOnly]ref Translation translation, [ReadOnly]ref Tdata data, [ReadOnly]ref Tdata2 data2, [ReadOnly]ref Tdata3 data3)
-            {
-                int key = QuadrantVariables.GetPositionHashMapKey(translation.Value);
-                quadrantHashMap.Add(key, new MyData()
-                {
-                    position = translation.Value,
-                    data = data,
-                    data2 = data2,
-                    data3 = data3,
-                });
-            }
-        }
-
         protected override void OnUpdate()
         {
             EntityQuery entityQuery = GetEntityQuery(typeof(Translation), typeof(Tdata), typeof(Tdata2), typeof(Tdata3));
@@ -195,13 +134,17 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 quadrantHashMap.Capacity = entityQuery.CalculateEntityCount();
             }
 
-            var job = new SetHashMapJob()
+            Entities.ForEach((ref Translation translation, ref Tdata data, ref Tdata2 data2, ref Tdata3 data3) =>
             {
-                quadrantHashMap = quadrantHashMap.AsParallelWriter(),
-            };
-
-            var handle = JobForEachExtensions.Schedule(job, entityQuery);
-            handle.Complete();
+                int key = QuadrantVariables.GetPositionHashMapKey(translation.Value);
+                quadrantHashMap.Add(key, new MyData()
+                {
+                    position = translation.Value,
+                    data = data,
+                    data2 = data2,
+                    data3 = data3,
+                });
+            });
         }
     }
 }
