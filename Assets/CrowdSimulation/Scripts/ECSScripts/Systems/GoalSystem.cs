@@ -4,7 +4,7 @@ using Unity.Collections;
 using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
 using Unity.Transforms;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
+using UnityEngine.UIElements;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
@@ -15,6 +15,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         private EndSimulationEntityCommandBufferSystem endSimulation;
         private EntityQuery decisionGroup;
         private EntityQuery foodGroup;
+        private EntityQuery groupGroup;
 
         protected override void OnCreate()
         {
@@ -31,6 +32,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 All = new ComponentType[] { typeof(Condition), typeof(Walker), ComponentType.ReadOnly<Translation>() }
             };
             foodGroup = GetEntityQuery(foodQuery);
+            var groupQuery = new EntityQueryDesc
+            {
+                All = new ComponentType[] { typeof(GroupCondition), typeof(Translation)}
+            };
+            groupGroup = GetEntityQuery(groupQuery);
             base.OnCreate();
         }
 
@@ -55,8 +61,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 TranslationType = GetComponentTypeHandle<Translation>(true),
             };
             var desireHandle = desireJob.Schedule(foodGroup);
-            var groupGoalJob = new GroupGoalJob();
-            var groupHandle = groupGoalJob.Schedule(this, desireHandle);
+            var groupGoalJob = new GroupGoalJob()
+            {
+                GroupConditionHandle = GetComponentTypeHandle<GroupCondition>(false),
+                TranslationHandle = GetComponentTypeHandle<Translation>(true),
+            };
+            var groupHandle = groupGoalJob.Schedule(groupGroup, desireHandle);
 
             var decisionJob = new DecisionJobChunk()
             {
