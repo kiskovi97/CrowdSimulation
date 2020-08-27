@@ -1,4 +1,5 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using Unity.Burst;
 using Unity.Collections;
@@ -185,9 +186,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 densityMatrix = collisionMatrix,
                 widthPoints = Map.WidthPoints,
                 heightPoints = Map.HeightPoints,
-                max = Map.Values
+                max = Map.Values,
+                LocalToWorldHandle = GetComponentTypeHandle<LocalToWorld>(),
+                PhysicsCollidertHandle = GetComponentTypeHandle<PhysicsCollider>()
             };
-            var handle = JobForEachExtensions.Schedule(job, entityQuery);
+            var handle = job.Schedule(entityQuery);
             handle.Complete();
         }
 

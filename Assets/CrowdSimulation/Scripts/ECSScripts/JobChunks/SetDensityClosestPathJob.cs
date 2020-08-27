@@ -1,18 +1,13 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Transforms;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
-    struct SetDensityClosestPathJob : IJobForEach<PhysicsCollider, LocalToWorld>
+    struct SetDensityClosestPathJob : IJobChunk
     {
         private static readonly float distance = 1f;
         [NativeDisableParallelForRestriction]
@@ -21,6 +16,26 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public int widthPoints;
         public int heightPoints;
         public MapValues max;
+
+        public ComponentTypeHandle<PhysicsCollider> PhysicsCollidertHandle;
+        public ComponentTypeHandle<LocalToWorld> LocalToWorldHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var colliders = chunk.GetNativeArray(PhysicsCollidertHandle);
+            var localtToWorlds = chunk.GetNativeArray(LocalToWorldHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var collider = colliders[i];
+                var localToWorld = localtToWorlds[i];
+
+                Execute(ref collider, ref localToWorld);
+
+                colliders[i] = collider;
+                localtToWorlds[i] = localToWorld;
+            }
+        }
 
         public void Execute(ref PhysicsCollider collider, ref LocalToWorld localToWorld)
         {
