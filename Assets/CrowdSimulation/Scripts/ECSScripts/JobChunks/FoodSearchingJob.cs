@@ -6,7 +6,7 @@ using Unity.Mathematics;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
     public struct FoodSearchingJob : IJobChunk
@@ -23,14 +23,14 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         [ReadOnly]
         public NativeMultiHashMap<int, FoodHierarchieHashMap.MyData> hierarchieMap;
 
-        public EntityCommandBuffer.Concurrent commandBuffer;
+        public EntityCommandBuffer.ParallelWriter commandBuffer;
 
         public float deltaTime;
 
-        [ReadOnly] public ArchetypeChunkComponentType<Translation> TranslationType;
-        public ArchetypeChunkComponentType<Walker> WalkerType;
-        public ArchetypeChunkComponentType<Condition> ConditionType;
-        public ArchetypeChunkComponentType<FoodHierarchie> FoodHieararchieType;
+        [ReadOnly] public ComponentTypeHandle<Translation> TranslationType;
+        public ComponentTypeHandle<Walker> WalkerType;
+        public ComponentTypeHandle<Condition> ConditionType;
+        public ComponentTypeHandle<FoodHierarchie> FoodHieararchieType;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {

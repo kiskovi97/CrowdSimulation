@@ -35,7 +35,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         private void GetMin(ref float tmp, int index, float distance = 1)
         {
             var small = index % values.LayerSize;
-            if (ShortestPathSystem.IsIn(index, values) && !collisionMatrix[small])
+            if (AStarMatrixSystem.IsIn(index, values) && !collisionMatrix[small])
             {
                 var next = readArray[index];
                 if (!(next < 0f) && (tmp < 0f || next + 1f < tmp))

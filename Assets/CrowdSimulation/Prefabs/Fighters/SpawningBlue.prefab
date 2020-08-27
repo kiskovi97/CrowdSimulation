@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 5932534044113058652}
   - component: {fileID: 2768478722608927872}
   - component: {fileID: 2661251881071032745}
+  - component: {fileID: 2703769418157855488}
   m_Layer: 0
   m_Name: SpawningBlue
   m_TagString: Untagged
@@ -196,6 +197,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 547f4519515bd944a8022bd2893b584b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2703769418157855488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8361643065793752213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb28e53bc0b54a14685ecb7b211fcc4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &8361643067033010800

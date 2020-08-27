@@ -37,19 +37,6 @@ public class DebugProxy : MonoBehaviour
             X1 = y,
         });
 
-        lines.Enqueue(new Line()
-        {
-            Color = color,
-            X0 = (x + y) * 0.5f + left * 0.3f,
-            X1 = y,
-        });
-
-        lines.Enqueue(new Line()
-        {
-            Color = color,
-            X0 = (x + y) * 0.5f - left * 0.3f,
-            X1 = y,
-        });
     }
 
     private void Start()

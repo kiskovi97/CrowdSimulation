@@ -237,6 +237,16 @@ PrefabInstance:
       propertyPath: pathFindingMethod
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1001998078931032056, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1001998078931032056, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: PathFindingMethod
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3996854967887251094, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -266,6 +276,16 @@ PrefabInstance:
         type: 3}
       propertyPath: pathFindingMethod
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: CollisionAvoidanceMethod
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: PathFindingMethod
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6062406484098030748, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
@@ -538,7 +558,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69e900a57ad296e4187bce78ed8b2ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  method: 1
 --- !u!1001 &4515821147130369168
 PrefabInstance:
   m_ObjectHideFlags: 0

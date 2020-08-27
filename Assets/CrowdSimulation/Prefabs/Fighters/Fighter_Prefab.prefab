@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   avoidMethod: 1
-  pathFindingMethod: 1
+  pathFindingMethod: 2
   decisionMethod: 1
   lastMessage: 0
   decidedGoal:

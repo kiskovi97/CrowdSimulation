@@ -1,4 +1,5 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
+using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
 using System;
 using Unity.Burst;
@@ -19,6 +20,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
     [UpdateAfter(typeof(CollisionSystem))]
     class ProbabilitySystem : ComponentSystem
     {
+        public static readonly int Angels = 10;
         private static int batchSize = 64;
 
         public static NativeArray<float> densityMatrix;
@@ -27,6 +29,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         public static float3 Right => new float3((1f / Map.density), 0, 0);
         public static float3 Up => new float3(0, 0, (1f / Map.density));
+
+        public static Entity selected = Entity.Null;
 
         protected override void OnCreate()
         {
@@ -71,7 +75,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             {
                 Entities.ForEach((Entity entity, ref PathFindingData data) =>
                 {
-                    if (!hasDensityPresent && data.avoidMethod == CollisionAvoidanceMethod.DensityGrid) hasDensityPresent = true;
+                    if (!hasDensityPresent && data.avoidMethod == CollisionAvoidanceMethod.Probability) hasDensityPresent = true;
                 });
             }
             if (!hasDensityPresent) return;
@@ -90,7 +94,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var addJob = new AddArrayJob() { from = collidersDensity, to = densityMatrix };
             var addHandle = addJob.Schedule(densityMatrix.Length, batchSize, handle);
             addHandle.Complete();
-            //Debug();
+            Debug();
         }
 
         private void MapChanged()
@@ -127,36 +131,70 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         void Debug()
         {
-            for (int j = 1; j < Map.HeightPoints - 1; j++)
-                for (int i = 1; i < Map.WidthPoints - 1; i++)
-                {
-                    float right = densityMatrix[Map.OneLayer + QuadrantVariables.Index(i + 1, j, Map.Values)];
-                    float left = densityMatrix[Map.OneLayer  + QuadrantVariables.Index(i - 1, j, Map.Values)];
-                    float up = densityMatrix[Map.OneLayer + QuadrantVariables.Index(i, j + 1, Map.Values)];
-                    float down = densityMatrix[Map.OneLayer + QuadrantVariables.Index(i, j - 1, Map.Values)];
+            if (selected  != Entity.Null)
+            {
+                var translation = EntityManager.GetComponentData<Translation>(selected);
+                var walker = EntityManager.GetComponentData<Walker>(selected);
+                var collision = EntityManager.GetComponentData<CollisionParameters>(selected);
 
-                    var point = QuadrantVariables.ConvertToWorld(new float3(i, 0, j), Map.Values);
-                    if (right < left && right < up && right < down)
+                var force = walker.direction;
+
+                var densityB = GetDensity(collision.outerRadius, translation.Value, translation.Value + force, walker.direction);
+                var point = translation.Value + force;
+                DebugProxy.DrawLine(point - new float3(0, 0, 0.2f), point + new float3(0f, 0, 0.2f), new Color(0, densityB * 0.4f, 1f));
+                DebugProxy.DrawLine(point - new float3(0.2f, 0, 0), point + new float3(0.2f, 0, 0), new Color(0, densityB * 0.4f, 1f));
+                for (int i = 2; i < 4; i++)
+                {
+                    densityB *= 0.9f;
+                    var multi = math.pow(0.5f, i);
+                    var A = PathFindingJob.GetDirection(force, math.PI * multi);
+                    var B = PathFindingJob.GetDirection(force, 0);
+                    var C = PathFindingJob.GetDirection(force, -math.PI * multi);
+
+                    var densityA = GetDensity(collision.outerRadius, translation.Value, translation.Value + A, walker.direction);
+
+                    var densityC = GetDensity(collision.outerRadius, translation.Value, translation.Value + C, walker.direction);
+
+                    point = translation.Value + A;
+                    DebugProxy.DrawLine(point - new float3(0, 0, 0.2f), point + new float3(0f, 0, 0.2f), new Color(0, densityA * 0.4f, 1f));
+                    DebugProxy.DrawLine(point - new float3(0.2f, 0,0), point + new float3(0.2f, 0, 0), new Color(0, densityA * 0.4f, 1f));
+                    point = translation.Value + C;
+                    DebugProxy.DrawLine(point - new float3(0, 0, 0.2f), point + new float3(0f, 0, 0.2f), new Color(0, densityC * 0.4f, 1f));
+                    DebugProxy.DrawLine(point - new float3(0.2f, 0, 0), point + new float3(0.2f, 0, 0), new Color(0, densityC * 0.4f, 1f));
+
+                    if (densityA > densityC && densityB > densityC)
                     {
-                        DebugProxy.DrawLine(point, point + new float3(0.2f, 0, 0), Color.red);
-                        continue;
+                        force = C * 0.8f;
+                        densityB = densityC;
                     }
-                    if (left < up && left < down && left < right)
+                    else
                     {
-                        DebugProxy.DrawLine(point, point + new float3(-0.2f, 0, 0), Color.red);
-                        continue;
-                    }
-                    if (up < down && up < right && up < left)
-                    {
-                        DebugProxy.DrawLine(point, point + new float3(0, 0, 0.2f), Color.red);
-                        continue;
-                    }
-                    if (down < left && down < up && down < right)
-                    {
-                        DebugProxy.DrawLine(point, point + new float3(0, 0, -0.2f), Color.red);
-                        continue;
+                        if (densityB > densityA && densityC > densityA)
+                        {
+                            force = A * 0.8f;
+                            densityB = densityA;
+                        }
+                        else
+                        {
+                            force = B;
+                        }
                     }
                 }
+               
+            }
+           
+        }
+
+        private float GetDensity(float radius, float3 position, float3 point, float3 velocity)
+        {
+            var index = QuadrantVariables.BilinearInterpolation(point, Map.Values);
+
+            var density0 = densityMatrix[index.Index0] * index.percent0;
+            var density1 = densityMatrix[index.Index1] * index.percent1;
+            var density2 = densityMatrix[index.Index2] * index.percent2;
+            var density3 = densityMatrix[index.Index3] * index.percent3;
+            var ownDens = SetProbabilityJob.Value(radius, position, point, velocity);
+            return (density0 + density1 + density2 + density3 - ownDens);
         }
     }
 }

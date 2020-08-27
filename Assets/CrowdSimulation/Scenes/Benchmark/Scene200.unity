@@ -424,7 +424,7 @@ PrefabInstance:
     - target: {fileID: 1001998078931032056, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
       propertyPath: CollisionAvoidanceMethod
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1001998078931032056, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
@@ -446,6 +446,21 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013078, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071065
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013078, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071072
+      objectReference: {fileID: 0}
+    - target: {fileID: 4367895927419013078, guid: 9903fb5a24efeed47910eb776bc5b346,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 90.00001
+      objectReference: {fileID: 0}
     - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
       propertyPath: pathFindingMethod
@@ -454,7 +469,7 @@ PrefabInstance:
     - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
       propertyPath: CollisionAvoidanceMethod
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4367895927419013079, guid: 9903fb5a24efeed47910eb776bc5b346,
         type: 3}
