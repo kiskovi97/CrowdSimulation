@@ -7,10 +7,10 @@ using Unity.Physics;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
-    public struct CollisionResolveJob : IJobForEach<Translation, Walker, CollisionParameters>
+    public struct CollisionResolveJob : IJobChunk
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
@@ -21,6 +21,30 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         public NativeMultiHashMap<int, CollidersHashMap.MyData> colliders;
 
         public float deltaTime;
+
+        public ComponentTypeHandle<Translation> TranslationHandle;
+        public ComponentTypeHandle<Walker> WalkerHandle;
+        public ComponentTypeHandle<CollisionParameters> CollisionParametersHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var collisions = chunk.GetNativeArray(CollisionParametersHandle);
+            var translations = chunk.GetNativeArray(TranslationHandle);
+            var walkers = chunk.GetNativeArray(WalkerHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var collision = collisions[i];
+                var translation = translations[i];
+                var walker = walkers[i];
+
+                Execute(ref translation, ref walker, ref collision);
+
+                collisions[i] = collision;
+                translations[i] = translation;
+                walkers[i] = walker;
+            }
+        }
 
         public void Execute(ref Translation translation, ref Walker walker, ref CollisionParameters collision)
         {
