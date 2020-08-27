@@ -5,12 +5,27 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
-    public struct ForceJob : IJobForEach<Walker>
+    public struct ForceJob : IJobChunk
     {
         public float deltaTime;
+        public ComponentTypeHandle<Walker> WalkerHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var walkers = chunk.GetNativeArray(WalkerHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var walker = walkers[i];
+
+                Execute(ref walker);
+
+                walkers[i] = walker;
+            }
+        }
 
         public void Execute(ref Walker walker)
         {

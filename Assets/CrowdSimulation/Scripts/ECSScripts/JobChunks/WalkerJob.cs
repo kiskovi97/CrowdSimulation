@@ -5,15 +5,39 @@ using Unity.Collections;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Unity.Burst;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
-    public struct WalkerJob : IJobForEach<Rotation, Translation, Walker>
+    public struct WalkerJob : IJobChunk
     {
         private static readonly float radiantperSecond = 2f;
         public float deltaTime;
         public float maxWidth;
         public float maxHeight;
+
+        public ComponentTypeHandle<Walker> WalkerHandle;
+        public ComponentTypeHandle<Rotation> RotationHandle;
+        public ComponentTypeHandle<Translation> TranslationHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var walkers = chunk.GetNativeArray(WalkerHandle);
+            var rotations = chunk.GetNativeArray(RotationHandle);
+            var translations = chunk.GetNativeArray(TranslationHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var walker = walkers[i];
+                var rotation = rotations[i];
+                var translation = translations[i];
+
+                Execute(ref rotation, ref translation, ref walker);
+
+                walkers[i] = walker;
+                rotations[i] = rotation;
+                translations[i] = translation;
+            }
+        }
 
         public void Execute(ref Rotation rotation, ref Translation transform, ref Walker walker)
         {
