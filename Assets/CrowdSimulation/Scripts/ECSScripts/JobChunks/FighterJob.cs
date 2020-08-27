@@ -6,17 +6,45 @@ using Unity.Transforms;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
-    public struct FighterJob : IJobForEach<Fighter, Condition, PathFindingData, Translation, Rotation>
+    public struct FighterJob : IJobChunk 
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeMultiHashMap<int, FightersHashMap.MyData> targetMap;
 
-        public void Execute(ref Fighter fighter, ref Condition condition, ref PathFindingData pathFindingData, 
-            [ReadOnly] ref Translation translation, ref Rotation walker)
+        public ComponentTypeHandle<Fighter> FighterHandle;
+        public ComponentTypeHandle<PathFindingData> PathFindingDataHandle;
+        [ReadOnly] public ComponentTypeHandle<Translation> TranslationHandle;
+        public ComponentTypeHandle<Rotation> RotationHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var fighters = chunk.GetNativeArray(FighterHandle);
+            var pathfindings = chunk.GetNativeArray(PathFindingDataHandle);
+            var rotations = chunk.GetNativeArray(RotationHandle);
+            var translations = chunk.GetNativeArray(TranslationHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var fighter = fighters[i];
+                var pathfinding = pathfindings[i];
+                var rotation = rotations[i];
+                var translation = translations[i];
+
+                Execute(ref fighter, ref pathfinding, ref translation, ref rotation);
+
+                fighters[i] = fighter;
+                rotations[i] = rotation;
+                pathfindings[i] = pathfinding;
+            }
+        }
+
+
+        public void Execute(ref Fighter fighter, ref PathFindingData pathFindingData, 
+            [ReadOnly] ref Translation translation, ref Rotation rotation)
         {
             var selected = new FightersHashMap.MyData();
             var found = ForeachAround(translation.Value, ref selected, fighter);
@@ -28,7 +56,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
                 if (math.length(direction) < fighter.attackRadius)
                 {
                     pathFindingData.decidedGoal = translation.Value + direction * 0.01f;
-                    RotateForward(direction, ref walker);
+                    RotateForward(direction, ref rotation);
                     fighter.state = FightState.Fight;
                 } else
                 {

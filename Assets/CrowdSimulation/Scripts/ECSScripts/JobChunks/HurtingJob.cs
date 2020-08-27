@@ -6,10 +6,10 @@ using Unity.Transforms;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
 using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
-    public struct HurtingJob : IJobForEachWithEntity<Fighter, Condition, Translation, CollisionParameters>
+    public struct HurtingJob : IJobChunk // IJobForEachWithEntity<Fighter, Condition, Translation, CollisionParameters>
     {
         [NativeDisableParallelForRestriction]
         [ReadOnly]
@@ -20,8 +20,36 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
 
         public float deltaTime;
 
-        public void Execute(Entity entity, int index, ref Fighter fighter, ref Condition condition, 
-            [ReadOnly] ref Translation translation, [ReadOnly] ref CollisionParameters collisionParameters)
+        public ComponentTypeHandle<Fighter> FighterHandle;
+        public ComponentTypeHandle<Condition> ConditionHandle;
+        [ReadOnly] public ComponentTypeHandle<Translation> TranslationHandle;
+        [ReadOnly] public EntityTypeHandle EntityHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var fighters = chunk.GetNativeArray(FighterHandle);
+            var conditions = chunk.GetNativeArray(ConditionHandle);
+            var translations = chunk.GetNativeArray(TranslationHandle);
+
+            var entities = chunk.GetNativeArray(EntityHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var fighter = fighters[i];
+                var condition = conditions[i];
+                var translation = translations[i];
+                var entity = entities[i];
+
+
+                Execute(entity, ref fighter, ref condition, ref translation);
+
+                fighters[i] = fighter;
+                conditions[i] = condition;
+            }
+        }
+
+        public void Execute(Entity entity, ref Fighter fighter, ref Condition condition, 
+            [ReadOnly] ref Translation translation)
         {
             condition.hurting -= deltaTime;
             condition.hurting = math.max(condition.hurting, 0f);
