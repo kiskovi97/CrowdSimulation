@@ -11,7 +11,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
     [BurstCompile]
     public struct FoodSearchingJob : IJobChunk
     {
-        private static readonly float secondPerHunger = 60f;
         private static readonly float hungerLimit = 1f;
 
 
