@@ -6,10 +6,10 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using static Assets.CrowdSimulation.Scripts.ECSScripts.Systems.AnimatorSystem;
 
-namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
+namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
     [BurstCompile]
-    public struct AnimatorJob : IJobForEach<Translation, Rotation, AnimatorData>
+    public struct AnimatorJob : IJobChunk
     {
         public float deltaTime;
         public Random random;
@@ -23,6 +23,30 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Jobs
         [NativeDisableParallelForRestriction]
         [ReadOnly]
         public NativeMultiHashMap<int, Fighter> hashMap;
+
+        public ComponentTypeHandle<Translation> TranslationHandle;
+        public ComponentTypeHandle<Rotation> RotationHandle;
+        public ComponentTypeHandle<AnimatorData> AnimatorHandle;
+
+        public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
+        {
+            var rotations = chunk.GetNativeArray(RotationHandle);
+            var translations = chunk.GetNativeArray(TranslationHandle);
+            var animators = chunk.GetNativeArray(AnimatorHandle);
+
+            for (var i = 0; i < chunk.Count; i++)
+            {
+                var rotation = rotations[i];
+                var translation = translations[i];
+                var animator = animators[i];
+
+                Execute(ref translation, ref rotation, ref animator);
+
+                rotations[i] = rotation;
+                translations[i] = translation;
+                animators[i] = animator;
+            }
+        }
 
         private void SetFromFighter(ref AnimatorData animator)
         {

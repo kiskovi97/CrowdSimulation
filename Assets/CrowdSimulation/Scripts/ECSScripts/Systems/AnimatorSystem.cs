@@ -1,5 +1,5 @@
 ﻿using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using Assets.CrowdSimulation.Scripts.ECSScripts.Jobs;
+using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
@@ -27,9 +27,18 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         public static NativeArray<Animation> animations;
         public static NativeArray<AnimationStep> animationSteps;
 
+        private EntityQuery pathfindingGroup;
+
         protected override void OnCreate()
         {
+            var pathFindingQuery = new EntityQueryDesc
+            {
+                All = new ComponentType[] { typeof(Translation), typeof(Rotation), typeof(AnimatorData) },
+            };
+            pathfindingGroup = GetEntityQuery(pathFindingQuery);
+
             base.OnCreate();
+
             animationSteps = new NativeArray<AnimationStep>(new AnimationStep[] {
             /// RABBIT STEPS
             new AnimationStep()
@@ -149,8 +158,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 steps = animationSteps,
                 hashMap = FighterSystem.hashMap,
                 random = random,
+                AnimatorHandle = GetComponentTypeHandle<AnimatorData>(),
+                RotationHandle = GetComponentTypeHandle<Rotation>(),
+                TranslationHandle = GetComponentTypeHandle<Translation>(),
             };
-            var handle = job.Schedule(this);
+            var handle = job.Schedule(pathfindingGroup);
             handle.Complete();
         }
     }
