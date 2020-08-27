@@ -46,13 +46,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             {
                 targetMap = EdibleHashMap.quadrantHashMap,
                 hierarchieMap = FoodHierarchieHashMap.quadrantHashMap,
-                commandBuffer = endSimulation.CreateCommandBuffer().ToConcurrent(),
+                commandBuffer = endSimulation.CreateCommandBuffer().AsParallelWriter(),
                 deltaTime = Time.DeltaTime,
 
-                ConditionType = GetArchetypeChunkComponentType<Condition>(false),
-                FoodHieararchieType  = GetArchetypeChunkComponentType<FoodHierarchie>(false),
-                WalkerType = GetArchetypeChunkComponentType<Walker>(false),
-                TranslationType = GetArchetypeChunkComponentType<Translation>(true),
+                ConditionType = GetComponentTypeHandle<Condition>(false),
+                FoodHieararchieType  = GetComponentTypeHandle<FoodHierarchie>(false),
+                WalkerType = GetComponentTypeHandle<Walker>(false),
+                TranslationType = GetComponentTypeHandle<Translation>(true),
             };
             var desireHandle = desireJob.Schedule(foodGroup);
             var groupGoalJob = new GroupGoalJob();
@@ -60,10 +60,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
             var decisionJob = new DecisionJobChunk()
             {
-                 ConditionType = GetArchetypeChunkComponentType<Condition>(true),
-                 GroupConditionType = GetArchetypeChunkComponentType<GroupCondition>(true),
-                 TranslationType = GetArchetypeChunkComponentType<Translation>(true),
-                 PathFindingType = GetArchetypeChunkComponentType<PathFindingData>(false),
+                 ConditionType = GetComponentTypeHandle<Condition>(true),
+                 GroupConditionType = GetComponentTypeHandle<GroupCondition>(true),
+                 TranslationType = GetComponentTypeHandle<Translation>(true),
+                 PathFindingType = GetComponentTypeHandle<PathFindingData>(false),
             };
             var decisionHandle = decisionJob.Schedule(decisionGroup, groupHandle);
             decisionHandle.Complete();

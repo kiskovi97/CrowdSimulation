@@ -17,6 +17,8 @@ namespace Assets.CrowdSimulation
         private readonly static Queue<string> cLines = new Queue<string>();
         private static readonly object lockObj = new object();
 
+        public bool FrameRateCapture = true;
+
         private static string[] Types =
         {
             "velocity", "distance", "collided", "near others", "near all", "rotation"
@@ -43,7 +45,10 @@ namespace Assets.CrowdSimulation
             EditorApplication.quitting += OnApplicationExit;
             EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
             //DensityGrid, Forces
-
+            if (FrameRateCapture)
+            {
+                return;
+            }
             StringBuilder builder = new StringBuilder();
             for (int i=0; i< Types.Length; i++)
             {
@@ -67,8 +72,23 @@ namespace Assets.CrowdSimulation
             }
         }
 
+        public float deltaTime;
+
         void Update()
         {
+            //var FrameRate = 60 / Time.unscaledDeltaTime;
+
+            deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
+            float FrameRate = 1.0f / deltaTime;
+
+            if (FrameRateCapture)
+            {
+                TimeSpan time = TimeSpan.FromSeconds(Time.time);
+                sw?.Write(time.ToString().Replace('.', ',') + ";");
+                sw?.WriteLine(FrameRate);
+                return;
+            }
+
             if (sw == null) return;
             var hasData = cLines.Count > 0;
             if (hasData)

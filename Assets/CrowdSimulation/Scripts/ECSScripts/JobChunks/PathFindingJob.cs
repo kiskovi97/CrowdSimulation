@@ -14,10 +14,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
     {
         private static readonly int Angels = 10;
 
-        public ArchetypeChunkComponentType<PathFindingData> PathFindingType;
-        public ArchetypeChunkComponentType<Walker> WalkerType;
-        [ReadOnly] public ArchetypeChunkComponentType<Translation> TranslationType;
-        [ReadOnly] public ArchetypeChunkComponentType<CollisionParameters> CollisionType;
+        public ComponentTypeHandle<PathFindingData> PathFindingType;
+        public ComponentTypeHandle<Walker> WalkerType;
+        [ReadOnly] public ComponentTypeHandle<Translation> TranslationType;
+        [ReadOnly] public ComponentTypeHandle<CollisionParameters> CollisionType;
 
         public MapValues values;
 

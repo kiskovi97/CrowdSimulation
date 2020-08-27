@@ -15,10 +15,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             Group, Condition, None
         }
 
-        [ReadOnly] public ArchetypeChunkComponentType<GroupCondition> GroupConditionType;
-        [ReadOnly] public ArchetypeChunkComponentType<Condition> ConditionType;
-        public ArchetypeChunkComponentType<PathFindingData> PathFindingType;
-        [ReadOnly] public ArchetypeChunkComponentType<Translation> TranslationType;
+        [ReadOnly] public ComponentTypeHandle<GroupCondition> GroupConditionType;
+        [ReadOnly] public ComponentTypeHandle<Condition> ConditionType;
+        public ComponentTypeHandle<PathFindingData> PathFindingType;
+        [ReadOnly] public ComponentTypeHandle<Translation> TranslationType;
 
         public void Execute(ArchetypeChunk chunk, int chunkIndex, int firstEntityIndex)
         {

@@ -42,10 +42,10 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 graphPoints = GraphSystem.graphPoints,
                 shortestPath = DijsktraSystem.shortestPath,
                 shapeGraph = GraphSystem.shapeGraph,
-                PathFindingType = GetArchetypeChunkComponentType<PathFindingData>(),
-                TranslationType = GetArchetypeChunkComponentType<Translation>(),
-                WalkerType = GetArchetypeChunkComponentType<Walker>(),
-                CollisionType = GetArchetypeChunkComponentType<CollisionParameters>(),
+                PathFindingType = GetComponentTypeHandle<PathFindingData>(),
+                TranslationType = GetComponentTypeHandle<Translation>(),
+                WalkerType = GetComponentTypeHandle<Walker>(),
+                CollisionType = GetComponentTypeHandle<CollisionParameters>(),
             };
             var pathfindingHandle = pathFindingJ.Schedule(pathfindingGroup);
             pathfindingHandle.Complete();
