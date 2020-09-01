@@ -1,15 +1,14 @@
 ﻿using Unity.Entities;
 using Unity.Jobs;
-using Unity.Collections;
 using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks;
 using Unity.Transforms;
 using Assets.CrowdSimulation.Scripts.ECSScripts.ComponentDatas;
-using UnityEngine.UIElements;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
     [AlwaysSynchronizeSystem]
     [UpdateAfter(typeof(EdibleHashMap))]
+    [UpdateAfter(typeof(GroupSystem))]
     public class GoalSystem : ComponentSystem
     {
         private EndSimulationEntityCommandBufferSystem endSimulation;
@@ -65,6 +64,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             {
                 GroupConditionHandle = GetComponentTypeHandle<GroupCondition>(false),
                 TranslationHandle = GetComponentTypeHandle<Translation>(true),
+                WalkerHandle = GetComponentTypeHandle<Walker>(true),
+                avarageDistances = GroupSystem.avarageDistances,
+                maxDistances = GroupSystem.maxDistances,
+                minDistances = GroupSystem.minDistances,
+                avaragePoints = GroupSystem.avaragePoint
             };
             var groupHandle = groupGoalJob.Schedule(groupGroup, desireHandle);
 

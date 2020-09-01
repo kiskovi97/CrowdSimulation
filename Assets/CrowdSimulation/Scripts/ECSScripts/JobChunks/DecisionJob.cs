@@ -68,7 +68,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                 if (groupCondition.isSet)
                 {
                     pathfinding.decidedGoal = groupCondition.goal;
-                    pathfinding.radius = groupCondition.goalRadius;
+                    pathfinding.radius = groupCondition.radius;
 
                 } else
                 {
@@ -130,7 +130,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                         break;
                     case DecidedGoalType.Group:
                         pathfinding.decidedGoal = groupCondition.goal;
-                        pathfinding.radius = groupCondition.goalRadius;
+                        pathfinding.radius = groupCondition.radius;
                         break;
                     case DecidedGoalType.None:
                         SetToStop(ref pathfinding, translation);
