@@ -17,6 +17,12 @@ public struct MapValues
     public float3 offset;
 }
 
+public static class StaticMap
+{
+    public static readonly int maxGroup = 12;
+    public static readonly int density = 1;
+}
+
 public class Map : MonoBehaviour
 {
 
@@ -31,14 +37,15 @@ public class Map : MonoBehaviour
     public static int MaxHeight { get => Instance != null ? Instance.InputMaxHeight : 30; }
     public static int MaxWidth { get => Instance != null ? Instance.InputMaxWidth : 50; }
 
-    public static readonly int density = 1;
     private static readonly float outerRadius = 0.6f;
     private static readonly float innerRadius = 0.2f;
 
-    public static int MaxGroup { get; set; } = 12;
+    public static int MaxGroup { get; set; } = StaticMap.maxGroup;
 
-    public static int HeightPoints { get => MaxHeight * density * 2; }
-    public static int WidthPoints { get => MaxWidth * density * 2; }
+    public static int FullGroup { get; set; }
+
+    public static int HeightPoints { get => MaxHeight * StaticMap.density * 2; }
+    public static int WidthPoints { get => MaxWidth * StaticMap.density * 2; }
 
     public static int OneLayer { get => HeightPoints * WidthPoints; }
     public static int AllPoints { get => OneLayer * MaxGroup; }
@@ -53,7 +60,7 @@ public class Map : MonoBehaviour
         {
             maxHeight = MaxHeight,
             maxWidth = MaxWidth,
-            density = density,
+            density = StaticMap.density,
             MaxGroup = MaxGroup,
             heightPoints = HeightPoints,
             widthPoints = WidthPoints,

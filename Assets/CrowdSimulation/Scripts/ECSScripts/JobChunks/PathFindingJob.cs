@@ -175,7 +175,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
         public void ExecuteAvoidEverybody(PathFindingData data, CollisionParameters collisionParameters, ref Walker walker, Translation translation)
         {
             var avoidanceForce = float3.zero;
-            ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
+            ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId % StaticMap.maxGroup },
                 ref avoidanceForce, collisionParameters.innerRadius * 2);
 
             walker.force = data.decidedForce + avoidanceForce;
@@ -186,7 +186,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             var avoidanceForce = float3.zero;
             var convinientForce = float3.zero;
             var bros = 0;
-            ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId },
+            ForeachAround(new QuadrantData() { direction = walker.direction, position = translation.Value, broId = walker.broId % StaticMap.maxGroup },
                 ref avoidanceForce, ref convinientForce, ref bros, collisionParameters.outerRadius);
 
             var distance = translation.Value - data.decidedGoal;
@@ -212,7 +212,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                 data.decidedForce *= 0.5f;
             }
 
-            var group = values.LayerSize * walker.broId;
+            var group = values.LayerSize * (walker.broId % StaticMap.maxGroup);
 
             var force = float3.zero;
 

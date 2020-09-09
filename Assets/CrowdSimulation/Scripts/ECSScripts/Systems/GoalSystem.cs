@@ -65,9 +65,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 GroupConditionHandle = GetComponentTypeHandle<GroupCondition>(false),
                 TranslationHandle = GetComponentTypeHandle<Translation>(true),
                 WalkerHandle = GetComponentTypeHandle<Walker>(true),
-                avarageDistances = GroupSystem.avarageDistances,
-                maxDistances = GroupSystem.maxDistances,
-                minDistances = GroupSystem.minDistances,
                 avaragePoints = GroupSystem.avaragePoint
             };
             var groupHandle = groupGoalJob.Schedule(groupGroup, desireHandle);

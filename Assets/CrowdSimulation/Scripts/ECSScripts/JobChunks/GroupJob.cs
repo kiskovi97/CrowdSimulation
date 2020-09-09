@@ -12,9 +12,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
     public struct GroupGoalJob : IJobChunk// IJobForEach<Translation, GroupCondition>
     {
         public NativeArray<float3> avaragePoints;
-        public NativeArray<float> avarageDistances;
-        public NativeArray<float> minDistances;
-        public NativeArray<float> maxDistances;
 
         [ReadOnly] public ComponentTypeHandle<Translation> TranslationHandle;
         public ComponentTypeHandle<GroupCondition> GroupConditionHandle;
@@ -39,13 +36,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
         }
         public void Execute([ReadOnly] ref Translation translation, ref GroupCondition group, ref Walker walker)
         {
-            var force = (group.goalPoint - translation.Value);
-            var xForce = (group.goal - translation.Value);
-
-            var avarageDistance = avarageDistances[walker.broId];
             var avaragePoint = avaragePoints[walker.broId];
-            var minDistance = minDistances[walker.broId];
-            var maxDistance = maxDistances[walker.broId];
 
             var direction = math.normalize(translation.Value - avaragePoint);
 

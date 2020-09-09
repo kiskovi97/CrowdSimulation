@@ -48,7 +48,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             for (float i = -max; i < max; i += step)
                 for (float j = -max; j < max; j += step)
                 {
-                    Add(pos + DensitySystem.Up * i + DensitySystem.Right * j, pos, max, walker.broId);
+                    Add(pos + DensitySystem.Up * i + DensitySystem.Right * j, pos, max, walker.broId % StaticMap.maxGroup);
                 }
         }
 

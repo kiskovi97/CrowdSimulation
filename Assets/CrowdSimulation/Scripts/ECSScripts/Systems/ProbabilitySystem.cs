@@ -27,8 +27,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         public static NativeArray<float> collidersDensity;
 
-        public static float3 Right => new float3((1f / Map.density), 0, 0);
-        public static float3 Up => new float3(0, 0, (1f / Map.density));
+        public static float3 Right => new float3((1f / StaticMap.density), 0, 0);
+        public static float3 Up => new float3(0, 0, (1f / StaticMap.density));
 
         public static Entity selected = Entity.Null;
 
@@ -109,7 +109,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             var addJob = new AddArrayJob() { from = collidersDensity, to = densityMatrix };
             var addHandle = addJob.Schedule(densityMatrix.Length, batchSize, handle);
             addHandle.Complete();
-            Debug();
+            //Debug();
         }
 
         private void MapChanged()

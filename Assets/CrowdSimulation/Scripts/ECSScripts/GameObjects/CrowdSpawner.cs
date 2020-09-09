@@ -85,10 +85,12 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
             ShortestPathSystem.AddGoalPoint(goal);
             var cond = new GroupCondition() { goalPoint = goal, goalRadius = goalRadius };
             Id++;
-            if (Id >= Map.MaxGroup)
-            {
-                Id = 1;
-            }
+            //if (Id >= Map.MaxGroup)
+            //{
+            //    Id = 1;
+            //}
+
+            Map.FullGroup = Id + 1;
             for (int i = 0; i < sizeX; i++)
             {
                 for (int j = 0; j < sizeZ; j++)

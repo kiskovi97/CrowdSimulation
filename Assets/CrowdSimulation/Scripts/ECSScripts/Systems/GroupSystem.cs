@@ -18,11 +18,11 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
         protected override void OnCreate()
         {
             base.OnCreate();
-            avaragePoint = new NativeArray<float3>(Map.MaxGroup, Allocator.Persistent);
-            avarageDistances = new NativeArray<float>(Map.MaxGroup, Allocator.Persistent);
-            minDistances = new NativeArray<float>(Map.MaxGroup, Allocator.Persistent);
-            maxDistances = new NativeArray<float>(Map.MaxGroup, Allocator.Persistent);
-            groupSize = new NativeArray<int>(Map.MaxGroup, Allocator.Persistent);
+            avaragePoint = new NativeArray<float3>(Map.FullGroup, Allocator.Persistent);
+            avarageDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
+            minDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
+            maxDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
+            groupSize = new NativeArray<int>(Map.FullGroup, Allocator.Persistent);
         }
 
         protected override void OnDestroy()
@@ -37,7 +37,22 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 
         protected override void OnUpdate()
         {
-            for (int i = 0; i < Map.MaxGroup; i++)
+            if (avarageDistances.Length < Map.FullGroup)
+            {
+                if (avaragePoint.IsCreated) avaragePoint.Dispose();
+                if (avarageDistances.IsCreated) avarageDistances.Dispose();
+                if (minDistances.IsCreated) minDistances.Dispose();
+                if (maxDistances.IsCreated) maxDistances.Dispose();
+                if (groupSize.IsCreated) groupSize.Dispose();
+
+                avaragePoint = new NativeArray<float3>(Map.FullGroup, Allocator.Persistent);
+                avarageDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
+                minDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
+                maxDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
+                groupSize = new NativeArray<int>(Map.FullGroup, Allocator.Persistent);
+            }
+
+            for (int i = 0; i < Map.FullGroup; i++)
             {
                 avarageDistances[i] = 0;
                 avaragePoint[i] = float3.zero;
@@ -56,7 +71,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 groupSize[walker.broId]++;
             });
 
-            for (int i = 0; i < Map.MaxGroup; i++)
+            for (int i = 0; i < Map.FullGroup; i++)
             {
                 if (groupSize[i] > 0)
                 {
