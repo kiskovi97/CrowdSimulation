@@ -93,6 +93,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             shortestPath.AddRange(na);
             previousPoint.AddRange(pp);
 
+            na.Dispose();
+            pp.Dispose();
+
             var used = new HashSet<int>();
             var unused = new HashSet<int>();
 
@@ -132,6 +135,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
                 shortestPath[i] = -1;
                 previousPoint[i] = -1;
             }
+
+            na.Dispose();
+            pp.Dispose();
         }
 
         private static void InitilaizeIfNecesearry()
