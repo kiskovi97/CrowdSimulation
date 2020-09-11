@@ -33,6 +33,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         public int sizeZ = 5;
 
         public float distance = 1f;
+        public GroupFormation formation = GroupFormation.Circel;
+        public bool fill = false;
 
         private List<Entity> entities = new List<Entity>();
 
@@ -83,7 +85,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         void Start()
         {
             ShortestPathSystem.AddGoalPoint(goal);
-            var cond = new GroupCondition() { goalPoint = goal, goalRadius = goalRadius };
+            var cond = new GroupCondition() { goalPoint = goal, goalRadius = goalRadius, formation = formation, fill = fill };
             Id++;
             //if (Id >= Map.MaxGroup)
             //{

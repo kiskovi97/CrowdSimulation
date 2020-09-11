@@ -48,7 +48,19 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
             var direction = math.normalize(translation.Value - avaragePoint);
 
-            group.goal = GetCubePoint(group.goalPoint, direction, group.goalRadius * 1.5f, distance / maxDistance);
+            switch (group.formation)
+            {
+                case GroupFormation.Circel:
+                    group.goal = GetCirclePoint(group.goalPoint, direction, 
+                        group.goalRadius * (group.fill ? 1.2f : 2f), 
+                        group.fill ? distance / maxDistance : 1f);
+                    break;
+                case GroupFormation.Squere:
+                    group.goal = GetCubePoint(group.goalPoint, direction, 
+                        group.goalRadius * (group.fill ? 1.5f : 2.5f), 
+                        group.fill ? distance / maxDistance : 1f);
+                    break;
+            }            
 
             group.isSet = true;
             group.radius = 0.1f;
