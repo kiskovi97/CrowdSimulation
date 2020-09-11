@@ -56,8 +56,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                         group.fill ? distance / maxDistance : 1f);
                     break;
                 case GroupFormation.Squere:
-                    group.goal = GetCubePoint(group.goalPoint, direction, 
-                        group.goalRadius * (group.fill ? 1.5f : 2.5f), 
+                    group.goal = GetSquerePoint(group.goalPoint, direction,
+                        group.goalRadius * (group.fill ? 1.41f * 1.1f : 2.5f), 
                         group.fill ? distance / maxDistance : 1f);
                     break;
             }            
@@ -71,7 +71,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
             return center + direction * radius * percent;
         }
 
-        private float3 GetCubePoint(float3 center, float3 direction, float radius, float percent)
+        private float3 GetSquerePoint(float3 center, float3 direction, float radius, float percent)
         {
             float3 A = new float3();
             float3 B = new float3();
@@ -107,9 +107,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
             var final = point - center;
             var maxDistance = math.length(final);
-            var finalPrecentage = math.min(percent, maxDistance / radius);
+            var finalPrecentage = math.min(percent * 1.3f, maxDistance / radius);
 
-            return center + math.normalize(final) * radius * finalPrecentage;
+            return center + direction * radius * finalPrecentage;
         }
     }
 }

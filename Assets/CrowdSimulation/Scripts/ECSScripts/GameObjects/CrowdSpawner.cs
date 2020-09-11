@@ -34,7 +34,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 
         public float distance = 1f;
         public GroupFormation formation = GroupFormation.Circel;
-        public bool fill = false;
+        public bool fill = true;
 
         private List<Entity> entities = new List<Entity>();
 
