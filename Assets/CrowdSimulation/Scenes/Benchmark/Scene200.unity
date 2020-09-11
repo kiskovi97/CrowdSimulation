@@ -388,8 +388,8 @@ MonoBehaviour:
   distance: 1
   ediblesNumber: 0
   obstaclesNumber: 0
-  InputMaxHeight: 30
-  InputMaxWidth: 30
+  InputMaxHeight: 40
+  InputMaxWidth: 40
 --- !u!114 &1987304910
 MonoBehaviour:
   m_ObjectHideFlags: 0

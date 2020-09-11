@@ -64,9 +64,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             Entities.ForEach((ref GroupCondition condition, ref Walker walker, ref Translation translation) =>
             {
                 var dist = math.length(translation.Value - condition.goal);
-                if (minDistances[walker.broId] > dist) minDistances[walker.broId] = dist;
-                if (maxDistances[walker.broId] < dist) maxDistances[walker.broId] = dist;
-                avarageDistances[walker.broId] += dist;
                 avaragePoint[walker.broId] += translation.Value;
                 groupSize[walker.broId]++;
             });
@@ -75,8 +72,23 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             {
                 if (groupSize[i] > 0)
                 {
-                    avarageDistances[i] /= (float)groupSize[i];
                     avaragePoint[i] /= (float)groupSize[i];
+                }
+            }
+
+            Entities.ForEach((ref GroupCondition condition, ref Walker walker, ref Translation translation) =>
+            {
+                var dist = math.length(translation.Value - avaragePoint[walker.broId]);
+                if (minDistances[walker.broId] > dist) minDistances[walker.broId] = dist;
+                if (maxDistances[walker.broId] < dist) maxDistances[walker.broId] = dist;
+                avarageDistances[walker.broId] += dist;
+            });
+
+            for (int i = 0; i < Map.FullGroup; i++)
+            {
+                if (groupSize[i] > 0)
+                {
+                    avarageDistances[i] /= (float)groupSize[i];
                 }
             }
         }
