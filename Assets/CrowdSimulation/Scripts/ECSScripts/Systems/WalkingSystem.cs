@@ -11,7 +11,6 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
     [AlwaysSynchronizeSystem]
     [UpdateAfter(typeof(PathFindingSystem))]
-    [UpdateAfter(typeof(CollisionSystem))]
     public class WalkingSystem : ComponentSystem
     {
         private EntityQuery walkingEntities;

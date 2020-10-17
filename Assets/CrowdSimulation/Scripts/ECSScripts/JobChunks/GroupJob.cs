@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Assertions.Must;
 using Assets.CrowdSimulation.Scripts.Utilities;
 using System.Globalization;
+using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks.ForationHelpers;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
@@ -15,8 +16,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
     public struct GroupGoalJob : IJobChunk// IJobForEach<Translation, GroupCondition>
     {
         public NativeArray<float3> avaragePoints;
-        public NativeArray<float> maxDistances;
+        public NativeArray<float3> maxDistances;
         public NativeArray<float> avarageDistances;
+        public NativeArray<int> groupSizes;
 
         [ReadOnly] public ComponentTypeHandle<Translation> TranslationHandle;
         public ComponentTypeHandle<GroupCondition> GroupConditionHandle;
@@ -43,6 +45,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
         {
             var avaragePoint = avaragePoints[walker.broId];
             var maxDistance = avarageDistances[walker.broId] * 2f;
+            var groupSize = groupSizes[walker.broId];
 
             var distance = math.length(translation.Value - avaragePoint);
 
@@ -56,9 +59,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
                         group.fill ? distance / maxDistance : 1f);
                     break;
                 case GroupFormation.Squere:
-                    group.goal = GetSquerePoint(group.goalPoint, direction,
-                        group.goalRadius * (group.fill ? 1.41f * 1.1f : 2.5f), 
-                        group.fill ? distance / maxDistance : 1f);
+
+                    group.goal = SquereFormationHelper.GetClosestPoint(group.goalPoint, direction,
+                        group.goalRadius * (group.fill ? 1.0f : 2.5f),
+                        group.fill ? distance / maxDistance : 1f, groupSize, maxDistances[walker.broId]);
+                    //group.goal = GetSquerePoint(group.goalPoint, direction,
+                    //    group.goalRadius * (group.fill ? 1.41f * 1.1f : 2.5f), 
+                    //    group.fill ? distance / maxDistance : 1f);
                     break;
             }            
 
@@ -73,6 +80,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 
         private float3 GetSquerePoint(float3 center, float3 direction, float radius, float percent)
         {
+
             float3 A = new float3();
             float3 B = new float3();
             float3 point = new float3();

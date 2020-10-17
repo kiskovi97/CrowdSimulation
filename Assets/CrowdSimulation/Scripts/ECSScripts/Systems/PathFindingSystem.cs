@@ -9,12 +9,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
     [AlwaysSynchronizeSystem]
     [UpdateAfter(typeof(DensitySystem))]
-    [UpdateAfter(typeof(GoalSystem))]
     [UpdateAfter(typeof(EntitiesHashMap))]
     [UpdateAfter(typeof(FighterSystem))]
+    [UpdateAfter(typeof(GoalSystem))]
     [UpdateAfter(typeof(ShortestPathSystem))]
     [UpdateAfter(typeof(ProbabilitySystem))]
     [UpdateAfter(typeof(DijsktraSystem))]
+    [UpdateAfter(typeof(CollisionSystem))]
     public class PathFindingSystem : ComponentSystem
     {
         private EntityQuery pathfindingGroup;
