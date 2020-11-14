@@ -9,110 +9,113 @@ using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks.ForationHelpers;
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
 {
     [AlwaysSynchronizeSystem]
-    class GroupSystem : ComponentSystem
+    public class GroupSystem : ComponentSystem
     {
-        public static NativeArray<float3> avaragePoint;
-        public static NativeArray<float> avarageDistances;
-        public static NativeArray<float> minDistances;
-        public static NativeArray<float3> maxDistances;
-        public static NativeArray<int> groupSize;
+        public static NativeArray<DistanceData> distanceDatas;
+
+        public struct DistanceData
+        {
+            public float3 center;
+            public float avarageDistance;
+            public float absMaxDistance;
+            public float2 absMaxDistanceXZ;
+            public float2 absAvarageDistanceXZ;
+            public int groupSize;
+        }
 
         protected override void OnCreate()
         {
             base.OnCreate();
-            avaragePoint = new NativeArray<float3>(Map.FullGroup, Allocator.Persistent);
-            avarageDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
-            minDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
-            maxDistances = new NativeArray<float3>(Map.FullGroup, Allocator.Persistent);
-            groupSize = new NativeArray<int>(Map.FullGroup, Allocator.Persistent);
+            distanceDatas = new NativeArray<DistanceData>(Map.FullGroup, Allocator.Persistent);
         }
 
         protected override void OnDestroy()
         {
-            if (avaragePoint.IsCreated) avaragePoint.Dispose();
-            if (avarageDistances.IsCreated) avarageDistances.Dispose();
-            if (minDistances.IsCreated) minDistances.Dispose();
-            if (maxDistances.IsCreated) maxDistances.Dispose();
-            if (groupSize.IsCreated) groupSize.Dispose();
+            if (distanceDatas.IsCreated) distanceDatas.Dispose();
             base.OnDestroy();
         }
 
         protected override void OnUpdate()
         {
-            if (avarageDistances.Length < Map.FullGroup)
+            if (distanceDatas.Length < Map.FullGroup)
             {
-                if (avaragePoint.IsCreated) avaragePoint.Dispose();
-                if (avarageDistances.IsCreated) avarageDistances.Dispose();
-                if (minDistances.IsCreated) minDistances.Dispose();
-                if (maxDistances.IsCreated) maxDistances.Dispose();
-                if (groupSize.IsCreated) groupSize.Dispose();
+                if (distanceDatas.IsCreated) distanceDatas.Dispose();
 
-                avaragePoint = new NativeArray<float3>(Map.FullGroup, Allocator.Persistent);
-                avarageDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
-                minDistances = new NativeArray<float>(Map.FullGroup, Allocator.Persistent);
-                maxDistances = new NativeArray<float3>(Map.FullGroup, Allocator.Persistent);
-                groupSize = new NativeArray<int>(Map.FullGroup, Allocator.Persistent);
+                distanceDatas = new NativeArray<DistanceData>(Map.FullGroup, Allocator.Persistent);
             }
 
             for (int i = 0; i < Map.FullGroup; i++)
             {
-                avarageDistances[i] = 0;
-                avaragePoint[i] = float3.zero;
-                minDistances[i] = float.MaxValue;
-                maxDistances[i] = 0;
-                groupSize[i] = 0;
+                distanceDatas[i] = new DistanceData()
+                {
+                    absMaxDistanceXZ = float2.zero,
+                    absAvarageDistanceXZ = float2.zero,
+                    avarageDistance = 0f,
+                    center = float3.zero,
+                    groupSize = 0,
+                    absMaxDistance = 0f,
+                };
             }
 
             Entities.ForEach((ref GroupCondition condition, ref Walker walker, ref Translation translation) =>
             {
-                avaragePoint[walker.broId] += translation.Value;
-                groupSize[walker.broId]++;
+                var data = distanceDatas[walker.broId];
+                data.center += translation.Value;
+                data.groupSize++;
+                distanceDatas[walker.broId] = data;
             });
 
             for (int i = 0; i < Map.FullGroup; i++)
             {
-                if (groupSize[i] > 0)
+                var data = distanceDatas[i];
+                if (data.groupSize > 0)
                 {
-                    avaragePoint[i] /= (float)groupSize[i];
+                    data.center /= (float)data.groupSize;
                 }
+                distanceDatas[i] = data;
             }
 
             Entities.ForEach((ref GroupCondition condition, ref Walker walker, ref Translation translation) =>
             {
-                var dist = math.length(translation.Value - avaragePoint[walker.broId]);
-                var distx = math.length(translation.Value.x - avaragePoint[walker.broId].x);
-                var distz = math.length(translation.Value.z - avaragePoint[walker.broId].z);
-                if (minDistances[walker.broId] > dist) minDistances[walker.broId] = dist;
-                var maxDistance = maxDistances[walker.broId];
-                if (maxDistance.y < dist) maxDistance.y = dist;
-                if (maxDistance.x < distx) maxDistance.x = dist;
-                if (maxDistance.z < distz) maxDistance.z = dist;
-                maxDistances[walker.broId] = maxDistance;
-                avarageDistances[walker.broId] += dist;
+                var data = distanceDatas[walker.broId];
 
-                var A = math.normalize(new float3(1, 0, 1));
-                var B = math.normalize(new float3(-1, 0, 1));
-                var C = math.normalize(new float3(1, 0, -1));
-                var D = math.normalize(new float3(-1, 0, -1));
-                var point = SquereFormationHelper.GetClosestPoint(condition.goalPoint, A, condition.goalRadius, 1f, groupSize[walker.broId], maxDistance);
-                var point2 = SquereFormationHelper.GetClosestPoint(condition.goalPoint, B, condition.goalRadius, 1f, groupSize[walker.broId], maxDistance);
-                var point3 = SquereFormationHelper.GetClosestPoint(condition.goalPoint, C, condition.goalRadius, 1f, groupSize[walker.broId], maxDistance);
-                var point4 = SquereFormationHelper.GetClosestPoint(condition.goalPoint, D, condition.goalRadius, 1f, groupSize[walker.broId], maxDistance);
+                var direction = translation.Value - data.center;
+                var distance = math.length(direction);
 
-                DebugProxy.DrawLine(point2, point, Color.black);
-                DebugProxy.DrawLine(point3, point2, Color.black);
-                DebugProxy.DrawLine(point4, point3, Color.black);
-                DebugProxy.DrawLine(point, point3, Color.black);
-                DebugProxy.DrawLine(point2, point4, Color.black);
+                data.absMaxDistance += distance / data.groupSize;
+                if (data.absMaxDistance < distance)
+                    data.avarageDistance = distance;
+
+                var x = data.absMaxDistanceXZ.x;
+                var z = data.absMaxDistanceXZ.y;
+                if (x < math.abs(direction.x))
+                    x = math.abs(direction.x);
+                if (z < math.abs(direction.z))
+                    z = math.abs(direction.z);
+                data.absMaxDistanceXZ = new float2(x, z);
+                data.absAvarageDistanceXZ += math.abs(new float2(direction.x, direction.z) / data.groupSize);
+
+                distanceDatas[walker.broId] = data;
             });
 
-            for (int i = 0; i < Map.FullGroup; i++)
-            {
-                if (groupSize[i] > 0)
-                {
-                    avarageDistances[i] /= (float)groupSize[i];
-                }
-            }
+            //Entities.ForEach((ref GroupCondition condition, ref Walker walker, ref Translation translation) =>
+            //{
+            //    var data = distanceDatas[walker.broId];
+            //    var A = new float3(data.absAvarageDistanceXZ.x * 2, 0, data.absAvarageDistanceXZ.y * 2);
+            //    var B = new float3(-data.absAvarageDistanceXZ.x * 2, 0, data.absAvarageDistanceXZ.y * 2);
+            //    var C = new float3(data.absAvarageDistanceXZ.x * 2, 0, -data.absAvarageDistanceXZ.y * 2);
+            //    var D = new float3(-data.absAvarageDistanceXZ.x * 2, 0, -data.absAvarageDistanceXZ.y * 2);
+            //    var point1 = SquereFormationHelper.GetGoalPosition(condition.goalPoint, condition.goalRadius, A, data);
+            //    var point2 = SquereFormationHelper.GetGoalPosition(condition.goalPoint, condition.goalRadius, B, data);
+            //    var point3 = SquereFormationHelper.GetGoalPosition(condition.goalPoint, condition.goalRadius, C, data);
+            //    var point4 = SquereFormationHelper.GetGoalPosition(condition.goalPoint, condition.goalRadius, D, data);
+
+            //    DebugProxy.DrawLine(point2, point1, Color.black);
+            //    DebugProxy.DrawLine(point3, point2, Color.black);
+            //    DebugProxy.DrawLine(point4, point3, Color.black);
+            //    DebugProxy.DrawLine(point1, point3, Color.black);
+            //    DebugProxy.DrawLine(point2, point4, Color.black);
+            //});
         }
     }
 }

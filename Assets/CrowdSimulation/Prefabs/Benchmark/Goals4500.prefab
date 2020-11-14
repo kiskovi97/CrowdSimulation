@@ -430,6 +430,11 @@ PrefabInstance:
       propertyPath: color
       value: 
       objectReference: {fileID: 2100000, guid: 3864e8118431e7a47b13a67b15d0be7f, type: 2}
+    - target: {fileID: 7553311594438484709, guid: a9a1108c0c19249418a243b8a671da71,
+        type: 3}
+      propertyPath: formation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7553311594438484710, guid: a9a1108c0c19249418a243b8a671da71,
         type: 3}
       propertyPath: m_Name
@@ -549,6 +554,11 @@ PrefabInstance:
         type: 3}
       propertyPath: goalRadius
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7553311594438484709, guid: a9a1108c0c19249418a243b8a671da71,
+        type: 3}
+      propertyPath: formation
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7553311594438484710, guid: a9a1108c0c19249418a243b8a671da71,
         type: 3}
@@ -675,6 +685,11 @@ PrefabInstance:
       propertyPath: color
       value: 
       objectReference: {fileID: 2100000, guid: 3864e8118431e7a47b13a67b15d0be7f, type: 2}
+    - target: {fileID: 7553311594438484709, guid: a9a1108c0c19249418a243b8a671da71,
+        type: 3}
+      propertyPath: formation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7553311594438484710, guid: a9a1108c0c19249418a243b8a671da71,
         type: 3}
       propertyPath: m_Name
@@ -800,6 +815,11 @@ PrefabInstance:
       propertyPath: color
       value: 
       objectReference: {fileID: 2100000, guid: 3864e8118431e7a47b13a67b15d0be7f, type: 2}
+    - target: {fileID: 7553311594438484709, guid: a9a1108c0c19249418a243b8a671da71,
+        type: 3}
+      propertyPath: formation
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7553311594438484710, guid: a9a1108c0c19249418a243b8a671da71,
         type: 3}
       propertyPath: m_Name
@@ -920,6 +940,11 @@ PrefabInstance:
       propertyPath: goalRadius
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 7553311594438484709, guid: a9a1108c0c19249418a243b8a671da71,
+        type: 3}
+      propertyPath: formation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7553311594438484710, guid: a9a1108c0c19249418a243b8a671da71,
         type: 3}
       propertyPath: m_Name
@@ -1039,6 +1064,11 @@ PrefabInstance:
         type: 3}
       propertyPath: goalRadius
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7553311594438484709, guid: a9a1108c0c19249418a243b8a671da71,
+        type: 3}
+      propertyPath: formation
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7553311594438484710, guid: a9a1108c0c19249418a243b8a671da71,
         type: 3}
@@ -1165,6 +1195,11 @@ PrefabInstance:
       propertyPath: color
       value: 
       objectReference: {fileID: 2100000, guid: 3864e8118431e7a47b13a67b15d0be7f, type: 2}
+    - target: {fileID: 7553311594438484709, guid: a9a1108c0c19249418a243b8a671da71,
+        type: 3}
+      propertyPath: formation
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7553311594438484710, guid: a9a1108c0c19249418a243b8a671da71,
         type: 3}
       propertyPath: m_Name
@@ -1285,6 +1320,11 @@ PrefabInstance:
       propertyPath: goalRadius
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 7553311594438484709, guid: a9a1108c0c19249418a243b8a671da71,
+        type: 3}
+      propertyPath: formation
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7553311594438484710, guid: a9a1108c0c19249418a243b8a671da71,
         type: 3}
       propertyPath: m_Name
@@ -1404,6 +1444,11 @@ PrefabInstance:
         type: 3}
       propertyPath: goalRadius
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 7553311594438484709, guid: a9a1108c0c19249418a243b8a671da71,
+        type: 3}
+      propertyPath: formation
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7553311594438484710, guid: a9a1108c0c19249418a243b8a671da71,
         type: 3}

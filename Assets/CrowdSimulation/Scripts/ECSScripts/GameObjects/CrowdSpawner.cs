@@ -26,8 +26,8 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         public Vector3 goal { get => goalPoint != null ? goalPoint.position : Vector3.zero; }
 
         public float goalRadius => formation == GroupFormation.Circel 
-            ? math.sqrt(sizeX * sizeZ * distance / (2 * math.PI))
-            : math.sqrt(sizeX * sizeZ * distance );
+            ? math.sqrt(sizeX * sizeZ * distance / (2 * math.PI)) * 1.1f
+            : (sizeX - 1) * distance / 2f;
 
         public static int Id = 0;
 

@@ -9,6 +9,7 @@ using UnityEngine.Assertions.Must;
 using Assets.CrowdSimulation.Scripts.Utilities;
 using System.Globalization;
 using Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks.ForationHelpers;
+using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
 
 namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
 {
@@ -16,13 +17,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
     public struct GroupGoalJob : IJobChunk// IJobForEach<Translation, GroupCondition>
     {
         [NativeDisableParallelForRestriction]
-        public NativeArray<float3> avaragePoints;
-        [NativeDisableParallelForRestriction]
-        public NativeArray<float3> maxDistances;
-        [NativeDisableParallelForRestriction]
-        public NativeArray<float> avarageDistances;
-        [NativeDisableParallelForRestriction]
-        public NativeArray<int> groupSizes;
+        public NativeArray<GroupSystem.DistanceData> distanceDatas;
 
         [ReadOnly] public ComponentTypeHandle<Translation> TranslationHandle;
         public ComponentTypeHandle<GroupCondition> GroupConditionHandle;
@@ -47,26 +42,25 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
         }
         public void Execute([ReadOnly] ref Translation translation, ref GroupCondition group, ref Walker walker)
         {
-            var avaragePoint = avaragePoints[walker.broId];
-            var maxDistance = avarageDistances[walker.broId] * 2f;
-            var groupSize = groupSizes[walker.broId];
+            var data = distanceDatas[walker.broId];
+            var center = data.center;
+            var maxDistance = data.avarageDistance * 2f;
+            var groupSize = data.groupSize;
 
-            var distance = math.length(translation.Value - avaragePoint);
-
-            var direction = math.normalize(translation.Value - avaragePoint);
+            var direction = (translation.Value - center);
+            var distance = math.length(direction);
+            var directionNormal = math.normalize(direction);
 
             switch (group.formation)
             {
                 case GroupFormation.Circel:
-                    group.goal = GetCirclePoint(group.goalPoint, direction, 
+                    group.goal = GetCirclePoint(group.goalPoint, directionNormal, 
                         group.goalRadius * (group.fill ? 1.2f : 2f), 
                         group.fill ? distance / maxDistance : 1f);
                     break;
                 case GroupFormation.Squere:
 
-                    group.goal = SquereFormationHelper.GetClosestPoint(group.goalPoint, direction,
-                        group.goalRadius * (group.fill ? 1.0f : 2.5f),
-                        group.fill ? distance / maxDistance : 1f, groupSize, maxDistances[walker.broId]);
+                    group.goal = SquereFormationHelper.GetGoalPosition(group.goalPoint, group.goalRadius, direction, data);
                     //group.goal = GetSquerePoint(group.goalPoint, direction,
                     //    group.goalRadius * (group.fill ? 1.41f * 1.1f : 2.5f), 
                     //    group.fill ? distance / maxDistance : 1f);

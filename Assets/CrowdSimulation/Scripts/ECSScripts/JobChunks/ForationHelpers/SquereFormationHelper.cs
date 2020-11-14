@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.CrowdSimulation.Scripts.ECSScripts.Systems;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,36 +19,32 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks.ForationHelpers
             public int maxHeight;
         }
 
-        public static float3 GetClosestPoint(float3 center, float3 direction, float radius, float percent, int entitiCount, float3 maxDistances)
+        public static float3 GetGoalPosition(float3 center, float radius, float3 direction, GroupSystem.DistanceData data)
         {
-            var help = GetWidthHeight(radius, entitiCount);
+            var normalizedX = direction.x / (data.absAvarageDistanceXZ.x * 2);
+            var normalizedY = direction.z / (data.absAvarageDistanceXZ.y * 2);
 
-            var forward = new float3(0, 0, 1);
-            var right = new float3(1, 0, 0);
+            var entitiyWidth = math.sqrt(data.groupSize);
+            normalizedX = Round(normalizedX, entitiyWidth, false);
+            normalizedY = Round(normalizedY, entitiyWidth, false);
 
-            var leftDownPoint = center - math.mul(quaternion.RotateY(help.insideAngle / 2f), forward) * radius;
+            var width = radius;
 
-            var worldPoint = center + direction * percent * radius;
-            var localPoint = (worldPoint - leftDownPoint) / help.distance;
-
-            var width = math.clamp(math.round(localPoint.x), 0, help.maxWidth - 1);
-            var height = math.clamp(math.round(localPoint.z), 0, help.maxHeight - 1);
-
-            return leftDownPoint + height * forward * help.distance + width * right * help.distance;
+            return center + new float3(normalizedX, 0, normalizedY) * width;
         }
 
-        static Help GetWidthHeight(float radius, int entitiCount)
+        private static float Round(float normalizedX, float entitiyWidth, bool even)
         {
-            int width = (int)math.ceil(math.sqrt(entitiCount));
-            int height = width;
-
-            if (width * height < entitiCount) height++;
-
-            float angle = math.atan((width -1) / (height - 1));
-            float distance = (2 * radius * math.sin(angle)) / (height - 1);
-            float insideAngle = math.PI - 2 * angle;
-
-            return new Help() { distance = distance, insideAngle = insideAngle, maxHeight = height, maxWidth = width };
+            var help = entitiyWidth / 2f;
+            if (math.abs(normalizedX) > (1f - 1f / help))
+                normalizedX = normalizedX > 0f ? 1f : -1f;
+            else
+            {
+                normalizedX = normalizedX / 2f + 0.5f;
+                normalizedX = math.round((entitiyWidth-1) * normalizedX) / (entitiyWidth-1);
+                normalizedX = normalizedX * 2f - 1f;
+            }
+            return normalizedX;
         }
     }
 }

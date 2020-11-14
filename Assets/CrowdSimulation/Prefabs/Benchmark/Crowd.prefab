@@ -51,7 +51,8 @@ MonoBehaviour:
   decisionMethod: 0
   info: {fileID: 0}
   color: {fileID: 2100000, guid: 9f7d26166fcd90044a06f72b86bd8c1f, type: 2}
-  goalRadius: 5
   sizeX: 10
   sizeZ: 10
-  distance: 1
+  distance: 1.5
+  formation: 0
+  fill: 1
