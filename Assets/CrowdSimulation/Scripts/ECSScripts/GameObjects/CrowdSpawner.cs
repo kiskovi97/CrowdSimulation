@@ -25,7 +25,9 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
 
         public Vector3 goal { get => goalPoint != null ? goalPoint.position : Vector3.zero; }
 
-        public float goalRadius;
+        public float goalRadius => formation == GroupFormation.Circel 
+            ? math.sqrt(sizeX * sizeZ * distance / (2 * math.PI))
+            : math.sqrt(sizeX * sizeZ * distance );
 
         public static int Id = 0;
 
@@ -86,6 +88,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.GameObjects
         {
             ShortestPathSystem.AddGoalPoint(goal);
             var cond = new GroupCondition() { goalPoint = goal, goalRadius = goalRadius, formation = formation, fill = fill };
+            Debug.Log(goalRadius + " is goalRadius");
             Id++;
             //if (Id >= Map.MaxGroup)
             //{

@@ -15,9 +15,13 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.JobChunks
     [BurstCompile]
     public struct GroupGoalJob : IJobChunk// IJobForEach<Translation, GroupCondition>
     {
+        [NativeDisableParallelForRestriction]
         public NativeArray<float3> avaragePoints;
+        [NativeDisableParallelForRestriction]
         public NativeArray<float3> maxDistances;
+        [NativeDisableParallelForRestriction]
         public NativeArray<float> avarageDistances;
+        [NativeDisableParallelForRestriction]
         public NativeArray<int> groupSizes;
 
         [ReadOnly] public ComponentTypeHandle<Translation> TranslationHandle;

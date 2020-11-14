@@ -33,7 +33,7 @@ namespace Assets.CrowdSimulation.Scripts.ECSScripts.Systems
             foodGroup = GetEntityQuery(foodQuery);
             var groupQuery = new EntityQueryDesc
             {
-                All = new ComponentType[] { typeof(GroupCondition), typeof(Translation)}
+                All = new ComponentType[] { typeof(GroupCondition), typeof(Translation), typeof(Walker)}
             };
             groupGroup = GetEntityQuery(groupQuery);
             base.OnCreate();
